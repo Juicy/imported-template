@@ -19,5 +19,9 @@
   "keywords": [
     "web-components"
   ],
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "grunt": "~0.4.4",
+    "grunt-contrib-watch": "~0.6.1"
+  }
 }
