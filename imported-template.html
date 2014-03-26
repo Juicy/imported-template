@@ -1,8 +1,8 @@
 <!--
-x-html.html v0.0.20140221
+imported-template.html v0.0.1
 (c) 2013 Joachim Wester
 MIT license
-https://github.com/PuppetJs/x-html
+https://github.com/PuppetJs/imported-template
 -->
 <link rel="import" href="../polymer/polymer.html">
 <script>
@@ -47,7 +47,7 @@ https://github.com/PuppetJs/x-html
 
     /**
      * Empty xhml content.
-     * @TODO clear also siblings for `x-html[currentnode]`
+     * @TODO clear also siblings for `imported-template[currentnode]`
      * @requires HTMLTemplateElement#clear (https://github.com/Polymer/TemplateBinding/blob/51df59c16e0922dec041cfe604016aac00918d5d/src/TemplateBinding.js#L595)
      * @extends HTMLTemplateElement.prototype.clear
      * @return  see HTMLTemplateElement.prototype.clear
@@ -73,7 +73,7 @@ https://github.com/PuppetJs/x-html
       });
     };
 
-    document.register('x-html', {
+    document.register('imported-template', {
       prototype: XHTMLPrototype,
       extends: "template"
     });

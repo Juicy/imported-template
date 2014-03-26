@@ -1,6 +1,6 @@
 {
-  "name": "x-html",
-  "version": "0.0.20140221",
+  "name": "imported-template",
+  "version": "0.0.1",
   "dependencies": {
     "polymer": "Polymer/polymer#~0.2"
   },
@@ -9,5 +9,22 @@
   },
   "keywords": [
     "web-components"
+  ],
+  "homepage": "https://github.com/PuppetJs/imported-template",
+  "authors": [
+    "Joachim Wester <joachimwester@me.com>",
+    "Marcin Warpechowski <marcin@nextgen.pl>",
+    "Tomek Wytrebowicz <tomalecpub@gmail.com>"
+  ],
+  "description": "`<imported-template>` is a custom element that let's you load HTML partials into your Web Components, and take full control over loaded `<script>`s and `<link rel=\\\"import\\\">`s.",
+  "main": "./imported-template.html",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "../",
+    "test",
+    "tests"
   ]
 }
