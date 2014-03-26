@@ -11,14 +11,21 @@ https://github.com/PuppetJs/imported-template
 
     XHTMLPrototype.loadTemplate_ = function() {
       var val = this.getAttribute('content');
+      var asIframe = this.getAttribute("iframe") || this.getAttribute("iframe")==="";
       var xhtml = this;
       if (val && (val.indexOf('/') === 0 || val.indexOf('./') === 0)) {
+        if( asIframe ){
+           this.loadIframe(val);
+           return;
+        }
+        // TODO: clean it, rearange it (tomalec)
+
         //val is a URL, load the partial from the HTTP server/cache
         var link = document.createElement('link');
         link.rel = "import";
         link.href = val;
         link.onload =  function processImportedDocument(){
-          // TODO: clear previous template
+          // TODO: clear previous template (tomalec)
           var template = this.import.querySelector("template");
           // simple template
           if(!template){
@@ -26,7 +33,7 @@ https://github.com/PuppetJs/imported-template
             template.setAttribute("bind","");
             // move entire content to tempalte
             // TODO: check if moving by text is faster, 
-            //      as we assume it is simple template => we can use it as static HTML
+            //      as we assume it is simple template => we can use it as static HTML (tomalec)
             while( this.import.body.firstChild ){
               template.content.appendChild(this.import.body.firstChild);
             }
@@ -47,9 +54,21 @@ https://github.com/PuppetJs/imported-template
 
       }
       else {
-        //val is HTML code, insert the partial from the string
-        this.reattachTemplate_(val);
+        if( asIframe ){
+          this.loadIframe(undefined, encodeURI(val)
+            );
+        } else {
+          //val is HTML code, insert the partial from the string
+          this.reattachTemplate_(val);
+        }
       }
+    };
+    XHTMLPrototype.loadIframe = function(src, srcdoc){
+      var iframe = document.createElement('iframe');
+      iframe.src = src;
+      srcdoc && (iframe.srcdoc = srcdoc);
+      this.parentNode.insertBefore(iframe, this.nextSibling);
+      // TODO: keep a reference to be able to remove/update it later (tomalec)
     };
 
     XHTMLPrototype.reattachTemplate_ = function(html) {
