@@ -11,15 +11,40 @@ https://github.com/PuppetJs/imported-template
 
     XHTMLPrototype.loadTemplate_ = function() {
       var val = this.getAttribute('content');
+      var xhtml = this;
       if (val && (val.indexOf('/') === 0 || val.indexOf('./') === 0)) {
         //val is a URL, load the partial from the HTTP server/cache
-        var oReq = new XMLHttpRequest();
-        var that = this;
-        oReq.onload = function (event) {
-          that.reattachTemplate_(event.target.responseText);
+        var link = document.createElement('link');
+        link.rel = "import";
+        link.href = val;
+        link.onload =  function processImportedDocument(){
+          // TODO: clear previous template
+          var template = this.import.querySelector("template");
+          // simple template
+          if(!template){
+            template = this.import.createElement("template");
+            template.setAttribute("bind","");
+            // move entire content to tempalte
+            // TODO: check if moving by text is faster, 
+            //      as we assume it is simple template => we can use it as static HTML
+            while( this.import.body.firstChild ){
+              template.content.appendChild(this.import.body.firstChild);
+            }
+            this.import.body.appendChild(template);
+
+          }
+
+          // var clone = document.importNode(template.content, true);
+          var clone = document.importNode(template, true);
+          if(window.PolymerExpressions) {
+            clone.bindingDelegate = new PolymerExpressions; //use PolymerExpressions if available. This allows <template if="{{val == 1}}">, etc
+          }
+          clone.model = xhtml.model;
+          xhtml.parentNode.insertBefore(clone, xhtml.nextSibling);
+
         };
-        oReq.open("GET", val, true);
-        oReq.send();
+        document.head.appendChild(link);
+
       }
       else {
         //val is HTML code, insert the partial from the string
@@ -47,7 +72,6 @@ https://github.com/PuppetJs/imported-template
 
     /**
      * Empty xhml content.
-     * @TODO clear also siblings for `imported-template[currentnode]`
      * @requires HTMLTemplateElement#clear (https://github.com/Polymer/TemplateBinding/blob/51df59c16e0922dec041cfe604016aac00918d5d/src/TemplateBinding.js#L595)
      * @extends HTMLTemplateElement.prototype.clear
      * @return  see HTMLTemplateElement.prototype.clear
@@ -77,5 +101,8 @@ https://github.com/PuppetJs/imported-template
       prototype: XHTMLPrototype,
       extends: "template"
     });
+
+
+   
   })();
 </script>

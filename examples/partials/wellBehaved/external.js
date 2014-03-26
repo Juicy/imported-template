@@ -1,0 +1,1 @@
+console.info("/partials/wellBehaved/external.js was executed in imported document", document.currentScript.ownerDocument);

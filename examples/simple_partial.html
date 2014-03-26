@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>&lt;imported-template&gt; from simple partial</title>
+  <script src="../../platform/platform.js"></script>
+  <link rel="import" href="../../polymer/polymer.html">
+  <link rel="import" href="../imported-template.html">
+  <style>
+    body {
+      font-family: Helvetica, Arial, sans-serif;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+
+Let's greet
+<template id="test" bind>
+  <ul>
+  <template repeat="{{ users }}">
+      <li><template is="imported-template" content="{{ html }}"></template></li>
+  </template>
+  </ul>
+</template>
+
+<script>
+document.addEventListener("polymer-ready", function(){
+  var model = {
+    users: [{
+      username: "World",
+      html: "./partials/simple.html"
+    },
+    {
+      username: "tomalec",
+      html: "./partials/simple.html"
+    }]
+  };
+  document.getElementById('test').model = model;
+});
+</script>
+
+</body>
+</html>
