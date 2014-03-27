@@ -8,6 +8,7 @@
       font-family: Helvetica, Arial, sans-serif;
       color: #333;
     }
+    .warn{ color: indianred; }
   </style>
 </head>
 <body>
@@ -19,22 +20,39 @@
 <p>
   <code>&lt;imported-template&gt;</code> is a custom element that lets you load HTML partials into your Web Components. See <a href="https://github.com/puppetjs/imported-template">README.md</a> for more information
 </p>
-
 <h2>Examples</h2>
 
 <h3><code>&lt;imported-template&gt;</code> features</h3>
 <ul>
   <li><a href="simple_partial.html">&lt;imported-template&gt; with simple partial</a></li>
   <li><a href="wellBehaved_partial.html">&lt;imported-template&gt; from well behaved partial</a></li>
-  <li><a href="iframe_partial.html">&lt;imported-template&gt; from ill-behaved partial (<code>&lt;iframe&gt;</code></a></li>
+  <li><a href="iframe_partial.html">&lt;imported-template&gt; from ill-behaved partial (<code>&lt;iframe&gt;</code>)</a></li>
 </ul>
 <h3><code>&lt;x-html&gt;</code> features</h3>
 <ul>
   <li><a href="template_inline.html">&lt;imported-template&gt; in a &lt;template&gt; with HTML partial from a string</a></li>
-  <li><a href="template_partial.html">&lt;imported-template&gt; in a &lt;template&gt; with HTML partial loaded from a file</a></li>
-  <li><a href="template_partial_sibling.html">&lt;imported-template&gt; in a &lt;template&gt;  with HTML partial loaded directly to DOM tree (not wrapeed by &lt;imported-template&gt; node)</a></li>
+  <li><a href="template_partial.html">&lt;imported-template&gt; in a &lt;template&gt; with HTML partial loaded from a file</a> <strong class="warn">Misbehaved partial - does not contain <code>&lt;template&gt;</code>, but does contain <code>&lt;script&gt;</code></strong></li>
+  <li><a href="template_partial_sibling.html">&lt;imported-template&gt; in a &lt;template&gt;  with HTML partial loaded directly to DOM tree (not wrapped by &lt;imported-template&gt; node)</a> <strong class="warn">Misbehaved partial - does not contain <code>&lt;template&gt;</code>, but does contain <code>&lt;script&gt;</code></strong></li>
   <li><a href="polymer_partial.html">&lt;imported-template&gt; in a Polymer element</a></li>
 </ul>
+
+<h2>Well behaved partial rules</h2>
+<h3>Composite well-behaved partial</h3>
+  <ul>
+    <li>Contains <code>&lt;template&gt;</code> to be replicated</li>
+    <li>May contain <code>&lt;script&gt;</code>, <code>&lt;style&gt;</code>, <code>&lt;link&gt;</code> element that are going to be loaded and executed once, on first import</li>
+  </ul>
+  <h3>Simplified partial</h3>
+  <ul>
+    <li>Does not contain any <code>&lt;tempalte&gt;</code></li>
+    <li>Does not contain any other <code>&lt;script&gt;</code>, <code>&lt;style&gt;</code>, <code>&lt;link&gt;</code></li>
+  </ul>
+  In this case everything will be moved to a new <code>&lt;template&gt;</code>.
+
+<h2>Misbehaved partials</h2>
+<p>In this case use iframe (<code>&lt;template is="imported-tempalte" iframe&gt;</code>)</p>
+<iframe width="560" height="315" src="//www.youtube.com/embed/7QfgqYlCvxk" frameborder="0" allowfullscreen></iframe>
+<p>Otherwise it may blow up, as entire content will be loaded once as a HTML Import, and then replicated (re-executed) to original <code>document</code> every time.</p>
 
 </body>
 </html>
