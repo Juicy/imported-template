@@ -26,13 +26,14 @@ Let's greet
 
 <script>
 document.addEventListener("polymer-ready", function(){
-  var model = {
+  // global for easier debugging and fiddling
+  model = {
     users: [{
-      username: "World",
+      name: "World",
       html: "./partials/simple.html"
     },
     {
-      username: "tomalec",
+      name: "tomalec",
       html: "./partials/simple.html"
     }]
   };

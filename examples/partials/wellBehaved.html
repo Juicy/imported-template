@@ -6,9 +6,14 @@
 	<li>
 		<strong>{{name}}</strong>: <polymer-ui-ratings value="3"></polymer-ui-ratings>
 		<p>This comes from <em>well behaved</em> composite partial, that contains plain HTML, <code>&lt;script&gt;</code>s, HTML Imports and one <code>&lt;template&gt;</code> to clone. </p>
+		<button>Switch partial to simple one</button>
 		<script>
 			console.info("template stamped, ", document.currentScript, "inline script was executed, but still in context of", this);
-			console.log("and it can at least somehow refer to its parentNode", document.currentScript.parentNode, "(in modern browsers)");
+			console.log("it can at least somehow refer to its parentNode", document.currentScript.parentNode, "(in modern browsers)");
+			console.log("and (in a bit hacky way) refer to the model attached", document.currentScript.templateInstance.model, "(in modern browsers)");
+			document.currentScript.parentNode.querySelector('button').addEventListener("click",function(){
+				this.templateInstance.model.html = "./partials/simple.html"
+			})
 		</script>
 	</li>
 </template>
