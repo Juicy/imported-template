@@ -1,7 +1,7 @@
 &lt;imported-template&gt;
 ==============
 
-`<imported-template>` is a custom element that let's you load HTML partials into your Web Components, and take full control over loaded `<script>`s and `<link rel=\"import\">`s.
+`<imported-template>` is a custom element that let's you load HTML partials into your Web Components, and take full control over loaded `<script>`s and `<link rel="import">`s.
 
 If you have this:
 
@@ -51,6 +51,7 @@ besides other `<template>` attributes given by [TemplateBinding](http://www.poly
 Attribute    | Options       | Default          | Description
 ---          | ---           | ---              | ---
 `content`    | *string*		 | `""`				| Safe HTML code, or path to partial to be loaded.
+`iframe`     | *boolean*	 | `false`			| Indicate misbehaved partial to be loaded in `<iframe>`.
 
 
 ### Dependencies
@@ -58,6 +59,11 @@ Attribute    | Options       | Default          | Description
 TBD
 
 ### Changelog
+
+#### v0.0.2
+
+- Load partials using HTML Imports
+- `iframe` attribute to indicate misbehaved partial to be loaded in `<iframe>`.
 
 #### v0.0.1
 

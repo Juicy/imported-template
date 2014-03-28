@@ -11,67 +11,46 @@ https://github.com/PuppetJs/imported-template
 
     XHTMLPrototype.loadTemplate_ = function() {
       var val = this.getAttribute('content');
+      debugger;
       var asIframe = this.getAttribute("iframe") || this.getAttribute("iframe")==="";
-      var xhtml = this;
       if (val && (val.indexOf('/') === 0 || val.indexOf('./') === 0)) {
         if( asIframe ){
-           this.loadIframe(val);
-           return;
+          return this._importIframe(val);
+        } else {
+          return this._importHTMLImport(val);
         }
-        // TODO: clean it, rearange it (tomalec)
-
-        //val is a URL, load the partial from the HTTP server/cache
-        var link = document.createElement('link');
-        link.rel = "import";
-        link.href = val;
-        link.onload =  function processImportedDocument(){
-          // TODO: clear previous template (tomalec)
-          var template = this.import.querySelector("template");
-          // simple template
-          if(!template){
-            template = this.import.createElement("template");
-            template.setAttribute("bind","");
-            // move entire content to tempalte
-            // TODO: check if moving by text is faster, 
-            //      as we assume it is simple template => we can use it as static HTML (tomalec)
-            while( this.import.body.firstChild ){
-              template.content.appendChild(this.import.body.firstChild);
-            }
-            this.import.body.appendChild(template);
-
-          }
-
-          // var clone = document.importNode(template.content, true);
-          var clone = document.importNode(template, true);
-          if(window.PolymerExpressions) {
-            clone.bindingDelegate = new PolymerExpressions; //use PolymerExpressions if available. This allows <template if="{{val == 1}}">, etc
-          }
-          clone.model = xhtml.model;
-          xhtml.parentNode.insertBefore(clone, xhtml.nextSibling);
-
-        };
-        document.head.appendChild(link);
-
       }
       else {
         if( asIframe ){
-          this.loadIframe(undefined, encodeURI(val)
-            );
+          return this._importIframe(undefined, encodeURI(val) );
         } else {
           //val is HTML code, insert the partial from the string
-          this.reattachTemplate_(val);
+          return this._importInline(val);
         }
       }
     };
-    XHTMLPrototype.loadIframe = function(src, srcdoc){
-      var iframe = document.createElement('iframe');
+    /**
+     * Import given file, or source as iframe.
+     * @public only for debugging.
+     * @param  {String} src    file path
+     * @param  {String} srcdoc HTML source code
+     * @return {imported-template}        self
+     */
+    XHTMLPrototype._importIframe = function(src, srcdoc){
+      this.clear();
+      var iframe = this.subTemplate = document.createElement('iframe');
       iframe.src = src;
       srcdoc && (iframe.srcdoc = srcdoc);
       this.parentNode.insertBefore(iframe, this.nextSibling);
-      // TODO: keep a reference to be able to remove/update it later (tomalec)
+      return this;
     };
-
-    XHTMLPrototype.reattachTemplate_ = function(html) {
+    /**
+     * Import inline html as template
+     * @public only for debugging.
+     * @param  {String} html html source code
+     * @return {imported-template}      self
+     */
+    XHTMLPrototype._importInline = function(html) {
       if( this.subTemplate ){
         // IDEA: or maybe just this.subTempalte.clear()? - to leave lightDOM template untouched (tomalec)
         this.clear();
@@ -80,13 +59,60 @@ https://github.com/PuppetJs/imported-template
       }
       this.subTemplate.setAttribute("bind","");
       this.subTemplate.innerHTML = html;
-      this.parentNode.insertBefore(this.subTemplate, this.nextSibling);
-      // TODO: do we need this? (tomalec)
+      return this._insertTemplate();
+    };
+    /**
+     * Import partial via HTML Import, and replicate its `<template>`.
+     * @IDEA: return promise (if supported) for document load (tomalec)
+     * @public only for debugging.
+     * @param  {String} href partial URL
+     * @return {imported-template}      self
+     */
+    XHTMLPrototype._importHTMLImport = function(href){
+      //href is a URL, load the partial from the HTTP server/cache
+      var link = document.createElement('link');
+      link.rel = "import";
+      link.href = href;
+      var xhtml = this;
+      link.onload =  function processImportedDocument(){
+        xhtml.clear();
+        // TODO: clear previous template (tomalec)
+        var template = this.import.querySelector("template");
+        // simple template: wrap content into template (make it well behaved)
+        if(!template){
+          template = this.import.createElement("template");
+          template.setAttribute("bind","");
+          // move entire content to tempalte
+          // TODO: check if moving by text is faster, 
+          //      as we assume it is simple template => we can use it as static HTML (tomalec)
+          while( this.import.body.firstChild ){
+            template.content.appendChild(this.import.body.firstChild);
+          }
+          this.import.body.appendChild(template);
+
+        }
+        // var xhtml.subTemplate = document.importNode(template.content, true);
+        xhtml.subTemplate = document.importNode(template, true);
+        xhtml._insertTemplate();
+
+      };
+      document.head.appendChild(link);
+      return this;
+    };
+
+    /**
+     * Insert template into DOM.
+     * @public only for debugging.
+     * @param  {String} href partial URL
+     * @return {imported-template}      self
+     */
+    XHTMLPrototype._insertTemplate = function(){
       if(window.PolymerExpressions) {
         this.subTemplate.bindingDelegate = new PolymerExpressions; //use PolymerExpressions if available. This allows <template if="{{val == 1}}">, etc
       }
+      this.parentNode.insertBefore(this.subTemplate, this.nextSibling);
       this.subTemplate.model = this.model;
-
+      return this;
     };
 
     /**
@@ -96,7 +122,12 @@ https://github.com/PuppetJs/imported-template
      * @return  see HTMLTemplateElement.prototype.clear
      */
     XHTMLPrototype.clear = function(){
-      return this.subTemplate.clear() && HTMLTemplateElement.prototype.clear.call(this);
+      // return false;
+      return this.subTemplate
+            && ( !this.subTemplate.clear || this.subTemplate.clear() || true)
+            && this.subTemplate.parentNode.removeChild(this.subTemplate);
+      // IDEA: clear also content? (tomalec)        
+      //      && HTMLTemplateElement.prototype.clear.call(this);
     }
 
 
@@ -106,7 +137,8 @@ https://github.com/PuppetJs/imported-template
 
       var observer = new MutationObserver(function (mutations) {
         mutations.forEach(function (mutation) {
-          if (mutation.type === "attributes" && mutation.attributeName === "content") {
+          if (mutation.type === "attributes" && 
+                (mutation.attributeName === "content" || mutation.attributeName === "iframe") ) {
             that.loadTemplate_();
           }
         });
