@@ -39,8 +39,10 @@ Usage examples can be found in [examples](http://puppetjs.github.io/imported-tem
 
 ### Features
 
- - Sends request for template only once (HTML Import's caching)
-TBD
+ - Sends request for template only once (HTML Import's caching),
+ - Supports `<script>, <link>, <style>` tags to be executed once,
+ - Supports `<script>, <style>` tags per template instance,
+ - Multiple (concatenated) templates per partial.
 
 ### Usage
 
@@ -57,7 +59,7 @@ Attribute    | Options       | Default          | Description
 
 ### Dependencies
 
-TBD
+`<imported-template>` is dependent on [Polymer](http://www.polymer-project.org/) as a polyfill for Web Components APIs. It also relies on [TemplateBinding](http://www.polymer-project.org/docs/polymer/template.html)
 
 ### Changelog
 
