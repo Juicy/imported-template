@@ -76,20 +76,25 @@ https://github.com/PuppetJs/imported-template
       link.onload =  function processImportedDocument(){
         xhtml.clear();
         // TODO: clear previous template (tomalec)
-        var template = this.import.querySelector("template");
-        // simple template: wrap content into template (make it well behaved)
-        if(!template){
-          template = this.import.createElement("template");
+        var templates = this.import.querySelectorAll("template");
+        var template;
+        // debugger
+        // many teamplates (merged partial), wrap them with one.
+        if( templates.length > 1 ){
+          var template = this.import.createElement("template");
           template.setAttribute("bind","");
           // move entire content to tempalte
           // TODO: check if moving by text is faster, 
-          //      as we assume it is simple template => we can use it as static HTML (tomalec)
-          while( this.import.body.firstChild ){
-            template.content.appendChild(this.import.body.firstChild);
+          //      as we assume those are templates => document fragments (tomalec)
+          for( var nodeNo=0; nodeNo < templates.length; nodeNo++){
+            template.content.appendChild(templates[nodeNo]);
           }
           this.import.body.appendChild(template);
 
+        } else {
+          template = templates[0];
         }
+        // TODO: rewrite binding attributes here (tomalec)
         // var xhtml.subTemplate = document.importNode(template.content, true);
         xhtml.subTemplate = document.importNode(template, true);
         xhtml._insertTemplate();
@@ -110,6 +115,7 @@ https://github.com/PuppetJs/imported-template
         this.subTemplate.bindingDelegate = new PolymerExpressions; //use PolymerExpressions if available. This allows <template if="{{val == 1}}">, etc
       }
       this.parentNode.insertBefore(this.subTemplate, this.nextSibling);
+      debugger
       this.subTemplate.model = this.model;
       return this;
     };
