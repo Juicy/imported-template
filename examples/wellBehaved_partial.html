@@ -18,7 +18,7 @@ Let's rate features
 <template id="test" bind>
   <ul>
   <template repeat="{{ features }}">
-      <template is="imported-template" content="{{ html }}"></template>
+      <li><template is="imported-template" content="{{ html }}"></template></li>
   </template>
   </ul>
 </template>
@@ -28,11 +28,11 @@ document.addEventListener("polymer-ready", function(){
   // global for easier debugging and fiddling
   model = {
     features: [{
-      name: "simple partials",
+      name: "imported-template",
       html: "./partials/wellBehaved.html"
     },
     {
-      name: "well behaved composite partials",
+      name: "x-html",
       html: "./partials/wellBehaved.html"
     }]
   };

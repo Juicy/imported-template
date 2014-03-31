@@ -24,7 +24,6 @@
 
 <h3><code>&lt;imported-template&gt;</code> features</h3>
 <ul>
-  <li><a href="simple_partial.html">&lt;imported-template&gt; with simple partial</a></li>
   <li><a href="wellBehaved_partial.html">&lt;imported-template&gt; from well behaved partial</a></li>
   <li><a href="iframe_partial.html">&lt;imported-template&gt; from ill-behaved partial (<code>&lt;iframe&gt;</code>)</a></li>
 </ul>
@@ -37,17 +36,11 @@
 </ul>
 
 <h2>Well behaved partial rules</h2>
-<h3>Composite well-behaved partial</h3>
+<!-- <h3>Composite well-behaved partial</h3> -->
   <ul>
-    <li>Contains <code>&lt;template&gt;</code> to be replicated</li>
+    <li>Contains at least one <code>&lt;template&gt;</code> to be replicated</li>
     <li>May contain <code>&lt;script&gt;</code>, <code>&lt;style&gt;</code>, <code>&lt;link&gt;</code> element that are going to be loaded and executed once, on first import</li>
   </ul>
-  <h3>Simplified partial</h3>
-  <ul>
-    <li>Does not contain any <code>&lt;tempalte&gt;</code></li>
-    <li>Does not contain any other <code>&lt;script&gt;</code>, <code>&lt;style&gt;</code>, <code>&lt;link&gt;</code></li>
-  </ul>
-  In this case everything will be moved to a new <code>&lt;template&gt;</code>.
 
 <h2>Misbehaved partials</h2>
 <p>In this case use iframe (<code>&lt;template is="imported-tempalte" iframe&gt;</code>)</p>

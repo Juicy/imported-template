@@ -19,7 +19,9 @@ Let's import
 <template id="test" bind>
   <ul>
   <template repeat="{{ partials }}">
-      <li>{{desc}}<template is="imported-template" content="{{ html }}" iframe?="{{iframe}}"></template></li>
+      <li>
+        <h5>{{desc}}</h5>
+        <template is="imported-template" content="{{ html }}" iframe?="{{iframe}}"></template></li>
   </template>
   </ul>
 </template>
@@ -29,12 +31,14 @@ document.addEventListener("polymer-ready", function(){
   // global for easier debugging and fiddling
   model = {
     partials: [{
-      desc: "Nice and simple partial",
-      html: "./partials/simple.html"
+      desc: "Nice and well behaved partial",
+      name: "Well behaved",
+      html: "./partials/wellBehaved.html"
     },
     {
-      desc: "Ugly ill behaved partial, loaded as <iframe>",
-      html: "./simple_partial.html",
+      desc: "Ugly misbehaved partial, loaded as <iframe>",
+      name: "Misbehaved",
+      html: "./wellBehaved_partial.html",
       iframe: true
     }]
   };

@@ -1,17 +1,13 @@
-<script src="wellBehaved/external.js"></script>
-<link rel="import"
-      href="../../../polymer-ui-ratings/polymer-ui-ratings.html">
-
 <template bind>
-	<strong>{{name}}</strong>: <polymer-ui-ratings value="3"></polymer-ui-ratings>
-	<p>This comes from <em>well behaved</em> composite partial, that contains plain HTML, <code>&lt;script&gt;</code>s, HTML Imports and one <code>&lt;template&gt;</code> to clone. </p>
-	<button>Switch partial to second one</button>
+	<em>{{name}}</em>: 
+	<p>This comes from <code>&lt;partials/wellBehaved2.html&gt;</code> to clone. </p>
+	<button>Switch partial to first one</button>
 	<script>
 		console.info("template stamped, ", document.currentScript, "inline script was executed, but still in context of", this);
 		console.log("it can at least somehow refer to its parentNode", document.currentScript.parentNode, "(in modern browsers)");
 		console.log("and (in a bit hacky way) refer to the model attached", document.currentScript.templateInstance.model, "(in modern browsers)");
 		document.currentScript.parentNode.querySelector('button').addEventListener("click",function(){
-			this.templateInstance.model.html = "./partials/wellBehaved2.html"
+			this.templateInstance.model.html = "./partials/wellBehaved.html"
 		})
 	</script>
 </template>

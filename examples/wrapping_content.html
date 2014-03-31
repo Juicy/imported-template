@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>&lt;imported-template&gt; from simple partial</title>
+  <title>&lt;imported-template&gt; with wrapping content</title>
   <script src="../../platform/platform.js"></script>
   <link rel="import" href="../../polymer/polymer.html">
   <link rel="import" href="../imported-template.html">
@@ -19,7 +19,7 @@ Let's greet
 <template id="test" bind>
   <ul>
   <template repeat="{{ users }}">
-      <li><template is="imported-template" content="{{ html }}"></template></li>
+      <template is="imported-template" content="{{ html }}"><li><content></content></li></template>
   </template>
   </ul>
 </template>

@@ -115,7 +115,7 @@ https://github.com/PuppetJs/imported-template
         this.subTemplate.bindingDelegate = new PolymerExpressions; //use PolymerExpressions if available. This allows <template if="{{val == 1}}">, etc
       }
       this.parentNode.insertBefore(this.subTemplate, this.nextSibling);
-      debugger
+      // debugger
       this.subTemplate.model = this.model;
       return this;
     };
