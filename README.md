@@ -15,13 +15,15 @@ var model = {
 ```
 **/path/to/file.html**:
 ```html
-<h1>Hello {{username}}</h1>
+<template bind="{{ appdata }}">
+	<h1>Hello {{username}}</h1>
+</template>
 ```
 
 You can put it on screen with this:
 
 ```html
-<template is="imported-template" bind="{{ appdata }}" content="{{ html }}"></template>
+<template is="imported-template" content="{{ html }}"></template>
 ```
 
 To produce that:
@@ -42,18 +44,18 @@ Usage examples can be found in [examples](http://puppetjs.github.io/imported-tem
  - Sends request for template only once (HTML Import's caching),
  - Supports `<script>, <link>, <style>` tags to be executed once,
  - Supports `<script>, <style>` tags per template instance,
- - Multiple (concatenated) templates per partial.
+ - Multiple (concatenated) templates per partial. 
 
 ### Usage
 
 TBD
 
 ## Options/Attributes
-besides other `<template>` attributes given by [TemplateBinding](http://www.polymer-project.org/docs/polymer/template.html)
+We [plan](https://github.com/PuppetJs/imported-template/issues/1) to support other `<template>` attributes given by [TemplateBinding](http://www.polymer-project.org/docs/polymer/template.html)
 
 Attribute    | Options       | Default          | Description
 ---          | ---           | ---              | ---
-`content`    | *string*		 | `""`				| Safe HTML code, or path to partial to be loaded.
+`content`    | *string*		 | `""`				| Safe HTML code, or path (starts with `/` or `./`) to partial to be loaded.
 `iframe`     | *boolean*	 | `false`			| Indicate misbehaved partial to be loaded in `<iframe>`.
 
 

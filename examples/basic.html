@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>&lt;imported-template&gt; basic partial</title>
+  <script src="../../platform/platform.js"></script>
+  <link rel="import" href="../../polymer/polymer.html">
+  <link rel="import" href="../imported-template.html">
+  <style>
+    body {
+      font-family: Helvetica, Arial, sans-serif;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+<template is="imported-template" content="{{ html }}"></template>
+
+<script>
+document.addEventListener("polymer-ready", function(){
+  // global for easier debugging and fiddling
+  model = {
+    appdata: {
+      username: "World"
+    },
+    html: "./partials/basic.html"
+  };
+  document.querySelector('template').model = model;
+});
+</script>
+
+</body>
+</html>

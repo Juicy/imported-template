@@ -8,6 +8,7 @@
     "polymer-ui-elements": "Polymer/polymer-ui-elements#~0.2"
   },
   "keywords": [
+    "polymer",
     "web-components"
   ],
   "homepage": "https://github.com/PuppetJs/imported-template",
