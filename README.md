@@ -32,7 +32,7 @@ To produce that:
 <h1>Hello World</h1>
 ```
 
-Usage examples can be found in [examples](http://puppetjs.github.io/imported-template/examples/index.html).
+Usage examples can be found in [examples](http://Juicy.github.io/imported-template/examples/index.html).
 
 ### Rationale
 
@@ -51,7 +51,7 @@ Usage examples can be found in [examples](http://puppetjs.github.io/imported-tem
 TBD
 
 ## Options/Attributes
-We [plan](https://github.com/PuppetJs/imported-template/issues/1) to support other `<template>` attributes given by [TemplateBinding](http://www.polymer-project.org/docs/polymer/template.html)
+We [plan](https://github.com/Juicy/imported-template/issues/1) to support other `<template>` attributes given by [TemplateBinding](http://www.polymer-project.org/docs/polymer/template.html)
 
 Attribute    | Options       | Default          | Description
 ---          | ---           | ---              | ---
@@ -67,7 +67,7 @@ Attribute    | Options       | Default          | Description
 
 #### v0.0.1
 
- - Started its own repo: [PuppetJs/imported-template](https://github.com/PuppetJs/imported-template)
+ - Started its own repo: [Juicy/imported-template](https://github.com/Juicy/imported-template)
    Forked from [PuppetJs/x-html](https://github.com/PuppetJs/x-html) ([@9be11a8e](https://github.com/PuppetJs/x-html/tree/9be11a8e67c17dc436c517047f394f9680836f64))
  - Load partials using HTML Imports,
  - `iframe` attribute to indicate misbehaved partial to be loaded in `<iframe>`,

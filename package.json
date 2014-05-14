@@ -2,13 +2,13 @@
   "name": "imported-template",
   "version": "0.0.1",
   "description": "`<imported-template>` is a custom element that let's you load HTML partials into your Web Components, and take full control over loaded `<script>`s and `<link rel=\"import\">`s.",
-  "homepage": "https://github.com/PuppetJs/imported-template",
+  "homepage": "https://github.com/Juicy/imported-template",
   "repository": {
     "type": "git",
-    "url": "git://github.com/PuppetJs/imported-template.git"
+    "url": "git://github.com/Juicy/imported-template.git"
   },
   "bugs": {
-    "url": "https://github.com/PuppetJs/imported-template/issues"
+    "url": "https://github.com/Juicy/imported-template/issues"
   },
   "author": {
     "name": "Joachim Wester",
