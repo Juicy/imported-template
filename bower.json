@@ -2,10 +2,14 @@
   "name": "imported-template",
   "version": "0.0.1",
   "dependencies": {
-    "polymer": "Polymer/polymer#~0.2"
+    "polymer": "Polymer/polymer#~0.3"
   },
   "devDependencies": {
-    "polymer-ui-elements": "Polymer/polymer-ui-elements#~0.2"
+    "polymer-ui-ratings": "Polymer/polymer-ui-ratings",
+    "polymer-ui-base-css": "Polymer/polymer-ui-base-css",
+    "polymer-ui-menu": "Polymer/polymer-ui-menu",
+    "polymer-ui-menu-item": "Polymer/polymer-ui-menu-item",
+    "polymer-ui-icon": "Polymer/polymer-ui-icon"
   },
   "keywords": [
     "polymer",
