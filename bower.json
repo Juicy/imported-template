@@ -5,11 +5,10 @@
     "polymer": "Polymer/polymer#~0.3"
   },
   "devDependencies": {
-    "polymer-ui-ratings": "Polymer/polymer-ui-ratings",
-    "polymer-ui-base-css": "Polymer/polymer-ui-base-css",
-    "polymer-ui-menu": "Polymer/polymer-ui-menu",
-    "polymer-ui-menu-item": "Polymer/polymer-ui-menu-item",
-    "polymer-ui-icon": "Polymer/polymer-ui-icon"
+    "github-button": "zenorocha/github-button",
+    "core-menu": "Polymer/core-menu",
+    "core-item": "Polymer/core-item",
+    "core-icon": "Polymer/core-icon"
   },
   "keywords": [
     "polymer",

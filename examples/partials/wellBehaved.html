@@ -1,9 +1,9 @@
 <script src="wellBehaved/external.js"></script>
 <link rel="import"
-      href="../../../polymer-ui-ratings/polymer-ui-ratings.html">
+      href="../../../github-button/src/github-button.html">
 
 <template bind>
-	<strong>{{name}}</strong>: <polymer-ui-ratings value="3"></polymer-ui-ratings>
+	<strong>{{name}}</strong>: <github-button height="20" user="juicy" repo="{{name}}"></github-button>
 	<p>This comes from <em>well behaved</em> composite partial, that contains plain HTML, <code>&lt;script&gt;</code>s, HTML Imports and one <code>&lt;template&gt;</code> to clone. </p>
 	<button>Switch partial to second one</button>
 	<script>
