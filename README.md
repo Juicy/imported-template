@@ -36,7 +36,7 @@ Usage examples can be found in [examples](http://Juicy.github.io/imported-templa
 
 ### Rationale
 
-`imported-template` evolved out of [x-html](https://github.com/PuppetJs/x-html) due to need for better control of `<scripts>` and HTML Imports execution. See ongoing discussion [here](https://github.com/PuppetJs/x-html/issues/8)
+`imported-template` evolved out of [x-html](https://github.com/PuppetJs/x-html) (now [`juicy-html`](https://github.com/Juicy/juicy-html) ) due to need for better control of `<scripts>` and HTML Imports execution. See ongoing discussion [here](https://github.com/Juicy/juicy-html/issues/8)
 
 
 ### Features
