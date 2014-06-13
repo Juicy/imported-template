@@ -65,9 +65,14 @@ Attribute    | Options       | Default          | Description
 
 ### Changelog
 
+#### v0.0.2
+ - Demos updated
+ - Repo renamed to: [Juicy/imported-template](https://github.com/Juicy/imported-template)
+ - Polymer updated
+
 #### v0.0.1
 
- - Started its own repo: [Juicy/imported-template](https://github.com/Juicy/imported-template)
+ - Started its own repo: [PuppetJs/imported-template](https://github.com/PuppetJs/imported-template)
    Forked from [PuppetJs/x-html](https://github.com/PuppetJs/x-html) ([@9be11a8e](https://github.com/PuppetJs/x-html/tree/9be11a8e67c17dc436c517047f394f9680836f64))
  - Load partials using HTML Imports,
  - `iframe` attribute to indicate misbehaved partial to be loaded in `<iframe>`,
