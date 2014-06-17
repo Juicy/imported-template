@@ -29,6 +29,8 @@
     "bower_components",
     "../",
     "test",
-    "tests"
+    "tests",
+    "examples",
+    "preview.png"
   ]
 }
