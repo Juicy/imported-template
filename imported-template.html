@@ -100,7 +100,10 @@ https://github.com/Juicy/imported-template
         xhtml._insertTemplate();
 
       };
-      document.head.appendChild(link);
+      // guessed workaround for Polyjuice/Launcher#82, Polymer/polymer#554
+      setTimeout( function appendAsync(){
+          document.head.appendChild(link);
+      });
       return this;
     };
 
