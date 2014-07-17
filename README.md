@@ -65,6 +65,9 @@ Attribute    | Options       | Default          | Description
 
 ### Changelog
 
+#### v0.0.3
+ - Workaround for Chrome bug http://crbug.com/389566, Polymer/polymer#554, Polyjuice/Launcher#82
+
 #### v0.0.2
  - Demos updated
  - Repo renamed to: [Juicy/imported-template](https://github.com/Juicy/imported-template)
