@@ -91,8 +91,12 @@ https://github.com/Juicy/imported-template
           }
           this.import.body.appendChild(template);
 
-        } else {
+        } else if(templates.length == 1) {
           template = templates[0];
+        } else { //there is no template in the response. 
+          // it could be a stack trace, or HTML document with imports, etc. which could be hard to handle
+          console.error("DON'T misbehave! At least one <template> tag is expected in content body", this.import.body.innerHTML);
+          return;
         }
         // TODO: rewrite binding attributes here (tomalec)
         // var xhtml.subTemplate = document.importNode(template.content, true);
