@@ -14,19 +14,11 @@
   </style>
 </head>
 <body>
-<template is="imported-template" content="{{ html }}"></template>
+<code>&lt;template is="imported-template" content="./partials/basic.html"&gt;&lt;/template&gt;</code>:
+<template is="imported-template" content="./partials/basic.html"></template>
 
 <script>
-document.addEventListener("polymer-ready", function(){
-  // global for easier debugging and fiddling
-  model = {
-    appdata: {
-      username: "World"
-    },
-    html: "./partials/basic.html"
-  };
-  document.querySelector('template').model = model;
-});
+  document.querySelector('template').model = {};
 </script>
 
 </body>
