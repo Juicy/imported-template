@@ -65,7 +65,7 @@ Or [download as ZIP](https://github.com/Juicy/imported-template/archive/gh-pages
 1. Import Web Components' polyfill:
 
     ```html
-    <script src="//cdn.jsdelivr.net/polymer.platform/0.4.2/platform.js"></script>
+    <script src="bower_components/webcomponentsjs/webcomponents.js">
     ```
 
 2. Import Custom Element:
