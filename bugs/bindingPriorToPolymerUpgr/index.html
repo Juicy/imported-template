@@ -1,0 +1,26 @@
+<!doctype html>
+<head>
+    <title>Polymer binding issue</title>
+    <meta charset="utf-8">
+    <!-- Import Polymer platform -->
+    <script src="../../../webcomponentsjs/webcomponents.js"></script>
+    <link rel="import" href="../../../polymer/polymer.html">
+
+    <link rel="import" href="../../imported-template.html">
+</head>
+
+<body>
+  <template id="root" bind>
+    <template is="imported-template" content="./templates/start.html"></template>
+  </template>
+
+  <script type="text/javascript">
+    document.getElementById("root").model = {
+      "namespace": {
+        "list": [{
+          "key": "Works"
+          }]
+      }
+    };
+  </script>
+</body>
