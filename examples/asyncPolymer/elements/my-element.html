@@ -5,7 +5,7 @@
         attributes="header data">
     <template>
         <link rel="stylesheet" href="my-element.css"/>
-        <h1>{{header}} / {{data}} / {{data[0].key}}</h1>
+        <h1>{{header}} {{data[0].key}}</h1>
     </template>
     <script>
         Polymer('my-element', {

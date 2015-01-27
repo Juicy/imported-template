@@ -74,6 +74,10 @@ https://github.com/Juicy/imported-template
       link.href = href;
       var xhtml = this;
       link.onload =  function processImportedDocument(){
+
+      // TODO: consider once https://github.com/Polymer/polymer/issues/1127 
+      //        and http://crbug.com/389566 will be resolved (tomalec)
+      // Polymer.import([href], function processImportedDocument(){
         xhtml.clear();
         // TODO: clear previous template (tomalec)
         var templates = this.import.querySelectorAll("template");
@@ -104,7 +108,7 @@ https://github.com/Juicy/imported-template
         xhtml._insertTemplate();
 
       };
-      // guessed workaround for Polyjuice/Launcher#82, Polymer/polymer#554
+      // guessed workaround for Polyjuice/Launcher#82, Polymer/polymer#554, http://crbug.com/389566
       setTimeout( function appendAsync(){
           document.head.appendChild(link);
       });
@@ -118,12 +122,15 @@ https://github.com/Juicy/imported-template
      * @return {imported-template}      self
      */
     XHTMLPrototype._insertTemplate = function(){
+      var that = this;
       if(window.PolymerExpressions) {
         this.subTemplate.bindingDelegate = new PolymerExpressions; //use PolymerExpressions if available. This allows <template if="{{val == 1}}">, etc
       }
       this.parentNode.insertBefore(this.subTemplate, this.nextSibling);
-      // debugger
-      this.subTemplate.model = this.model;
+      // attach model once all Polymer Elements are ready
+      Polymer.whenReady(function(){
+        that.subTemplate.model = that.model;
+      });
       return this;
     };
 
