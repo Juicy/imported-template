@@ -45,6 +45,7 @@ Usage examples can be found in [examples](http://Juicy.github.io/imported-templa
  - Supports `<script>, <link>, <style>` tags to be executed once,
  - Supports `<script>, <style>` tags per template instance,
  - Multiple (concatenated) templates per partial. 
+ - Applies two-way databinding, even for nested asynchronously loaded `<polymer-element>`s.
 
 ## Demo/Examples
 
