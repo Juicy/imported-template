@@ -7,9 +7,9 @@ https://github.com/Juicy/imported-template
 <link rel="import" href="../polymer/polymer.html">
 <script>
   (function () {
-    var XHTMLPrototype = Object.create( (HTMLTemplateElement || HTMLElement ).prototype);
+    var ImportedTemplatePrototype = Object.create( (HTMLTemplateElement || HTMLElement ).prototype);
 
-    XHTMLPrototype.loadTemplate_ = function() {
+    ImportedTemplatePrototype.loadTemplate_ = function() {
       var val = this.getAttribute('content');
       var asIframe = this.getAttribute("iframe") || this.getAttribute("iframe")==="";
       if (val && (val.indexOf('/') === 0 || val.indexOf('./') === 0)) {
@@ -35,7 +35,7 @@ https://github.com/Juicy/imported-template
      * @param  {String} srcdoc HTML source code
      * @return {imported-template}        self
      */
-    XHTMLPrototype._importIframe = function(src, srcdoc){
+    ImportedTemplatePrototype._importIframe = function(src, srcdoc){
       this.clear();
       var iframe = this.subTemplate = document.createElement('iframe');
       iframe.src = src;
@@ -49,7 +49,7 @@ https://github.com/Juicy/imported-template
      * @param  {String} html html source code
      * @return {imported-template}      self
      */
-    XHTMLPrototype._importInline = function(html) {
+    ImportedTemplatePrototype._importInline = function(html) {
       if( this.subTemplate ){
         // IDEA: or maybe just this.subTempalte.clear()? - to leave lightDOM template untouched (tomalec)
         this.clear();
@@ -67,7 +67,7 @@ https://github.com/Juicy/imported-template
      * @param  {String} href partial URL
      * @return {imported-template}      self
      */
-    XHTMLPrototype._importHTMLImport = function(href){
+    ImportedTemplatePrototype._importHTMLImport = function(href){
       //href is a URL, load the partial from the HTTP server/cache
       var link = document.createElement('link');
       link.rel = "import";
@@ -136,7 +136,7 @@ https://github.com/Juicy/imported-template
      * @param  {String} href partial URL
      * @return {imported-template}      self
      */
-    XHTMLPrototype._insertTemplate = function(){
+    ImportedTemplatePrototype._insertTemplate = function(){
       var that = this;
       var subTemplate = this.subTemplate;
       subTemplate.setAttribute("bind", this.getAttribute("bind") || "");
@@ -146,6 +146,7 @@ https://github.com/Juicy/imported-template
       if(window.PolymerExpressions) {
         subTemplate.bindingDelegate = new PolymerExpressions(); //use PolymerExpressions if available. This allows <template if="{{val == 1}}">, etc
       }
+      // insert after
       this.parentNode.insertBefore(subTemplate, this.nextSibling);
       // attach model once all Polymer Elements are ready
       Polymer.whenReady(function(){
@@ -155,40 +156,36 @@ https://github.com/Juicy/imported-template
     };
 
     /**
-     * Empty xhml content.
+     * Empty template content.
      * @requires HTMLTemplateElement#clear (https://github.com/Polymer/TemplateBinding/blob/51df59c16e0922dec041cfe604016aac00918d5d/src/TemplateBinding.js#L595)
      * @extends HTMLTemplateElement.prototype.clear
      * @return  see HTMLTemplateElement.prototype.clear
      */
-    XHTMLPrototype.clear = function(){
+    ImportedTemplatePrototype.clear = function(){
       // return false;
       return this.subTemplate
             && ( !this.subTemplate.clear || this.subTemplate.clear() || true)
             && this.subTemplate.parentNode.removeChild(this.subTemplate);
       // IDEA: clear also content? (tomalec)        
       //      && HTMLTemplateElement.prototype.clear.call(this);
-    }
+    };
 
-
-    XHTMLPrototype.attachedCallback = function () {
-      var that = this;
+    ImportedTemplatePrototype.isAttached =  false;
+    ImportedTemplatePrototype.attachedCallback = function () {
+      this.isAttached = true;
       this.loadTemplate_();
-
-      var observer = new MutationObserver(function (mutations) {
-        mutations.forEach(function (mutation) {
-          if (mutation.type === "attributes" && 
-                (mutation.attributeName === "content" || mutation.attributeName === "iframe") ) {
-            that.loadTemplate_();
-          }
-        });
-      });
-      observer.observe(this, {
-        attributes: true
-      });
+    };
+    ImportedTemplatePrototype.detachedCallback = function(){
+      this.isAttached = false;
+    };
+    ImportedTemplatePrototype.attributeChangedCallback = function(name, oldVal, newVal){
+      if(this.isAttached && (name === "content" || name === "iframe")) {
+        this.loadTemplate_();
+      }
     };
 
     document.registerElement('imported-template', {
-      prototype: XHTMLPrototype,
+      prototype: ImportedTemplatePrototype,
       extends: "template"
     });
 
