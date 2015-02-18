@@ -84,7 +84,11 @@ https://github.com/Juicy/imported-template
         var template;
         // debugger
         // many teamplates (merged partial), wrap them with one.
-        if( templates.length > 1 ){
+        if(templates.length === 1 && templates[0].hasAttribute("processed")) {
+          //IDEA (tomalec): consider caching references to templates url->processed instance
+          template = templates[0];
+        } else if( templates.length >= 1 ){
+          // IDEA: create it in main document, attach reference to imported-template instance, and keep imported untouched. (tomalec)
           var template = this.import.createElement("template");
           template.setAttribute("bind","");
           // move entire content to tempalte
@@ -93,10 +97,9 @@ https://github.com/Juicy/imported-template
           for( var nodeNo=0; nodeNo < templates.length; nodeNo++){
             template.content.appendChild(templates[nodeNo]);
           }
+          template.setAttribute("processed", "");
           this.import.body.appendChild(template);
 
-        } else if(templates.length == 1) {
-          template = templates[0];
         } else { //there is no template in the response. 
           // it could be a stack trace, or HTML document with imports, etc. which could be hard to handle
           console.error("DON'T misbehave! At least one <template> tag is expected in content body", this.import.body.innerHTML);
