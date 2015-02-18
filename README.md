@@ -1,10 +1,16 @@
 &lt;imported-template&gt;
 ==============
 
-`<imported-template>` is a custom element that let's you load HTML partials into your Web Components, and take full control over loaded `<script>`s and `<link rel="import">`s. Thanks to HTML Imports caching, script execution, etc. is almost native.
+`<imported-template>` is a custom element that let's you load HTML partials into your document, and take full control over loaded `<script>`s and `<link rel="import">`s. Thanks to HTML Imports - caching, script execution, etc. is completely native.
 
-If you have this:
+### Small sample
 
+If you have **/path/to/file.html**:
+```html
+<template>
+	<h1>Hello {{username}}</h1>
+</template>
+```
 ```javascript
 var model = {
   appdata: {
@@ -13,44 +19,38 @@ var model = {
   html: "/path/to/file.html"
 }
 ```
-**/path/to/file.html**:
+You can put it on screen with
 ```html
-<template bind="{{ appdata }}">
-	<h1>Hello {{username}}</h1>
-</template>
+<template is="imported-template" content="{{ html }}" bind="{{ appdata }}"></template>
 ```
-
-You can put it on screen with this:
-
-```html
-<template is="imported-template" content="{{ html }}"></template>
-```
-
-To produce that:
-
+To produce
 ```html
 <h1>Hello World</h1>
 ```
 
-Usage examples can be found in [examples](http://Juicy.github.io/imported-template/examples/index.html).
+## Demo/Examples
+
+[Check it live!](http://juicy.github.io/imported-template/examples/index.html)
+
+## Features
+
+ - Applies two-way databinding, even for nested asynchronously loaded `<polymer-element>`s,
+ - Multiple (concatenated) templates per partial, 
+ - Polymer's `<template>` features (binding, repeat, if, etc.),
+ - HTML Imports features: 
+  - Sends request for template only once (HTML Import's caching),
+  - Supports `<script>, <link>, <style>` tags to be executed once,
+  - Supports `<script>, <style>` tags per template instance.
+
+### Partial limitations
+
+ - It should be W3C compliant Document body,
+ - It should contain at least one `<template>` tag in root node.
 
 ### Rationale
 
 `imported-template` evolved out of [x-html](https://github.com/PuppetJs/x-html) (now [`juicy-html`](https://github.com/Juicy/juicy-html) ) due to need for better control of `<scripts>` and HTML Imports execution. See ongoing discussion [here](https://github.com/Juicy/juicy-html/issues/8)
 
-
-### Features
-
- - Sends request for template only once (HTML Import's caching),
- - Supports `<script>, <link>, <style>` tags to be executed once,
- - Supports `<script>, <style>` tags per template instance,
- - Multiple (concatenated) templates per partial. 
- - Applies two-way databinding, even for nested asynchronously loaded `<polymer-element>`s.
- - Polymer's `<template>` features (binding, repeat, if, etc.)
-
-## Demo/Examples
-
-[Check it live!](http://juicy.github.io/imported-template/examples/index.html)
 
 ## Install
 
