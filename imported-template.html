@@ -80,7 +80,8 @@ https://github.com/Juicy/imported-template
       // Polymer.import([href], function processImportedDocument(){
         xhtml.clear();
         // TODO: clear previous template (tomalec)
-        var templates = this.import.querySelectorAll("template");
+        // find only root templates
+        var templates = this.import.querySelectorAll("head>template,body>template,imported-template-scope>template");
         var template;
         // debugger
         // many teamplates (merged partial), wrap them with one.
@@ -96,7 +97,16 @@ https://github.com/Juicy/imported-template
           //      as we assume those are templates => document fragments (tomalec)
           for( var nodeNo=0; nodeNo < templates.length; nodeNo++){
             var singleTemplate = templates[nodeNo];
-            !singleTemplate.hasAttribute("bind") && singleTemplate.setAttribute("bind","");
+            var hasBind = singleTemplate.hasAttribute("bind");
+
+            if(singleTemplate.parentElement.tagName === "IMPORTED-TEMPLATE-SCOPE"){
+              if(hasBind){
+                console.warn("Your template ", singleTemplate, " already has `bind` attribute, it will be replaced");
+              }
+              singleTemplate.setAttribute("bind", singleTemplate.parentElement.getAttribute("scope"));
+            } else if ( !hasBind ){
+              singleTemplate.setAttribute("bind","");
+            }
             template.content.appendChild(singleTemplate);
           }
           template.setAttribute("processed", "");
