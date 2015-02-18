@@ -95,7 +95,9 @@ https://github.com/Juicy/imported-template
           // TODO: check if moving by text is faster, 
           //      as we assume those are templates => document fragments (tomalec)
           for( var nodeNo=0; nodeNo < templates.length; nodeNo++){
-            template.content.appendChild(templates[nodeNo]);
+            var singleTemplate = templates[nodeNo];
+            !singleTemplate.hasAttribute("bind") && singleTemplate.setAttribute("bind","");
+            template.content.appendChild(singleTemplate);
           }
           template.setAttribute("processed", "");
           this.import.body.appendChild(template);
@@ -126,10 +128,15 @@ https://github.com/Juicy/imported-template
      */
     XHTMLPrototype._insertTemplate = function(){
       var that = this;
+      var subTemplate = this.subTemplate;
+      subTemplate.setAttribute("bind", this.getAttribute("bind") || "");
+      subTemplate.setAttribute("repeat", this.getAttribute("repeat") );
+      subTemplate.setAttribute("if", this.getAttribute("if") );
+
       if(window.PolymerExpressions) {
-        this.subTemplate.bindingDelegate = new PolymerExpressions; //use PolymerExpressions if available. This allows <template if="{{val == 1}}">, etc
+        subTemplate.bindingDelegate = new PolymerExpressions(); //use PolymerExpressions if available. This allows <template if="{{val == 1}}">, etc
       }
-      this.parentNode.insertBefore(this.subTemplate, this.nextSibling);
+      this.parentNode.insertBefore(subTemplate, this.nextSibling);
       // attach model once all Polymer Elements are ready
       Polymer.whenReady(function(){
         that.subTemplate.model = that.model;
