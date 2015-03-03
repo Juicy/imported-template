@@ -140,8 +140,13 @@ https://github.com/Juicy/imported-template
       var that = this;
       var subTemplate = this.subTemplate;
       subTemplate.setAttribute("bind", this.getAttribute("bind") || "");
-      subTemplate.setAttribute("repeat", this.getAttribute("repeat") );
-      subTemplate.setAttribute("if", this.getAttribute("if") );
+      
+      if(this.hasAttribute("repeat")) {
+        subTemplate.setAttribute("repeat", this.getAttribute("repeat") );
+	    }
+	    if(this.hasAttribute("if")) {
+        subTemplate.setAttribute("if", this.getAttribute("if") );
+	    }
 
       if(window.PolymerExpressions) {
         subTemplate.bindingDelegate = new PolymerExpressions(); //use PolymerExpressions if available. This allows <template if="{{val == 1}}">, etc
