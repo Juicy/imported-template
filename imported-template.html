@@ -11,6 +11,9 @@ https://github.com/Juicy/imported-template
 
     ImportedTemplatePrototype.loadTemplate_ = function() {
       var val = this.getAttribute('content');
+      if(val === null){
+        return val;
+      }
       var asIframe = this.getAttribute("iframe") || this.getAttribute("iframe")==="";
       if (val && (val.indexOf('/') === 0 || val.indexOf('./') === 0)) {
         if( asIframe ){
@@ -155,7 +158,7 @@ https://github.com/Juicy/imported-template
       this.parentNode.insertBefore(subTemplate, this.nextSibling);
       // attach model once all Polymer Elements are ready
       Polymer.whenReady(function(){
-        that.subTemplate.model = that.model;
+        that.subTemplate.model = that.model || that.templateInstance && that.templateInstance.model;
       });
       return this;
     };
