@@ -35,7 +35,6 @@
   <li><a href="wellBehaved_partial.html">&lt;imported-template&gt; from well behaved partial</a></li>
   <li><a href="concatenated_partial.html">&lt;imported-template&gt; from concatenated/merged partial</a></li>
   <li><a href="asyncPolymer/">&lt;imported-template&gt; from partial that contains asynchronously created Polymer Element (with external style sheets)</a></li>
-  <li><a href="iframe_partial.html">&lt;imported-template&gt; from ill-behaved partial (<code>&lt;iframe&gt;</code>)</a></li>
 </ul>
 <h3><code>&lt;juicy-html&gt;</code> features</h3>
 <ul>
@@ -54,7 +53,7 @@
   </ul>
 
 <h2>Misbehaved partials</h2>
-<p>In this case use iframe (<code>&lt;template is="imported-tempalte" iframe&gt;</code>)</p>
+<p>If you partial missbehaves, and you would like to isolate it's content more consider <a href="https://github.com/Juicy/juicy-iframe">iframe (<code>&lt;template is="juicy-iframe"&gt;</code>)</p></a>.
 <iframe width="560" height="315" src="//www.youtube.com/embed/7QfgqYlCvxk?rel=0" frameborder="0" allowfullscreen></iframe>
 <p>Otherwise it may blow up, as entire content will be loaded once as a HTML Import, and then replicated (re-executed) to original <code>document</code> every time.</p>
 

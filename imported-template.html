@@ -14,37 +14,13 @@ https://github.com/Juicy/imported-template
       if(val === null){
         return val;
       }
-      var asIframe = this.getAttribute("iframe") || this.getAttribute("iframe")==="";
       if (val && (val.indexOf('/') === 0 || val.indexOf('./') === 0)) {
-        if( asIframe ){
-          return this._importIframe(val);
-        } else {
-          return this._importHTMLImport(val);
-        }
+        return this._importHTMLImport(val);
       }
       else {
-        if( asIframe ){
-          return this._importIframe(undefined, encodeURI(val) );
-        } else {
-          //val is HTML code, insert the partial from the string
-          return this._importInline(val);
-        }
+        //val is HTML code, insert the partial from the string
+        return this._importInline(val);
       }
-    };
-    /**
-     * Import given file, or source as iframe.
-     * @public only for debugging.
-     * @param  {String} src    file path
-     * @param  {String} srcdoc HTML source code
-     * @return {imported-template}        self
-     */
-    ImportedTemplatePrototype._importIframe = function(src, srcdoc){
-      this.clear();
-      var iframe = this.subTemplate = document.createElement('iframe');
-      iframe.src = src;
-      srcdoc && (iframe.srcdoc = srcdoc);
-      this.parentNode.insertBefore(iframe, this.nextSibling);
-      return this;
     };
     /**
      * Import inline html as template
@@ -78,7 +54,7 @@ https://github.com/Juicy/imported-template
       var xhtml = this;
       link.onload =  function processImportedDocument(){
 
-      // TODO: consider once https://github.com/Polymer/polymer/issues/1127 
+      // TODO: consider once https://github.com/Polymer/polymer/issues/1127
       //        and http://crbug.com/389566 will be resolved (tomalec)
       // Polymer.import([href], function processImportedDocument(){
         xhtml.clear();
@@ -96,7 +72,7 @@ https://github.com/Juicy/imported-template
           var template = this.import.createElement("template");
           template.setAttribute("bind","");
           // move entire content to tempalte
-          // TODO: check if moving by text is faster, 
+          // TODO: check if moving by text is faster,
           //      as we assume those are templates => document fragments (tomalec)
           for( var nodeNo=0; nodeNo < templates.length; nodeNo++){
             var singleTemplate = templates[nodeNo];
@@ -115,7 +91,7 @@ https://github.com/Juicy/imported-template
           template.setAttribute("processed", "");
           this.import.body.appendChild(template);
 
-        } else { //there is no template in the response. 
+        } else { //there is no template in the response.
           // it could be a stack trace, or HTML document with imports, etc. which could be hard to handle
           console.error("DON'T misbehave! At least one <template> tag is expected in content body", this.import.body.innerHTML);
           return;
@@ -143,7 +119,7 @@ https://github.com/Juicy/imported-template
       var that = this;
       var subTemplate = this.subTemplate;
       subTemplate.setAttribute("bind", this.getAttribute("bind") || "");
-      
+
       if(this.hasAttribute("repeat")) {
         subTemplate.setAttribute("repeat", this.getAttribute("repeat") );
 	    }
@@ -174,7 +150,7 @@ https://github.com/Juicy/imported-template
       return this.subTemplate
             && ( !this.subTemplate.clear || this.subTemplate.clear() || true)
             && this.subTemplate.parentNode.removeChild(this.subTemplate);
-      // IDEA: clear also content? (tomalec)        
+      // IDEA: clear also content? (tomalec)
       //      && HTMLTemplateElement.prototype.clear.call(this);
     };
 
@@ -187,7 +163,7 @@ https://github.com/Juicy/imported-template
       this.isAttached = false;
     };
     ImportedTemplatePrototype.attributeChangedCallback = function(name, oldVal, newVal){
-      if(this.isAttached && (name === "content" || name === "iframe")) {
+      if(this.isAttached && name === "content") {
         this.loadTemplate_();
       }
     };
@@ -198,6 +174,6 @@ https://github.com/Juicy/imported-template
     });
 
 
-   
+
   })();
 </script>

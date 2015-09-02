@@ -35,9 +35,9 @@ To produce
 ## Features
 
  - Applies two-way databinding, even for nested asynchronously loaded `<polymer-element>`s,
- - Multiple (concatenated) templates per partial, 
+ - Multiple (concatenated) templates per partial,
  - Polymer's `<template>` features (binding, repeat, if, etc.),
- - HTML Imports features: 
+ - HTML Imports features:
   - Sends request for template only once (HTML Import's caching),
   - Supports `<script>, <link>, <style>` tags to be executed once,
   - Supports `<script>, <style>` tags per template instance.
@@ -88,7 +88,6 @@ We [plan](https://github.com/Juicy/imported-template/issues/1) to support other 
 Attribute    | Options       | Default          | Description
 ---          | ---           | ---              | ---
 `content`    | *string*		 | `""`				| Safe HTML code, or path (starts with `/` or `./`) to partial to be loaded.
-`iframe`     | *boolean*	 | `false`			| Indicate misbehaved partial to be loaded in `<iframe>`.
 
 
 ### Dependencies
