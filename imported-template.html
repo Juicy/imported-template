@@ -148,6 +148,7 @@ https://github.com/Juicy/imported-template
         };
         ImportedTemplatePrototype.detachedCallback = function() {
             this.isAttached = false;
+            this.clear();
         };
         ImportedTemplatePrototype.attributeChangedCallback = function(name, oldVal, newVal) {
             if (this.isAttached) {
