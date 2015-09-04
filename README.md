@@ -2,45 +2,41 @@
 ==============
 
 `<imported-template>` is a custom element that let's you load template from external file into your document, and take full control over loaded `<script>`s and `<link rel="import">`s. Thanks to HTML Imports - caching, script execution, etc. is completely native.
+It also provides simple data-binding feature, that plays nice with Polymer or pure JavaScript + HTML data-binding.
 
 ### Small sample
 
-If you have **/path/to/file.html**:
+If you have your partial **/path/to/file.html** full of your HTML magic:
 ```html
+<link rel="import" href="awesome-component.html">
+<script src="init/some/stuff.js"></script>
 <template>
-	<h1>Hello {{username}}</h1>
+	<h1>Hello World</h1>
+	<awesome-component></awesome-component>
+	<script>doMagicPerStampedContent();</script>
 </template>
 ```
-```javascript
-var model = {
-  appdata: {
-    username: "World"
-  },
-  html: "/path/to/file.html"
-}
-```
-You can put it on screen with
+You can stamp template content in your main document with just
 ```html
-<template is="imported-template" content="{{ html }}" bind="{{ appdata }}"></template>
-```
-To produce
-```html
-<h1>Hello World</h1>
+<template is="imported-template" content="/path/to/file.html"></template>
 ```
 
 ## Demo/Examples
 
+To see more features and examples
 [Check it live!](http://juicy.github.io/imported-template/examples/index.html)
 
 ## Features
 
- - Applies two-way databinding, even for nested asynchronously loaded `<polymer-element>`s,
- - Multiple (concatenated) templates per partial,
- - Polymer's `<template>` features (binding, repeat, if, etc.),
+ - Imports external files, and stamps inline HTML markup,
+ - Supports multiple (concatenated) templates per partial,
  - HTML Imports features:
   - Sends request for template only once (HTML Import's caching),
   - Supports `<script>, <link>, <style>` tags to be executed once,
-  - Supports `<script>, <style>` tags per template instance.
+  - Supports `<script>, <style>` tags per template instance,
+ - Attaches data-binding to imported content,
+ - Works fine with Polymer auto-binding features (for > 1.0.0 also)
+
 
 ### Partial limitations
 
@@ -49,7 +45,7 @@ To produce
 
 ### Rationale
 
-`imported-template` evolved out of [x-html](https://github.com/PuppetJs/x-html) (now [`juicy-html`](https://github.com/Juicy/juicy-html) ) due to need for better control of `<scripts>` and HTML Imports execution. See ongoing discussion [here](https://github.com/Juicy/juicy-html/issues/8)
+`imported-template` evolved out of [x-html](https://github.com/PuppetJs/x-html) (now [`juicy-html`](https://github.com/Juicy/juicy-html) ) due to need for better control of `<scripts>` and HTML Imports execution. See discussion [here](https://github.com/Juicy/juicy-html/issues/8)
 
 
 ## Install
@@ -64,7 +60,7 @@ Or [download as ZIP](https://github.com/Juicy/imported-template/archive/gh-pages
 
 ## Usage
 
-1. Import Web Components' polyfill:
+1. Import Web Components' polyfill, if needed:
 
     ```html
     <script src="bower_components/webcomponentsjs/webcomponents.js">
@@ -78,21 +74,32 @@ Or [download as ZIP](https://github.com/Juicy/imported-template/archive/gh-pages
 
 3. Start using it!
 
+	To load content from file:
     ```html
     <template is="imported-template" content="./your/partial.html"></template>
     ```
+	To attach data to content:
+    ```html
+    <template is="imported-template" content="./your/partial.html" model='{"json":"data"}'></template>
+	```
 
-## Options/Attributes
-We [plan](https://github.com/Juicy/imported-template/issues/1) to support other `<template>` attributes given by [TemplateBinding](http://www.polymer-project.org/docs/polymer/template.html)
+## Attributes/Properties
 
-Attribute    | Options       | Default          | Description
----          | ---           | ---              | ---
-`content`    | *string*		 | `""`				| Safe HTML code, or path (starts with `/` or `./`) to partial to be loaded.
+Attribute | Options      | Default  | Description
+---       | ---          | ---      | ---
+`content` | *String*	 | `""`		| Safe HTML code, or path (starts with `/` or `./`) to partial to be loaded.
+`model`   | *JSON*		 | 			| (_optional_) Data model to be attached to every stamped node
 
+## Properties
+
+Property       | Type      | Description
+---            | ---       | ---
+`model`        | *JSON*	   | Attached model, plays nice with Polymer data-binding
+`stampedNodes` | *Array*   | Array of stamped nodes.
 
 ### Dependencies
 
-`<imported-template>` is dependent on [Polymer](http://www.polymer-project.org/) as a polyfill for Web Components APIs. It also relies on [TemplateBinding](http://www.polymer-project.org/docs/polymer/template.html)
+`<juicy-html>` is framework agnostic custom element, so all you need is Web Components support. However, it plays really nice with Polymer Auto-binding templates, or any other binding library, that sets HTML elements' properties and/or attributes. Check our demos and examples.
 
 ## Contributing
 

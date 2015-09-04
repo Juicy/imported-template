@@ -1,17 +1,37 @@
+<!-- external scripts, that will be eexecuted only once, when template will be imported for the first time -->
 <script src="wellBehaved/external.js"></script>
-<link rel="import"
-      href="../../../github-button/src/github-button.html">
+<!-- other HTML Imports, that will follow same rulle -->
+<link rel="import" href="../../../iron-icon/iron-icon.html">
+<link rel="import" href="../../../iron-iconset-svg/iron-iconset-svg.html">
+<!-- any HTML nodes, that will not get stamped into main document -->
+<iron-iconset-svg name="wc-icons" size="42">
+  <svg>
+    <defs>
+    <g id="html-imports">
+     <g fill="#231F20"><path d="M12.095 15.312h4.678l5.026 5.015-5.026 5.028h-5.166l4.774-5.036zM12.377 8.147v6.054h3.817v-2.302h15.781v16.89h-15.848v-2.059h-3.75v5.789h23.349v-24.372h-23.349"/></g>
+    </g>
+    </defs>
+  </svg>
+</iron-iconset-svg>
 
-<template bind>
-	<strong>{{name}}</strong>: <github-button height="20" user="juicy" repo="{{name}}"></github-button>
-	<p>This comes from <em>well behaved</em> composite partial, that contains plain HTML, <code>&lt;script&gt;</code>s, HTML Imports and one <code>&lt;template&gt;</code> to clone. </p>
-	<button>Switch partial to second one</button>
+
+<!-- template that can be stamped multiple times -->
+<template>
+	<p>
+        This comes from <em>well behaved</em> composite partial, that contains plain HTML,
+        <code>&lt;script&gt;</code>s,
+        <iron-icon icon="wc-icons:html-imports"></iron-icon> HTML Imports
+        and one <code>&lt;template&gt;</code> to clone.
+    </p>
+    <p>It may use attached data model, via:</p>
+    <h3></h3>
 	<script>
-		console.info("template stamped, ", document.currentScript, "inline script was executed, but still in context of", this);
-		console.log("it can at least somehow refer to its parentNode", document.currentScript.parentNode, "(in modern browsers)");
-		console.log("and (in a bit hacky way) refer to the model attached", document.currentScript.templateInstance.model, "(in modern browsers)");
-		document.currentScript.parentNode.querySelector('button').addEventListener("click",function(){
-			this.templateInstance.model.html = "./partials/wellBehaved2.html"
-		})
+		console.info("template stamped, ", document.currentScript, "inline script was executed, but still in context of main", document.currentScript.ownerDocument);
+		console.log("it can refer to its parentNode", document.currentScript.parentNode);
+		console.log("and simply refer to the model attached", document.currentScript.model);
+		document.currentScript.previousElementSibling.innerText = document.currentScript.model.vanilla;
 	</script>
+    <template is="dom-bind">
+        <h3>{{model.polymer}}</h3>
+    </template>
 </template>

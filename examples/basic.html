@@ -4,22 +4,27 @@
   <meta charset="utf-8">
   <title>&lt;imported-template&gt; basic partial</title>
   <script src="../../webcomponentsjs/webcomponents.js"></script>
-  <link rel="import" href="../../polymer/polymer.html">
+
   <link rel="import" href="../imported-template.html">
+
+  <link rel="stylesheet" href="http://juicy.github.io/juicy-tile-list/examples/github-markdown.css">
   <style>
     body {
       font-family: Helvetica, Arial, sans-serif;
       color: #333;
+      margin: 2em;
+    }
+    .markdown-body{
+        overflow: auto;
     }
   </style>
 </head>
-<body>
-<code>&lt;template is="imported-template" content="./partials/basic.html"&gt;&lt;/template&gt;</code>:
-<template is="imported-template" content="./partials/basic.html"></template>
+<body class="markdown-body">
+    <code>&lt;template is="imported-template" content="./partials/basic.html"&gt;&lt;/template&gt;</code>
+    <hr/>
 
-<script>
-  document.querySelector('template').model = {};
-</script>
+    <template is="imported-template" content="./partials/basic.html"></template>
+
 
 </body>
 </html>

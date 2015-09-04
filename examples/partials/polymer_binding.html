@@ -1,0 +1,8 @@
+<link rel="import" href="../../../polymer/polymer.html">
+<template>
+	<template is="dom-bind" id="test">
+        <!-- we use dom-bind-notifier to simplyfy two-way data-binding within dom-bind itself -->
+        <dom-bind-notifier ref="test" observed-object="{{model}}" path="model" deep></dom-bind-notifier>
+		This is <input value="{{model.content::input}}"/> stamped from `dom-bind` from <code>./partials/polymer_binding.html</code>.
+	</template>
+</template>

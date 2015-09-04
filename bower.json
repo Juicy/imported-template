@@ -1,26 +1,27 @@
 {
   "name": "imported-template",
   "version": "0.0.10",
-  "dependencies": {
-    "polymer": "Polymer/polymer#<0.8.0"
-  },
   "devDependencies": {
+    "dom-bind-notifier": "~1.0.0",
     "github-button": "zenorocha/github-button",
-    "core-menu": "Polymer/core-menu",
-    "core-item": "Polymer/core-item",
-    "core-icon": "Polymer/core-icon"
+    "iron-icon": "PolymerElements/iron-icon#~1.0.4",
+    "iron-iconset-svg": "PolymerElements/iron-iconset-svg#~1.0.4"
   },
   "keywords": [
-    "polymer",
-    "web-components"
+    "html",
+    "include",
+    "partial",
+    "template",
+    "web-components",
+    "polymer"
   ],
   "homepage": "https://github.com/Juicy/imported-template",
   "authors": [
+    "Tomek Wytrebowicz <tomalecpub@gmail.com>",
     "Joachim Wester <joachimwester@me.com>",
-    "Marcin Warpechowski <marcin@nextgen.pl>",
-    "Tomek Wytrebowicz <tomalecpub@gmail.com>"
+    "Marcin Warpechowski <marcin@nextgen.pl>"
   ],
-  "description": "`<imported-template>` is a custom element that let's you load HTML partials into your Web Components, and take full control over loaded `<script>`s and `<link rel=\\\"import\\\">`s.",
+  "description": "`<imported-template>` is a custom element that let's you load HTML partials into your Web Components, and take full control over loaded `<script>`s and `<link rel=\\\"import\\\">`s.Thanks to HTML Imports - caching, script execution, etc. is completely native. It also provides simple data-binding feature, that plays nice with Polymer or pure JavaScript + HTML data-binding.",
   "main": "./imported-template.html",
   "license": "MIT",
   "ignore": [

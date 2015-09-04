@@ -2,18 +2,55 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>&lt;imported-template&gt; in a Polymer element</title>
+  <title>&lt;imported-template&gt; merged partial</title>
   <script src="../../webcomponentsjs/webcomponents.js"></script>
-  <link rel="import" href="components/my-app.html">
-</head>
-<body>
-  <style>  
+
+  <link rel="import" href="../imported-template.html">
+
+  <link rel="import" href="../../polymer/polymer.html">
+  <link rel="import" href="../../dom-bind-notifier/dom-bind-notifier.html">
+  <link rel="stylesheet" href="http://juicy.github.io/juicy-tile-list/examples/github-markdown.css">
+  <style>
     body {
-      font-family: sans-serif;
-      margin: 20px;
+      font-family: Helvetica, Arial, sans-serif;
+      color: #333;
+      margin: 2em;
+    }
+    .markdown-body{
+        overflow: auto;
+    }
+    h1>code{
+        font-size: 1em;
     }
   </style>
-<my-app></my-app>
+</head>
+<body class="markdown-body">
+    <template is="dom-bind" id="root">
+        <!-- we use dom-bind-notifier to simplyfy two-way data-binding within dom-bind itself -->
+        <dom-bind-notifier ref="root" observed-object="{{model}}" path="model" deep></dom-bind-notifier>
+        <h1><code>imported-template</code> within Polymer's <code>dom-bind</code></h1>
+        <p><code>imported-template</code> plays nice with Polymer, even when used within <code>dom-bind</code>, and it stamps nested one - object is shared (given by reference) to nested instances.</p>
+        <p>So, you can access, and edit same object properties from outside: <input value="{{model.data.content::input}}"/></p>
+        <pre><code>&lt;template is="imported-template"
+        content$="{{model.path}}"
+        model="{{model.data}}"
+        &gt;&lt;/template&gt;</code></pre>
+        <hr/>
+        <template is="imported-template"
+            content$="{{model.path}}"
+            model="{{model.data}}"
+        ></template>
+        <hr/>
+
+    </template>
+    <script>
+     document.getElementById("root").model = {
+         path: "./partials/polymer_binding.html",
+         data: {
+             "content":"content"
+         }
+     }
+    </script>
 
 </body>
 </html>

@@ -1,0 +1,18 @@
+<!-- some server-side code could merge templates to improve traffic performance -->
+<imported-template-scope scope="vendorA">
+	<template>
+		This is content from the first part of <code>./partials/concatenated_scoped.html</code>, with data <em>{{data}}</em>
+		<script>
+			document.currentScript.previousElementSibling.innerText = document.currentScript.model.data;
+		</script>,
+	</template>
+</imported-template-scope>
+<imported-template-scope scope="vendorB">
+	<link rel="import" href="../../../polymer/polymer.html">
+	<template>
+		<template is="dom-bind">
+			and this is from the second part of <code>./partials/concatenated_scoped.html</code>,
+			with data <em>{{model.data}}</em>.
+		</template>
+	</template>
+</imported-template-scope>

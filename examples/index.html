@@ -23,7 +23,10 @@
   allowtransparency="true" frameborder="0" scrolling="0" width="90" height="30"></iframe></h1>
 
 <p>
-  <code>&lt;imported-template&gt;</code> is a custom element that lets you load HTML partials into your Web Components.
+  <code>&lt;imported-template&gt;</code> is a custom element that let's you load template from external file into your document,
+  and take full control over loaded <code>&lt;script&gt;</code>s and <code>&lt;link rel="import"&gt;</code>s.
+  Thanks to HTML Imports - caching, script execution, etc. is completely native.
+  It also provides simple data-binding feature, that plays nice with Polymer or pure JavaScript + HTML data-binding.
   It simply imports (according to HTML Imports) given file, and stamp template from it into current document.
   See <a href="https://github.com/Juicy/imported-template">README.md</a> for more information
 </p>
@@ -31,19 +34,15 @@
 
 <h3><code>&lt;imported-template&gt;</code> features</h3>
 <ul>
-  <li><a href="basic.html">&lt;imported-template&gt; basic - imports template from external file</a></li>
-  <li><a href="wellBehaved_partial.html">&lt;imported-template&gt; from well behaved partial</a></li>
-  <li><a href="concatenated_partial.html">&lt;imported-template&gt; from concatenated/merged partial</a></li>
-  <li><a href="asyncPolymer/">&lt;imported-template&gt; from partial that contains asynchronously created Polymer Element (with external style sheets)</a></li>
+  <li><a href="basic.html">imports simple template from external file</a></li>
+  <li><a href="wellBehaved_partial.html">imports complex HTML (scripts, HTML Imports, etc.) from external file and attaches data-binding</a></li>
+  <li><a href="concatenated_partial.html">handles concatenated/merged partial</a></li>
+  <li><a href="scoped_concat_partial.html">handles concatenated/merged partial with scoped binding</a></li>
+  <li><a href="polymer_partial.html">plays nice within Polymer's auto-binding <code>dom-bind</code></a></li>
 </ul>
-<h3><code>&lt;juicy-html&gt;</code> features</h3>
+<!-- <h3><code>&lt;juicy-html&gt;</code> features</h3>
 <ul>
-  <li><a href="template_inline.html">&lt;imported-template&gt; in a &lt;template&gt; with HTML partial from a string</a></li>
-  <li><a href="template_partial.html">&lt;imported-template&gt; in a &lt;template&gt; with HTML partial loaded from a file</a> <strong class="warn">Misbehaved partial - does not contain <code>&lt;template&gt;</code>, but does contain <code>&lt;script&gt;</code></strong></li>
-  <li><a href="template_partial_sibling.html">&lt;imported-template&gt; in a &lt;template&gt;  with HTML partial loaded directly to DOM tree (not wrapped by &lt;imported-template&gt; node)</a> <strong class="warn">Misbehaved partial - does not contain <code>&lt;template&gt;</code>, but does contain <code>&lt;script&gt;</code></strong></li>
-  <li><a href="polymer_partial.html">&lt;imported-template&gt; in a Polymer element</a></li>
-  <li><a href="asRegularTemplate.html"><code>&lt;imported-template&gt;</code> serving native <code>&lt;template&gt;</code> features and attributes</a></li>
-</ul>
+</ul> -->
 
 <h2>Well behaved partial rules</h2>
 <!-- <h3>Composite well-behaved partial</h3> -->
@@ -51,9 +50,10 @@
     <li>Contains at least one <code>&lt;template&gt;</code> to be replicated</li>
     <li>May contain <code>&lt;script&gt;</code>, <code>&lt;style&gt;</code>, <code>&lt;link&gt;</code> element that are going to be loaded and executed once, on first import</li>
   </ul>
+  In other words: use anything that valid HTML document may use, and prepare at least one <code>&lt;template&gt;</code> to be stamped.
 
 <h2>Misbehaved partials</h2>
-<p>If you partial missbehaves, and you would like to isolate it's content more consider <a href="https://github.com/Juicy/juicy-iframe">iframe (<code>&lt;template is="juicy-iframe"&gt;</code>)</p></a>.
+<p>If you partial missbehaves, and you would like to isolate its content more consider <a href="https://github.com/Juicy/juicy-iframe">iframe (<code>&lt;template is="juicy-iframe"&gt;</code>)</p></a>.
 <iframe width="560" height="315" src="//www.youtube.com/embed/7QfgqYlCvxk?rel=0" frameborder="0" allowfullscreen></iframe>
 <p>Otherwise it may blow up, as entire content will be loaded once as a HTML Import, and then replicated (re-executed) to original <code>document</code> every time.</p>
 

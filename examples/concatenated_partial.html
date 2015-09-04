@@ -4,36 +4,36 @@
   <meta charset="utf-8">
   <title>&lt;imported-template&gt; merged partial</title>
   <script src="../../webcomponentsjs/webcomponents.js"></script>
-  <link rel="import" href="../../polymer/polymer.html">
+
   <link rel="import" href="../imported-template.html">
+
+  <link rel="stylesheet" href="http://juicy.github.io/juicy-tile-list/examples/github-markdown.css">
   <style>
     body {
       font-family: Helvetica, Arial, sans-serif;
       color: #333;
+      margin: 2em;
+    }
+    .markdown-body{
+        overflow: auto;
     }
   </style>
 </head>
-<body>
-Merged partial:
-<template id="test" bind>
-  <template is="imported-template" content="{{ html }}"></template></li>
-</template>
+<body class="markdown-body">
+    <h1>Concatenated partials/templates</h1>
+    <p>To boost performance <code>imported-template</code> supports concatenated partials, and stamps all "root" templates all together.</p>
+    <pre><code>&lt;template is="imported-template"
+    content="./partials/concatenated.html"
+    model='{"path":"./partials/concatenated.html"}'
+    &gt;&lt;/template&gt;</code></pre>
+    <hr/>
+    <template is="imported-template"
+        content="./partials/concatenated.html"
+        model='{"path":"./partials/concatenated.html"}'
+    ></template>
+    <hr/>
+    <p>Please note, that if not specified otherwise, all shares same data model</p>
 
-<script>
-document.addEventListener("polymer-ready", function(){
-  // global for easier debugging and fiddling
-  model = {
-    one: {
-      name: "first"
-    },
-    two: {
-      name: "second"
-    },
-    html: "./partials/concatenated.html"
-  };
-  document.getElementById('test').model = model;
-});
-</script>
 
 </body>
 </html>

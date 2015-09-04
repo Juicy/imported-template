@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>&lt;imported-template&gt; merged, scoped partial</title>
+  <script src="../../webcomponentsjs/webcomponents.js"></script>
+
+  <link rel="import" href="../imported-template.html">
+
+  <link rel="stylesheet" href="http://juicy.github.io/juicy-tile-list/examples/github-markdown.css">
+  <style>
+    body {
+      font-family: Helvetica, Arial, sans-serif;
+      color: #333;
+      margin: 2em;
+    }
+    .markdown-body{
+        overflow: auto;
+    }
+  </style>
+</head>
+<body class="markdown-body">
+    <h1>Concatenated partials/templates with attached scopes</h1>
+    <blockquote>To boost performance <code>imported-template</code> supports <a href="concatenated_partial.html">concatenated partials</a>, and stamps all "root" templates all together.</blockquote>
+    <p>To mark isolated data scope for each partial, you may use <code>&lt;imported-template-scope&gt;</code> custom element.</p>
+    <pre><code>&lt;template is="imported-template"
+    content="./partials/concatenated_scoped.html"
+    model='{
+        "vendorA": {"data": "from scope of Vendor A"},
+        "vendorB": {"data": "from scope of Vendor B"}
+    }'
+    &gt;&lt;/template&gt;</code></pre>
+    <hr/>
+    <template is="imported-template"
+        content="./partials/concatenated_scoped.html"
+        model='{
+            "vendorA": {"data": "from scope of Vendor A"},
+            "vendorB": {"data": "from scope of Vendor B"}
+        }'
+    ></template>
+
+
+</body>
+</html>

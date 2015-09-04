@@ -6,174 +6,171 @@ https://github.com/Juicy/imported-template
 -->
 <link rel="import" href="../polymer/polymer.html">
 <script>
-  (function () {
-    var ImportedTemplatePrototype = Object.create( (HTMLTemplateElement || HTMLElement ).prototype);
+    (function() {
 
-    ImportedTemplatePrototype.loadTemplate_ = function() {
-      var val = this.getAttribute('content');
-      if(val === null){
-        return val;
-      }
-      if (val && (val.indexOf('/') === 0 || val.indexOf('./') === 0)) {
-        return this._importHTMLImport(val);
-      }
-      else {
-        //val is HTML code, insert the partial from the string
-        return this._importInline(val);
-      }
-    };
-    /**
-     * Import inline html as template
-     * @public only for debugging.
-     * @param  {String} html html source code
-     * @return {imported-template}      self
-     */
-    ImportedTemplatePrototype._importInline = function(html) {
-      if( this.subTemplate ){
-        // IDEA: or maybe just this.subTempalte.clear()? - to leave lightDOM template untouched (tomalec)
-        this.clear();
-      } else {
-        this.subTemplate = document.createElement("template");
-      }
-      this.subTemplate.setAttribute("bind","");
-      this.subTemplate.innerHTML = html;
-      return this._insertTemplate();
-    };
-    /**
-     * Import partial via HTML Import, and replicate its `<template>`.
-     * @IDEA: return promise (if supported) for document load (tomalec)
-     * @public only for debugging.
-     * @param  {String} href partial URL
-     * @return {imported-template}      self
-     */
-    ImportedTemplatePrototype._importHTMLImport = function(href){
-      //href is a URL, load the partial from the HTTP server/cache
-      var link = document.createElement('link');
-      link.rel = "import";
-      link.href = href;
-      var xhtml = this;
-      link.onload =  function processImportedDocument(){
+        var ImportedTemplatePrototype = Object.create((HTMLTemplateElement || HTMLElement).prototype);
 
-      // TODO: consider once https://github.com/Polymer/polymer/issues/1127
-      //        and http://crbug.com/389566 will be resolved (tomalec)
-      // Polymer.import([href], function processImportedDocument(){
-        xhtml.clear();
-        // TODO: clear previous template (tomalec)
-        // find only root templates
-        var templates = this.import.querySelectorAll("head>template,body>template,imported-template-scope>template");
-        var template;
-        // debugger
-        // many teamplates (merged partial), wrap them with one.
-        if(templates.length === 1 && templates[0].hasAttribute("processed")) {
-          //IDEA (tomalec): consider caching references to templates url->processed instance
-          template = templates[0];
-        } else if( templates.length >= 1 ){
-          // IDEA: create it in main document, attach reference to imported-template instance, and keep imported untouched. (tomalec)
-          var template = this.import.createElement("template");
-          template.setAttribute("bind","");
-          // move entire content to tempalte
-          // TODO: check if moving by text is faster,
-          //      as we assume those are templates => document fragments (tomalec)
-          for( var nodeNo=0; nodeNo < templates.length; nodeNo++){
-            var singleTemplate = templates[nodeNo];
-            var hasBind = singleTemplate.hasAttribute("bind");
-
-            if(singleTemplate.parentElement.tagName === "IMPORTED-TEMPLATE-SCOPE"){
-              if(hasBind){
-                console.warn("Your template ", singleTemplate, " already has `bind` attribute, it will be replaced");
-              }
-              singleTemplate.setAttribute("bind", singleTemplate.parentElement.getAttribute("scope"));
-            } else if ( !hasBind ){
-              singleTemplate.setAttribute("bind","");
+        ImportedTemplatePrototype.scopedNodes = null;
+        ImportedTemplatePrototype.loadTemplate_ = function() {
+            var val = this.getAttribute('content');
+            if (val === null) {
+                return val;
             }
-            template.content.appendChild(singleTemplate);
-          }
-          template.setAttribute("processed", "");
-          this.import.body.appendChild(template);
+            if (val && (val.indexOf('/') === 0 || val.indexOf('./') === 0)) {
+                return this._importHTMLImport(val);
+            } else {
+                //val is HTML code, insert the partial from the string
+                this.reattachTemplate_(val);
+            }
+        };
 
-        } else { //there is no template in the response.
-          // it could be a stack trace, or HTML document with imports, etc. which could be hard to handle
-          console.error("DON'T misbehave! At least one <template> tag is expected in content body", this.import.body.innerHTML);
-          return;
+        /**
+         * Import partial via HTML Import, and replicate its `<template>`.
+         * @IDEA: return promise (if supported) for document load (tomalec)
+         * @public only for debugging.
+         * @param  {String} href partial URL
+         * @return {imported-template}      self
+         */
+        ImportedTemplatePrototype._importHTMLImport = function(href) {
+            //href is a URL, load the partial from the HTTP server/cache
+            var link = document.createElement('link');
+            link.rel = "import";
+            link.href = href;
+            var xhtml = this;
+            link.onload = function processImportedDocument() {
+                // TODO(tomalec): caching
+                // find only root templates
+                var templates = this.import.querySelectorAll("head>template,body>template,imported-template-scope>template");
+                var fragment, template;
+                var singleTemplate, singleFragment, nodes;
+
+                xhtml.scopedNodes = [];
+                xhtml.scopelessNodes = [];
+                xhtml.clear();
+
+                // debugger
+                if (templates.length >= 1) {
+                    fragment = document.createDocumentFragment();
+                    // clone templates contents, and mark correct scopes
+                    // TODO: check if moving by text is faster,
+                    //      as we assume those are templates => document fragments (tomalec)
+                    // IDEA(tomalec): skip all that magic if we do not have any imported-template-scopes
+                    for (var nodeNo = 0; nodeNo < templates.length; nodeNo++) {
+                        singleTemplate = templates[nodeNo];
+                        //d debugger // or innerHTML in this case
+                        singleFragment = document.importNode(singleTemplate.content, true);
+                        // convert dynamic NodeList to regullar array
+                        nodes = Array.prototype.slice.call(singleFragment.childNodes);
+                        if (singleTemplate.parentElement.tagName === "IMPORTED-TEMPLATE-SCOPE") {
+                            nodes.scope = singleTemplate.parentElement.getAttribute("scope");
+                            xhtml.scopedNodes.push(nodes);
+                        } else {
+                            xhtml.scopelessNodes = xhtml.scopelessNodes.concat(nodes);
+                        }
+                        fragment.appendChild( singleFragment );
+
+                    }
+
+                } else { //there is no template in the response.
+                    // it could be a stack trace, or HTML document with imports, etc. which could be hard to handle
+                    console.error("DON'T misbehave! At least one <template> tag is expected in content body", this.import.body.innerHTML);
+                    return;
+                }
+
+
+                // convert dynamic NodeList to regullar array
+                xhtml.stampedNodes = Array.prototype.slice.call(fragment.childNodes);
+                // attach models
+                xhtml.attributeChangedCallback("model", undefined, xhtml.model || xhtml.getAttribute("model"));
+                xhtml.parentNode.insertBefore(fragment, xhtml.nextSibling);
+
+            };
+            // guessed workaround for Polyjuice/Launcher#82, Polymer/polymer#554, http://crbug.com/389566
+            // TODO(tomalec): check if it's still required
+            setTimeout(function appendAsync() {
+                document.head.appendChild(link);
+            });
+            return this;
+        };
+
+        ImportedTemplatePrototype.attachModel = function(model){
+            this.model = model;
+            var childNo,
+                scopedNodes = this.scopedNodes,
+                len = scopedNodes.length;
+
+            for (childNo = 0; childNo < len; childNo++) {
+                attachModels(scopedNodes[childNo], model[scopedNodes[childNo].scope]);
+            }
+            attachModels(this.scopelessNodes, model);
         }
-        // TODO: rewrite binding attributes here (tomalec)
-        // var xhtml.subTemplate = document.importNode(template.content, true);
-        xhtml.subTemplate = document.importNode(template, true);
-        xhtml._insertTemplate();
 
-      };
-      // guessed workaround for Polyjuice/Launcher#82, Polymer/polymer#554, http://crbug.com/389566
-      setTimeout( function appendAsync(){
-          document.head.appendChild(link);
-      });
-      return this;
-    };
+        // Here goes juicy-html stuff
+        // FIXME: DRY it
+        function attachModels(arrayOfElements, model) {
+            if (model === null) {
+                return;
+            }
+            for (var childNo = 0; childNo < arrayOfElements.length; childNo++) {
+                arrayOfElements[childNo].model = model;
+            }
+        }
+        ImportedTemplatePrototype.model = null;
+        ImportedTemplatePrototype.stampedNodes = null;
 
-    /**
-     * Insert template into DOM.
-     * @public only for debugging.
-     * @param  {String} href partial URL
-     * @return {imported-template}      self
-     */
-    ImportedTemplatePrototype._insertTemplate = function(){
-      var that = this;
-      var subTemplate = this.subTemplate;
-      subTemplate.setAttribute("bind", this.getAttribute("bind") || "");
+        ImportedTemplatePrototype.reattachTemplate_ = function(html) {
+            this.clear();
+            // fragmentFromString(strHTML) from http://stackoverflow.com/a/25214113/868184
+            var fragment = document.createRange().createContextualFragment(html);
+            // convert dynamic NodeList to regullar array
+            this.stampedNodes = Array.prototype.slice.call(fragment.childNodes);
+            // attach models
+            this.attributeChangedCallback("model", undefined, this.model || this.getAttribute("model"));
+            this.parentNode.insertBefore(fragment, this.nextSibling);
 
-      if(this.hasAttribute("repeat")) {
-        subTemplate.setAttribute("repeat", this.getAttribute("repeat") );
-	    }
-	    if(this.hasAttribute("if")) {
-        subTemplate.setAttribute("if", this.getAttribute("if") );
-	    }
+        };
+        /**
+         * Remove stamped content.
+         */
+        ImportedTemplatePrototype.clear = function() {
+            var parent = this.parentNode;
+            var childNo = this.stampedNodes && this.stampedNodes.length || 0;
+            while (childNo--) {
+                // this.stampedNodes[childNo].remove();
+                parent.removeChild(this.stampedNodes[childNo]);
+            }
+        };
 
-      if(window.PolymerExpressions) {
-        subTemplate.bindingDelegate = new PolymerExpressions(); //use PolymerExpressions if available. This allows <template if="{{val == 1}}">, etc
-      }
-      // insert after
-      this.parentNode.insertBefore(subTemplate, this.nextSibling);
-      // attach model once all Polymer Elements are ready
-      Polymer.whenReady(function(){
-        that.subTemplate.model = that.model || that.templateInstance && that.templateInstance.model;
-      });
-      return this;
-    };
+        ImportedTemplatePrototype.isAttached = false;
+        ImportedTemplatePrototype.attachedCallback = function() {
+            this.isAttached = true;
+            this.loadTemplate_();
+        };
+        ImportedTemplatePrototype.detachedCallback = function() {
+            this.isAttached = false;
+        };
+        ImportedTemplatePrototype.attributeChangedCallback = function(name, oldVal, newVal) {
+            if (this.isAttached) {
+                switch (name) {
+                    case "model":
+                        if (typeof newVal === "string") {
+                            newVal = newVal ? JSON.parse(newVal) : null;
+                        }
+                        this.attachModel(newVal);
+                        break;
+                    case "content":
+                        this.loadTemplate_();
+                        break;
+                }
+            }
+        };
 
-    /**
-     * Empty template content.
-     * @requires HTMLTemplateElement#clear (https://github.com/Polymer/TemplateBinding/blob/51df59c16e0922dec041cfe604016aac00918d5d/src/TemplateBinding.js#L595)
-     * @extends HTMLTemplateElement.prototype.clear
-     * @return  see HTMLTemplateElement.prototype.clear
-     */
-    ImportedTemplatePrototype.clear = function(){
-      // return false;
-      return this.subTemplate
-            && ( !this.subTemplate.clear || this.subTemplate.clear() || true)
-            && this.subTemplate.parentNode.removeChild(this.subTemplate);
-      // IDEA: clear also content? (tomalec)
-      //      && HTMLTemplateElement.prototype.clear.call(this);
-    };
-
-    ImportedTemplatePrototype.isAttached =  false;
-    ImportedTemplatePrototype.attachedCallback = function () {
-      this.isAttached = true;
-      this.loadTemplate_();
-    };
-    ImportedTemplatePrototype.detachedCallback = function(){
-      this.isAttached = false;
-    };
-    ImportedTemplatePrototype.attributeChangedCallback = function(name, oldVal, newVal){
-      if(this.isAttached && name === "content") {
-        this.loadTemplate_();
-      }
-    };
-
-    document.registerElement('imported-template', {
-      prototype: ImportedTemplatePrototype,
-      extends: "template"
-    });
+        document.registerElement('imported-template', {
+            prototype: ImportedTemplatePrototype,
+            extends: "template"
+        });
 
 
 
-  })();
+    })();
 </script>

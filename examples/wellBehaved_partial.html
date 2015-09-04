@@ -2,43 +2,38 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>&lt;imported-template&gt; from well behaved partial</title>
+  <title>&lt;imported-template&gt; with simple data binding</title>
   <script src="../../webcomponentsjs/webcomponents.js"></script>
-  <link rel="import" href="../../polymer/polymer.html">
+
   <link rel="import" href="../imported-template.html">
+
+  <link rel="stylesheet" href="http://juicy.github.io/juicy-tile-list/examples/github-markdown.css">
   <style>
     body {
       font-family: Helvetica, Arial, sans-serif;
       color: #333;
+      margin: 2em;
+    }
+    .markdown-body{
+        overflow: auto;
     }
   </style>
 </head>
-<body>
-Choose your favorite feature
-<template id="test" bind>
-  <ul>
-  <template repeat="{{ features }}">
-      <li><template is="imported-template" content="{{ html }}"></template></li>
-  </template>
-  </ul>
-</template>
-
-<script>
-document.addEventListener("polymer-ready", function(){
-  // global for easier debugging and fiddling
-  model = {
-    features: [{
-      name: "imported-template",
-      html: "./partials/wellBehaved.html"
-    },
-    {
-      name: "juicy-html",
-      html: "./partials/wellBehaved.html"
-    }]
-  };
-  document.getElementById('test').model = model;
-});
-</script>
+<body class="markdown-body">
+    <h1>Imported template with simple data binding</h1>
+    <pre><code>&lt;template is="imported-template"
+    content="./partials/wellBehaved.html"
+    model='{"name":"imported-template"}'
+&gt;&lt;/template&gt;</code></pre>
+    <hr/>
+    <template is="imported-template"
+        content="./partials/wellBehaved.html"
+        model='{
+            "polymer": "Polymer `dom-bind`",
+            "vanilla": "Native JS+HTML",
+            "data":"data model"
+        }'
+        ></template>
 
 </body>
 </html>

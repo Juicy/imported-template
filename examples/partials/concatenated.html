@@ -1,7 +1,13 @@
 <!-- some server-side code could merge templates to improve traffic performance -->
-<template bind="{{one}}">
-	This is content from {{name}} template,
+<template>
+	This is content from the first part of <code>{{path}}</code>
+	<script>
+		document.currentScript.previousElementSibling.innerText = document.currentScript.model.path;
+	</script>,
 </template>
-<template bind="{{two}}">
-	and this is from {{name}} template.
+<link rel="import" href="../../../polymer/polymer.html">
+<template>
+	<template is="dom-bind">
+		and this is from the second part of <code>{{model.path}}</code>.
+	</template>
 </template>
