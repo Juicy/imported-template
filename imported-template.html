@@ -4,11 +4,11 @@ imported-template.html v0.0.10
 MIT license
 https://github.com/Juicy/imported-template
 -->
-<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../juicy-html/juicy-html.html">
 <script>
     (function() {
 
-        var ImportedTemplatePrototype = Object.create((HTMLTemplateElement || HTMLElement).prototype);
+        var ImportedTemplatePrototype = Object.create(JuicyHTMLElement.prototype);
 
         ImportedTemplatePrototype.scopedNodes = null;
         ImportedTemplatePrototype.loadTemplate_ = function() {
@@ -93,78 +93,18 @@ https://github.com/Juicy/imported-template
             return this;
         };
 
+        var attachModels = JuicyHTMLElement.prototype.attachModel;
         ImportedTemplatePrototype.attachModel = function(model){
-            this.model = model;
             var childNo,
                 scopedNodes = this.scopedNodes,
-                len = scopedNodes.length;
+                len = scopedNodes && scopedNodes.length || 0;
 
             for (childNo = 0; childNo < len; childNo++) {
-                attachModels(scopedNodes[childNo], model[scopedNodes[childNo].scope]);
+                attachModels(model[scopedNodes[childNo].scope], scopedNodes[childNo]);
             }
-            attachModels(this.scopelessNodes, model);
+            attachModels(model, this.scopelessNodes);
         }
 
-        // Here goes juicy-html stuff
-        // FIXME: DRY it
-        function attachModels(arrayOfElements, model) {
-            if (model === null) {
-                return;
-            }
-            for (var childNo = 0; childNo < arrayOfElements.length; childNo++) {
-                arrayOfElements[childNo].model = model;
-            }
-        }
-        ImportedTemplatePrototype.model = null;
-        ImportedTemplatePrototype.stampedNodes = null;
-
-        ImportedTemplatePrototype.reattachTemplate_ = function(html) {
-            this.clear();
-            // fragmentFromString(strHTML) from http://stackoverflow.com/a/25214113/868184
-            var fragment = document.createRange().createContextualFragment(html);
-            // convert dynamic NodeList to regullar array
-            this.stampedNodes = Array.prototype.slice.call(fragment.childNodes);
-            // attach models
-            this.attributeChangedCallback("model", undefined, this.model || this.getAttribute("model"));
-            this.parentNode.insertBefore(fragment, this.nextSibling);
-
-        };
-        /**
-         * Remove stamped content.
-         */
-        ImportedTemplatePrototype.clear = function() {
-            var parent = this.parentNode;
-            var childNo = this.stampedNodes && this.stampedNodes.length || 0;
-            while (childNo--) {
-                // this.stampedNodes[childNo].remove();
-                parent.removeChild(this.stampedNodes[childNo]);
-            }
-        };
-
-        ImportedTemplatePrototype.isAttached = false;
-        ImportedTemplatePrototype.attachedCallback = function() {
-            this.isAttached = true;
-            this.loadTemplate_();
-        };
-        ImportedTemplatePrototype.detachedCallback = function() {
-            this.isAttached = false;
-            this.clear();
-        };
-        ImportedTemplatePrototype.attributeChangedCallback = function(name, oldVal, newVal) {
-            if (this.isAttached) {
-                switch (name) {
-                    case "model":
-                        if (typeof newVal === "string") {
-                            newVal = newVal ? JSON.parse(newVal) : null;
-                        }
-                        this.attachModel(newVal);
-                        break;
-                    case "content":
-                        this.loadTemplate_();
-                        break;
-                }
-            }
-        };
 
         document.registerElement('imported-template', {
             prototype: ImportedTemplatePrototype,
