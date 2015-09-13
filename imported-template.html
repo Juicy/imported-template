@@ -63,6 +63,8 @@ https://github.com/Juicy/imported-template
                         nodes = Array.prototype.slice.call(singleFragment.childNodes);
                         if (singleTemplate.parentElement.tagName === "IMPORTED-TEMPLATE-SCOPE") {
                             nodes.scope = singleTemplate.parentElement.getAttribute("scope");
+                            // workaround for migration from Polymer 0.5 to Polymer 1.1.0
+                              nodes.scope = nodes.scope.replace(/{{|}}/g,"");
                             xhtml.scopedNodes.push(nodes);
                         } else {
                             xhtml.scopelessNodes = xhtml.scopelessNodes.concat(nodes);
