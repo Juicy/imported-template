@@ -16,7 +16,7 @@ https://github.com/Juicy/imported-template
             if (val === null) {
                 return val;
             }
-            if (val && (val.indexOf('/') === 0 || val.indexOf('./') === 0)) {
+            if (val && (val.indexOf('/') === 0 || val.indexOf('./') === 0 || val.indexOf('../') === 0)) {
                 return this._importHTMLImport(val);
             } else {
                 //val is HTML code, insert the partial from the string

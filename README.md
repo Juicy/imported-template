@@ -87,7 +87,7 @@ Or [download as ZIP](https://github.com/Juicy/imported-template/archive/gh-pages
 
 Attribute | Options      | Default  | Description
 ---       | ---          | ---      | ---
-`content` | *String*	 | `""`		| Safe HTML code, or path (starts with `/` or `./`) to partial to be loaded.
+`content` | *String*	 | `""`		| Safe HTML code, or path (starts with `/`, `./`, or `../`) to partial to be loaded.
 `model`   | *JSON*		 | 			| (_optional_) Data model to be attached to every stamped node
 
 ## Properties
