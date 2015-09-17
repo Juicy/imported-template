@@ -20,6 +20,22 @@ module.exports = function(grunt) {
                 ],
                 // tasks: ['jshint'],
             },
+        },
+        bump: {
+          options: {
+            files: ['package.json', 'bower.json', 'imported-template.html'],
+            commit: true,
+            commitMessage: '%VERSION%',
+            commitFiles: ['package.json', 'bower.json', 'imported-template.html'],
+            createTag: true,
+            tagName: '%VERSION%',
+            tagMessage: 'Version %VERSION%',
+            push: false,
+            // pushTo: 'origin',
+            globalReplace: false,
+            prereleaseName: false,
+            regExp: false
+          }
         }
     });
 
