@@ -3,7 +3,6 @@
   "version": "0.0.10",
   "devDependencies": {
     "dom-bind-notifier": "~1.0.0",
-    "github-button": "zenorocha/github-button",
     "iron-icon": "PolymerElements/iron-icon#~1.0.4",
     "iron-iconset-svg": "PolymerElements/iron-iconset-svg#~1.0.4"
   },
@@ -35,6 +34,6 @@
     "preview.png"
   ],
   "dependencies": {
-    "juicy-html": "1.0.x"
+    "juicy-html": ">=1.0.0"
   }
 }
