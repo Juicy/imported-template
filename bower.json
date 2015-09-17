@@ -1,6 +1,6 @@
 {
   "name": "imported-template",
-  "version": "0.0.10",
+  "version": "1.0.0",
   "devDependencies": {
     "dom-bind-notifier": "~1.0.0",
     "iron-icon": "PolymerElements/iron-icon#~1.0.4",
