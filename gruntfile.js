@@ -7,6 +7,7 @@
 module.exports = function(grunt) {
     // grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-watch');
+    grunt.loadNpmTasks('grunt-bump');
 
     grunt.initConfig({
         watch: {
@@ -38,5 +39,6 @@ module.exports = function(grunt) {
           }
         }
     });
+
 
 };
