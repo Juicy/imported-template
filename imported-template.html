@@ -105,6 +105,10 @@ https://github.com/Juicy/imported-template
                 attachModels(model[scopedNodes[childNo].scope], scopedNodes[childNo]);
             }
             attachModels(model, this.scopelessNodes);
+            // inline HTML
+            if(!this.scopedNodes && !this.scopelessNodes){
+                attachModels(model, this.stampedNodes);
+            }
         }
 
 
