@@ -25,6 +25,29 @@ https://github.com/Juicy/imported-template
         };
 
         /**
+         * Clone all <script> tags to force script execution in IE and Firefox.
+         */
+        ImportedTemplatePrototype._cloneScriptNodes = function (node) {
+            var scripts = node.querySelectorAll("script");
+
+            for (var i = 0; i < scripts.length; i++) {
+                var oldScript = scripts[i];
+                var newScript = document.createElement("script");
+
+                newScript.text = oldScript.text;
+
+                for (var i = 0; i < oldScript.attributes.length; i++) {
+                    var attr = oldScript.attributes[i];
+
+                    newScript.setAttribute(attr.name, oldScript.getAttribute(attr.name));
+                }
+
+                node.insertBefore(newScript, oldScript);
+                node.removeChild(oldScript);
+            }
+        };
+
+        /**
          * Import partial via HTML Import, and replicate its `<template>`.
          * @IDEA: return promise (if supported) for document load (tomalec)
          * @public only for debugging.
@@ -84,6 +107,7 @@ https://github.com/Juicy/imported-template
                 xhtml.stampedNodes = Array.prototype.slice.call(fragment.childNodes);
                 // attach models
                 xhtml.attributeChangedCallback("model", undefined, xhtml.model || xhtml.getAttribute("model"));
+                ImportedTemplatePrototype._cloneScriptNodes(fragment);
                 xhtml.parentNode.insertBefore(fragment, xhtml.nextSibling);
 
             };
