@@ -36,8 +36,8 @@ https://github.com/Juicy/imported-template
 
                 newScript.text = oldScript.text;
 
-                for (var i = 0; i < oldScript.attributes.length; i++) {
-                    var attr = oldScript.attributes[i];
+                for (var j = 0; j < oldScript.attributes.length; j++) {
+                    var attr = oldScript.attributes[j];
 
                     newScript.setAttribute(attr.name, oldScript.getAttribute(attr.name));
                 }
