@@ -26,6 +26,9 @@ https://github.com/Juicy/imported-template
 
         /**
          * Clone all <script> tags to force script execution in IE and Firefox.
+         * TODO(tomalec) imported tempalte was created in place of juicy-html
+         * to use HTML Imports native flow instead of implementing it by ourselves
+         * so we should get rid of such hack as soon as possible
          */
         ImportedTemplatePrototype._cloneScriptNodes = function (node) {
             var scripts = node.querySelectorAll("script");
@@ -107,6 +110,7 @@ https://github.com/Juicy/imported-template
                 xhtml.stampedNodes = Array.prototype.slice.call(fragment.childNodes);
                 // attach models
                 xhtml.attributeChangedCallback("model", undefined, xhtml.model || xhtml.getAttribute("model"));
+                // Apply workaround for HTML Imports shim
                 ImportedTemplatePrototype._cloneScriptNodes(fragment);
                 xhtml.parentNode.insertBefore(fragment, xhtml.nextSibling);
 

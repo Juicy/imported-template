@@ -1,0 +1,86 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+
+    <script src="../../../webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../../../web-component-tester/browser.js"></script>
+
+    <!-- Step 1: import the element to test -->
+    <link rel="import" href="../../imported-template.html">
+</head>
+
+<body>
+
+    <!-- You can use the document as a place to set up your fixtures. -->
+    <test-fixture id="imported-template-fixture">
+        <template>
+            <div><!-- nest to workaround test-fixture bug -->
+                <template is="imported-template" content="./per-template_scripts.imports/partial_with_script.html">
+                </template>
+            </div>
+        </template>
+    </test-fixture>
+    <test-fixture id="twice-imported-template-fixture">
+        <template>
+            <div><!-- nest to workaround test-fixture bug -->
+                <template is="imported-template" content="./per-template_scripts.imports/partial_with_script.html">
+                </template>
+                <template is="imported-template" content="./per-template_scripts.imports/partial_with_script.html">
+                </template>
+            </div>
+        </template>
+    </test-fixture>
+
+    <script>
+        describe('<imported-template>', function() {
+            var myEl;
+            context('when loads partial with script', function() {
+                before(function() {
+                    window.importedTemplateScriptBump = 0;
+                    myEl = fixture('imported-template-fixture');
+                });
+                it('should execute when stamped', function(done){
+                    setTimeout(function waitForStamp(){
+                        expect(window.importedTemplateScriptBump).to.equal(1);
+                        done();
+                    }, 500);
+                });
+            });
+            context('when stamps same partial with script twice', function() {
+                before(function() {
+                    window.importedTemplateScriptBump = 0;
+                    myEl = fixture('twice-imported-template-fixture');
+                });
+                it('should execute script twice', function(done){
+                    setTimeout(function waitForStamp(){
+                        expect(window.importedTemplateScriptBump).to.equal(2);
+                        done();
+                    }, 500);
+                });
+            });
+            // test('says hello', function() {
+            //     assert.equal(myEl.sayHello(), 'imported-template says, Hello World!');
+            //     var greetings = myEl.sayHello('greetings Earthlings');
+            //     assert.equal(greetings, 'imported-template says, greetings Earthlings');
+            // });
+            // test('fires lasers', function(done) {
+            //     myEl.addEventListener('imported-template-lasers', function(event) {
+            //         assert.equal(event.detail.sound, 'Pew pew!');
+            //         done();
+            //     });
+            //     myEl.fireLasers();
+            // });
+            // test('distributed children', function() {
+            //     var els = myEl.getContentChildren();
+            //     assert.equal(els.length, 1, 'one distributed node');
+            //     assert.equal(els[0], myEl.querySelector('h2'), 'content distributed correctly');
+            // });
+        });
+    </script>
+
+</body>
+
+</html>
