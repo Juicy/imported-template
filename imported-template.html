@@ -25,32 +25,6 @@ https://github.com/Juicy/imported-template
         };
 
         /**
-         * Clone all <script> tags to force script execution in IE and Firefox.
-         * TODO:(tomalec) imported tempalte was created in place of juicy-html
-         * to use HTML Imports native flow instead of implementing it by ourselves
-         * so we should get rid of such hack as soon as possible
-         */
-        ImportedTemplatePrototype._cloneScriptNodes = function (node) {
-            var scripts = node.querySelectorAll("script");
-
-            for (var i = 0; i < scripts.length; i++) {
-                var oldScript = scripts[i];
-                var newScript = document.createElement("script");
-
-                newScript.text = oldScript.text;
-
-                for (var j = 0; j < oldScript.attributes.length; j++) {
-                    var attr = oldScript.attributes[j];
-
-                    newScript.setAttribute(attr.name, oldScript.getAttribute(attr.name));
-                }
-
-                node.insertBefore(newScript, oldScript);
-                node.removeChild(oldScript);
-            }
-        };
-
-        /**
          * Import partial via HTML Import, and replicate its `<template>`.
          * @IDEA: return promise (if supported) for document load (tomalec)
          * @public only for debugging.
@@ -111,8 +85,20 @@ https://github.com/Juicy/imported-template
                 // attach models
                 xhtml.attributeChangedCallback("model", undefined, xhtml.model || xhtml.getAttribute("model"));
                 // Apply workaround for HTML Imports shim
-                ImportedTemplatePrototype._cloneScriptNodes(fragment);
+                // Workaround https://github.com/webcomponents/webcomponentsjs/issues/470
+                // fix for https://github.com/Juicy/imported-template/issues/17
+                if(HTMLImports && !HTMLImports.useNative && HTMLImports.parser){
+                    var nodes = fragment.querySelectorAll(HTMLImports.parser.importsSelectors);
+                    for (var nodeNo=0, l=nodes.length, node; (nodeNo<l) && (node=nodes[nodeNo]); nodeNo++) {
+                        HTMLImports.parser.parseDynamic(node, true);
+                    }
+                }
+                // Stamp tempalte into document
                 xhtml.parentNode.insertBefore(fragment, xhtml.nextSibling);
+                // Last bit of workaround
+                if(HTMLImports && !HTMLImports.useNative && HTMLImports.parser){
+                    HTMLImports.parser.parseNext();
+                }
 
             };
             // guessed workaround for StarcounterSamples/Launcher#82, Polymer/polymer#554, http://crbug.com/389566
