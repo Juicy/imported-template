@@ -7,6 +7,20 @@ https://github.com/Juicy/imported-template
 <link rel="import" href="../juicy-html/juicy-html.html">
 <script>
     (function() {
+        // Prepare for monkeypatching addElementToDocument to make `document.currentScript.previousElementSibling` point to correct node
+        var originalAddElementToDocument, monkeyPatchedAddElementToDocument;
+        if(HTMLImports && !HTMLImports.useNative && HTMLImports.parser){
+            originalAddElementToDocument = HTMLImports.parser.addElementToDocument;
+            function monkeyPatchedAddElementToDocument(elt){
+                if(elt.ownerDocument == document){
+                    document.head.appendChild(elt);
+                } else {
+                    originalAddElementToDocument.call(this, elt);
+                }
+            }
+
+        }
+        // end of patching preparation
 
         var ImportedTemplatePrototype = Object.create(JuicyHTMLElement.prototype);
 
@@ -95,9 +109,15 @@ https://github.com/Juicy/imported-template
                 }
                 // Stamp tempalte into document
                 xhtml.parentNode.insertBefore(fragment, xhtml.nextSibling);
+
                 // Last bit of workaround
                 if(HTMLImports && !HTMLImports.useNative && HTMLImports.parser){
+                    //monkey patch addElementToDocument to make `document.currentScript.previousElementSibling` point to correct node
+                        HTMLImports.parser.addElementToDocument = monkeyPatchedAddElementToDocument;
+                    // parse scripts/styles
                     HTMLImports.parser.parseNext();
+                    // reverse monkey patch
+                        HTMLImports.parser.addElementToDocument = originalAddElementToDocument;
                 }
 
             };
