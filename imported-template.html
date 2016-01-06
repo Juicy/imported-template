@@ -98,10 +98,14 @@ https://github.com/Juicy/imported-template
                 xhtml.stampedNodes = Array.prototype.slice.call(fragment.childNodes);
                 // attach models
                 xhtml.attributeChangedCallback("model", undefined, xhtml.model || xhtml.getAttribute("model"));
+
+                // http://stackoverflow.com/questions/7944460/detect-safari-browser
+                var isSafari = navigator.vendor && navigator.vendor.indexOf("Apple") > -1 && navigator.userAgent && !navigator.userAgent.match("CriOS");
+
                 // Apply workaround for HTML Imports shim
                 // Workaround https://github.com/webcomponents/webcomponentsjs/issues/470
                 // fix for https://github.com/Juicy/imported-template/issues/17
-                if (HTMLImports && !HTMLImports.useNative && HTMLImports.parser) {
+                if (HTMLImports && !HTMLImports.useNative && HTMLImports.parser && !isSafari) {
                     var nodes = fragment.querySelectorAll(HTMLImports.parser.importsSelectors);
                     for (var nodeNo = 0, l = nodes.length, node; (nodeNo < l) && (node = nodes[nodeNo]) ; nodeNo++) {
                         HTMLImports.parser.parseDynamic(node, true);
@@ -111,7 +115,7 @@ https://github.com/Juicy/imported-template
                 xhtml.parentNode.insertBefore(fragment, xhtml.nextSibling);
 
                 // Last bit of workaround
-                if (HTMLImports && !HTMLImports.useNative && HTMLImports.parser) {
+                if (HTMLImports && !HTMLImports.useNative && HTMLImports.parser && !isSafari) {
                     //monkey patch addElementToDocument to make `document.currentScript.previousElementSibling` point to correct node
                     HTMLImports.parser.addElementToDocument = monkeyPatchedAddElementToDocument;
                     // parse scripts/styles
