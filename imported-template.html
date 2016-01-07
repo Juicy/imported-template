@@ -12,7 +12,7 @@ https://github.com/Juicy/imported-template
         if (HTMLImports && !HTMLImports.useNative && HTMLImports.parser) {
             originalAddElementToDocument = HTMLImports.parser.addElementToDocument;
             function monkeyPatchedAddElementToDocument(elt) {
-                if (elt.ownerDocument == document) {
+                if (unwrap(elt.ownerDocument) == document){
                     document.head.appendChild(elt);
                 } else {
                     originalAddElementToDocument.call(this, elt);
@@ -117,11 +117,11 @@ https://github.com/Juicy/imported-template
                 // Last bit of workaround
                 if (HTMLImports && !HTMLImports.useNative && HTMLImports.parser && !isSafari) {
                     //monkey patch addElementToDocument to make `document.currentScript.previousElementSibling` point to correct node
-                    HTMLImports.parser.addElementToDocument = monkeyPatchedAddElementToDocument;
+                        HTMLImports.parser.addElementToDocument = monkeyPatchedAddElementToDocument;
                     // parse scripts/styles
                     HTMLImports.parser.parseNext();
                     // reverse monkey patch
-                    HTMLImports.parser.addElementToDocument = originalAddElementToDocument;
+                        HTMLImports.parser.addElementToDocument = originalAddElementToDocument;
                 }
 
             };
