@@ -32,7 +32,8 @@
     "test",
     "tests",
     "examples",
-    "preview.png"
+    "preview.png",
+    "wct.conf.json"
   ],
   "dependencies": {
     "juicy-html": ">=1.0.0"
