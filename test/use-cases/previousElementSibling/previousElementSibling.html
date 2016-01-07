@@ -1,0 +1,51 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+
+    <script src="../../../../webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../../../../web-component-tester/browser.js"></script>
+
+    <!-- Step 1: import the element to test -->
+    <link rel="import" href="../../../imported-template.html">
+</head>
+
+<body>
+
+    <!-- You can use the document as a place to set up your fixtures. -->
+    <test-fixture id="imported-template-fixture">
+        <template>
+            <div><!-- nest to workaround test-fixture bug -->
+                <template is="imported-template" content="./previousElementSibling.import.html">
+                </template>
+            </div>
+        </template>
+    </test-fixture>
+
+    <script>
+        describe('<imported-template>', function() {
+            var myElContainer;
+            // placeholder for globals
+            window.ImportedTemplateTest = {};
+
+            context('when loads partial with script', function() {
+                before(function() {
+                    myElContainer = fixture('imported-template-fixture');
+                });
+                describe('once stamped, should execute script within correct place in DOM', function(){
+                    it('`document.(_)currentScript.previousElementSibling` should point to node that was before it in template', function(done){
+                        setTimeout(function waitForStamp(){
+                            expect(window.ImportedTemplateTest.previousElementSibling).to.equal(myElContainer.querySelector('#previousElement'));
+                            done();
+                        }, 500);
+                    });
+                });
+            });
+        });
+    </script>
+
+</body>
+
+</html>

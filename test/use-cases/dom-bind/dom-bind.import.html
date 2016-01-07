@@ -1,0 +1,10 @@
+<template>
+    <template is="dom-bind" id="previousElement">
+        <div>dom-bind.import.html <span>{{model.works}}</span></div>
+    </template>
+    <script>
+        console.log("In dom-bind.import.html!");
+        window.ImportedTemplateTest.previousElementSibling = (document._currentScript || document.currentScript).previousElementSibling;
+        window.ImportedTemplateTest.previousElementSibling.model = {works: "works"};
+    </script>
+</template>
