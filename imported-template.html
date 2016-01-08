@@ -9,19 +9,7 @@ https://github.com/Juicy/imported-template
     (function () {
         var polyfillNeedsWorkaround = (function () {
             var isSafari = navigator.vendor && navigator.vendor.indexOf("Apple") > -1 && navigator.userAgent && !navigator.userAgent.match("CriOS");
-            var isSafariWithWc = false;
-            
-            if (isSafari) {
-                var version = window.navigator.appVersion.match(/(version[/])(\d[.])/gi)[0];
-
-                if (version) {
-                    version = version.match(/\d/gi)[0] / 1;
-                }
-
-                if (version < 9) {
-                    isSafariWithWc = true;
-                }
-            }
+            var isSafariWithWc = isSafari && window.navigator.appVersion.match(/(version[/])([7-8][.])/gi);
 
             return HTMLImports && !HTMLImports.useNative && HTMLImports.parser && !isSafariWithWc;
         })();
