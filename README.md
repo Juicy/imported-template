@@ -107,7 +107,7 @@ Browser supports relies mainly on polyfills support/spec compliance.
 
 | Chrome | IE11 | Edge | Firefox  | Safari 7-8 | Safari 9 |
 |:------:|:----:|:----:|:--------:|:----------:|:---------:|
-|  ✓     | ✓*   | ✓*   | ✓*       | ~          | :construction: |
+|  ✓     | ✓*   | ✓*   | ✓*       | ~          | ~* |
 
 *There is a workaround for [polyfill issue](https://github.com/webcomponents/webcomponentsjs/issues/470), to execute scripts and apply styles define inside template in imported html. Also, some hacks are made to preserve correct position in DOM of scripts executed by polyfill, so `previousSibling` and Polymer's `dom-bind`/`dom-repeat` can be usedas in native Web Components, see [more sample use cases](https://github.com/Juicy/imported-template/tree/gh-pages/test/use-cases)
 
