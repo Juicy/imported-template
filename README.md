@@ -1,4 +1,4 @@
-&lt;imported-template&gt;
+&lt;imported-template&gt; [![Build Status](https://travis-ci.org/Juicy/imported-template.svg?branch=gh-pages)](https://travis-ci.org/Juicy/imported-template)
 ==============
 
 `<imported-template>` is a custom element that let's you load template from external file into your document, and take full control over loaded `<script>`s and `<link rel="import">`s. Thanks to HTML Imports - caching, script execution, etc. is completely native.
@@ -100,6 +100,18 @@ Property       | Type      | Description
 ### Dependencies
 
 `<juicy-html>` is framework agnostic custom element, so all you need is Web Components support. However, it plays really nice with Polymer Auto-binding templates, or any other binding library, that sets HTML elements' properties and/or attributes. Check our demos and examples.
+
+## Browser Support
+
+Browser supports relies mainly on polyfills support/spec compliance.
+
+| Chrome | IE11 | Edge | Firefox  | Safari 7-8 | Safari 9 |
+|:------:|:----:|:----:|:--------:|:----------:|:---------:|
+|  ✓     | ✓*   | ✓*   | ✓*       | ~          | :construction: |
+
+*There is a workaround for [polyfill issue](https://github.com/webcomponents/webcomponentsjs/issues/470), to execute scripts and apply styles define inside template in imported html. Also, some hacks are made to preserve correct position in DOM of scripts executed by polyfill, so `previousSibling` and Polymer's `dom-bind`/`dom-repeat` can be usedas in native Web Components, see [more sample use cases](https://github.com/Juicy/imported-template/tree/gh-pages/test/use-cases)
+
+~SauceLabs tests passed but it may not be stable.
 
 ## Contributing
 

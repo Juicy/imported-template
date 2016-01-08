@@ -7,9 +7,14 @@ https://github.com/Juicy/imported-template
 <link rel="import" href="../juicy-html/juicy-html.html">
 <script>
     (function () {
+        var polyfillNeedsWorkaround = HTMLImports &&
+                    !HTMLImports.useNative && HTMLImports.parser &&
+                    // http://stackoverflow.com/questions/7944460/detect-safari-browser
+                    //!isSafari
+                    !(navigator.vendor && navigator.vendor.indexOf("Apple") > -1 && navigator.userAgent && !navigator.userAgent.match("CriOS"));
         // Prepare for monkeypatching addElementToDocument to make `document.currentScript.previousElementSibling` point to correct node
         var originalAddElementToDocument, monkeyPatchedAddElementToDocument;
-        if (HTMLImports && !HTMLImports.useNative && HTMLImports.parser) {
+        if (polyfillNeedsWorkaround) {
             originalAddElementToDocument = HTMLImports.parser.addElementToDocument;
             function monkeyPatchedAddElementToDocument(elt) {
                 if (unwrap(elt.ownerDocument) == document){
@@ -99,13 +104,10 @@ https://github.com/Juicy/imported-template
                 // attach models
                 xhtml.attributeChangedCallback("model", undefined, xhtml.model || xhtml.getAttribute("model"));
 
-                // http://stackoverflow.com/questions/7944460/detect-safari-browser
-                var isSafari = navigator.vendor && navigator.vendor.indexOf("Apple") > -1 && navigator.userAgent && !navigator.userAgent.match("CriOS");
-
                 // Apply workaround for HTML Imports shim
                 // Workaround https://github.com/webcomponents/webcomponentsjs/issues/470
                 // fix for https://github.com/Juicy/imported-template/issues/17
-                if (HTMLImports && !HTMLImports.useNative && HTMLImports.parser && !isSafari) {
+                if (polyfillNeedsWorkaround) {
                     var nodes = fragment.querySelectorAll(HTMLImports.parser.importsSelectors);
                     for (var nodeNo = 0, l = nodes.length, node; (nodeNo < l) && (node = nodes[nodeNo]) ; nodeNo++) {
                         HTMLImports.parser.parseDynamic(node, true);
@@ -115,7 +117,7 @@ https://github.com/Juicy/imported-template
                 xhtml.parentNode.insertBefore(fragment, xhtml.nextSibling);
 
                 // Last bit of workaround
-                if (HTMLImports && !HTMLImports.useNative && HTMLImports.parser && !isSafari) {
+                if (polyfillNeedsWorkaround) {
                     //monkey patch addElementToDocument to make `document.currentScript.previousElementSibling` point to correct node
                         HTMLImports.parser.addElementToDocument = monkeyPatchedAddElementToDocument;
                     // parse scripts/styles
