@@ -52,11 +52,12 @@
                 describe('once stamped, should execute script within correct place in DOM', function(){
                     it('`document.(_)currentScript.previousElementSibling` should point to node that was before it in template', function(done){
                         setTimeout(function waitForStamp(){
-                            expect(repeatContainer.children.length).to.equal(3);
+                            var stampedNodes = repeatContainer.querySelectorAll('fieldset');
+                            expect(stampedNodes.length).to.equal(3);
                             for(var item = 0; item < 3; item++){
-                                expect(repeatContainer.children[item]).to.be.not.null;
-                                expect(repeatContainer.children[item].querySelector('.sub-dom-bind')).to.be.not.null;
-                                expect(window.ImportedTemplateTest.previousElementSiblings[item]).to.equal(repeatContainer.children[item].querySelector('.sub-dom-bind'));
+                                expect(stampedNodes[item]).to.be.not.null;
+                                expect(stampedNodes[item].querySelector('.sub-dom-bind')).to.be.not.null;
+                                expect(window.ImportedTemplateTest.previousElementSiblings[item]).to.equal(stampedNodes[item].querySelector('.sub-dom-bind'));
                             }
                             done();
                         }, 500);
