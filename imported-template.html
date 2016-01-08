@@ -12,7 +12,7 @@ https://github.com/Juicy/imported-template
             var isSafariWithWc = false;
             
             if (isSafari) {
-                var version = window.navigator.appVersion.match(/(version[/])(\d[.]\d[.]\d)/gi)[0];
+                var version = window.navigator.appVersion.match(/(version[/])(\d[.])/gi)[0];
 
                 if (version) {
                     version = version.match(/\d/gi)[0] / 1;
