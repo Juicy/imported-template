@@ -22,7 +22,7 @@
                 <template is="dom-bind">
                     <h3>dom-repeat</h3>
                     <div id="repeat">
-                        <template is="dom-repeat" items="{{model.items}}">
+                        <template is="dom-repeat" items="[0,1,2]">
                             <fieldset>
                                 <legend>Item <span>{{item}}</span></legend>
                                 <template is="imported-template" content="./dom-repeat.import.html"></template>
@@ -30,16 +30,6 @@
                         </template>
                     </div>
                 </template>
-                <script>
-                    (function () {
-                        var script = document._currentScript || document.currentScript;
-                        var template = script.previousElementSibling;
-                        // TODO:move it to markup
-                        template.model = {
-                            items: [0,1,2]
-                        };
-                    })();
-                </script>
             </div>
         <!-- </template> -->
     <!-- </test-fixture> -->
@@ -57,19 +47,19 @@
                         repeatContainer = myElContainer.querySelector('#repeat');
                         // myElContainer = fixture('imported-template-fixture');
                         done();
-                    },100);
+                    },500);
                 });
                 describe('once stamped, should execute script within correct place in DOM', function(){
                     it('`document.(_)currentScript.previousElementSibling` should point to node that was before it in template', function(done){
                         setTimeout(function waitForStamp(){
-                            debugger
+                            expect(repeatContainer.children.length).to.equal(3);
                             for(var item = 0; item < 3; item++){
                                 expect(repeatContainer.children[item]).to.be.not.null;
                                 expect(repeatContainer.children[item].querySelector('.sub-dom-bind')).to.be.not.null;
                                 expect(window.ImportedTemplateTest.previousElementSiblings[item]).to.equal(repeatContainer.children[item].querySelector('.sub-dom-bind'));
                             }
                             done();
-                        }, 100);
+                        }, 500);
                     });
                 });
             });
