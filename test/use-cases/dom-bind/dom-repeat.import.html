@@ -1,0 +1,19 @@
+<template>
+    <template is="dom-bind" class="sub-dom-bind">
+        <div class="sub">dom-repeat.import.html <span>{{model.works}}</span></div>
+    </template>
+    <script class="sub-script">
+    (function(){
+        debugger
+        console.log("In dom-repeat.import.html!");
+        var template = (document._currentScript || document.currentScript).previousElementSibling;
+        window.ImportedTemplateTest.previousElementSiblings.push( template );
+        template.model = {works: "works"};
+    })();
+    </script>
+    <style>
+        div.sub {
+            color: green;
+        }
+    </style>
+</template>

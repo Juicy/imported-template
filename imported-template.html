@@ -26,6 +26,9 @@ https://github.com/Juicy/imported-template
 
         }
         // end of patching preparation
+        // Monkey patch it permanently to make (asynchronous) `dom-repeat` get correct `document.currentScript.previousElementSibling`
+        // https://github.com/Juicy/imported-template/issues/17#issuecomment-169654611
+        HTMLImports.parser.addElementToDocument = monkeyPatchedAddElementToDocument;
 
         var ImportedTemplatePrototype = Object.create(JuicyHTMLElement.prototype);
 
@@ -118,12 +121,14 @@ https://github.com/Juicy/imported-template
 
                 // Last bit of workaround
                 if (polyfillNeedsWorkaround) {
-                    //monkey patch addElementToDocument to make `document.currentScript.previousElementSibling` point to correct node
-                        HTMLImports.parser.addElementToDocument = monkeyPatchedAddElementToDocument;
+                    // Hack it permanently for `dom-repeat` #17
+                    // ~ monkey patch addElementToDocument to make `document.currentScript.previousElementSibling` point to correct node
+                    //   HTMLImports.parser.addElementToDocument = monkeyPatchedAddElementToDocument;
                     // parse scripts/styles
                     HTMLImports.parser.parseNext();
-                    // reverse monkey patch
-                        HTMLImports.parser.addElementToDocument = originalAddElementToDocument;
+                    // Hack it permanently for `dom-repeat` #17
+                    // ~ reverse monkey patch
+                    //   HTMLImports.parser.addElementToDocument = originalAddElementToDocument;
                 }
 
             };

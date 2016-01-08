@@ -27,10 +27,10 @@
             </div>
         <!-- </template> -->
     <!-- </test-fixture> -->
-
+<!--  -->
     <script>
         describe('<imported-template> within `dom-bind`', function() {
-            // var myElContainer;
+            var myElContainer;
             // placeholder for globals
             window.ImportedTemplateTest = {};
 
@@ -42,7 +42,6 @@
                 describe('once stamped, should execute script within correct place in DOM', function(){
                     it('`document.(_)currentScript.previousElementSibling` should point to node that was before it in template', function(done){
                         setTimeout(function waitForStamp(){
-                            debugger
                             expect(window.ImportedTemplateTest.previousElementSibling).to.equal(myElContainer.querySelector('#previousElement'));
                             done();
                         }, 500);

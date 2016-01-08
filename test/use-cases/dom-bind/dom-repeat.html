@@ -1,0 +1,79 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+
+    <script src="../../../../webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../../../../web-component-tester/browser.js"></script>
+
+    <!-- Step 1: import the element to test -->
+    <link rel="import" href="../../../imported-template.html">
+    <link href="../../../../polymer/polymer.html" rel="import" />
+</head>
+
+<body>
+
+    <!-- https://github.com/PolymerElements/test-fixture/issues/24#issuecomment-169811731 -->
+    <!-- <test-fixture id="imported-template-fixture"> -->
+        <!-- <template> -->
+            <div id="dom-repeat-fixture">
+                <template is="dom-bind">
+                    <h3>dom-repeat</h3>
+                    <div id="repeat">
+                        <template is="dom-repeat" items="{{model.items}}">
+                            <fieldset>
+                                <legend>Item <span>{{item}}</span></legend>
+                                <template is="imported-template" content="./dom-repeat.import.html"></template>
+                            </fieldset>
+                        </template>
+                    </div>
+                </template>
+                <script>
+                    (function () {
+                        var script = document._currentScript || document.currentScript;
+                        var template = script.previousElementSibling;
+                        // TODO:move it to markup
+                        template.model = {
+                            items: [0,1,2]
+                        };
+                    })();
+                </script>
+            </div>
+        <!-- </template> -->
+    <!-- </test-fixture> -->
+
+    <script>
+        describe('<imported-template> within `dom-repeat`', function() {
+            // var myElContainer, repeatContainer;
+            // placeholder for globals
+            window.ImportedTemplateTest = {previousElementSiblings:[]};
+
+            context('when loads partial with script', function() {
+                before(function(done) {
+                    setTimeout(function(){
+                        myElContainer = document.getElementById('dom-repeat-fixture');
+                        repeatContainer = myElContainer.querySelector('#repeat');
+                        // myElContainer = fixture('imported-template-fixture');
+                        done();
+                    },100);
+                });
+                describe('once stamped, should execute script within correct place in DOM', function(){
+                    it('`document.(_)currentScript.previousElementSibling` should point to node that was before it in template', function(done){
+                        setTimeout(function waitForStamp(){
+                            debugger
+                            for(var item = 0; item < 3; item++){
+                                expect(repeatContainer.children[item]).to.be.not.null;
+                                expect(repeatContainer.children[item].querySelector('.sub-dom-bind')).to.be.not.null;
+                                expect(window.ImportedTemplateTest.previousElementSiblings[item]).to.equal(repeatContainer.children[item].querySelector('.sub-dom-bind'));
+                            }
+                            done();
+                        }, 100);
+                    });
+                });
+            });
+        });
+    </script>
+
+</body>
