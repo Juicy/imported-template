@@ -113,6 +113,8 @@ Browser supports relies mainly on polyfills support/spec compliance.
 
 ~SauceLabs tests passed but it may not be stable.
 
+ :construction: Core features more or less works, but some tests are failing.
+
 ## Contributing
 
 1. Fork it!
