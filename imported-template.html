@@ -24,11 +24,10 @@ https://github.com/Juicy/imported-template
                 }
             }
 
+            // Monkey patch it permanently to make (asynchronous) `dom-repeat` get correct `document.currentScript.previousElementSibling`
+            // https://github.com/Juicy/imported-template/issues/17#issuecomment-169654611
+            HTMLImports.parser.addElementToDocument = monkeyPatchedAddElementToDocument;
         }
-        // end of patching preparation
-        // Monkey patch it permanently to make (asynchronous) `dom-repeat` get correct `document.currentScript.previousElementSibling`
-        // https://github.com/Juicy/imported-template/issues/17#issuecomment-169654611
-        HTMLImports.parser.addElementToDocument = monkeyPatchedAddElementToDocument;
 
         var ImportedTemplatePrototype = Object.create(JuicyHTMLElement.prototype);
 
