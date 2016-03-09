@@ -34,18 +34,6 @@ https://github.com/Juicy/imported-template
         var ImportedTemplatePrototype = Object.create(JuicyHTMLElement.prototype);
 
         ImportedTemplatePrototype.scopedNodes = null;
-        ImportedTemplatePrototype.loadTemplate_ = function () {
-            var val = this.getAttribute('content');
-            if (val === null) {
-                return val;
-            }
-            if (val && (val.indexOf('/') === 0 || val.indexOf('./') === 0 || val.indexOf('../') === 0)) {
-                return this._importHTMLImport(val);
-            } else {
-                //val is HTML code, insert the partial from the string
-                this.reattachTemplate_(val);
-            }
-        };
 
         /**
          * Import partial via HTML Import, and replicate its `<template>`.
@@ -54,7 +42,7 @@ https://github.com/Juicy/imported-template
          * @param  {String} href partial URL
          * @return {imported-template}      self
          */
-        ImportedTemplatePrototype._importHTMLImport = function (href) {
+        ImportedTemplatePrototype._loadExternalFile = function importHTMLImport(href) {
             //href is a URL, load the partial from the HTTP server/cache
             var link = document.createElement('link');
             link.rel = "import";
