@@ -155,6 +155,39 @@ https://github.com/Juicy/imported-template
             }
         }
 
+        function _notifyNodes(path, value, nodes) {
+            for (var childNo = 0; childNo < nodes.length; childNo++) {
+                if (nodes[childNo]._notifyPath) {
+                    nodes[childNo]._notifyPath(path, value);
+                }
+            }
+        }
+
+        /**
+         * Forward Polymer notification downwards from upper
+         * `<template is="dom-bind">`
+         * to the imported `<template is="dom-bind">`
+         * @param  {String} path Polymer notification path
+         * @param  {Mixed} value New value
+         */
+        ImportedTemplatePrototype._notifyPath = function(path, value) {
+            var modelPrefix = "model.";
+            if (path.indexOf(modelPrefix) == 0) {
+                var childNo,
+                    scopedNodes = this.scopedNodes,
+                    len = scopedNodes && scopedNodes.length || 0;
+                for (childNo = 0; childNo < len; childNo++) {
+                    var modelScopePrefix = modelPrefix + scopedNodes[childNo].scope + ".";
+                    //only notify the scope if it is in path
+                    if (path.indexOf(modelScopePrefix) == 0) {
+                        var fixedScopePath = path.replace(modelScopePrefix, modelPrefix);
+                        _notifyNodes(fixedScopePath, value, scopedNodes[childNo]);
+                    }
+                }
+                _notifyNodes(path, value, this.scopelessNodes);
+            }
+        }
+
         document.registerElement('imported-template', {
             prototype: ImportedTemplatePrototype,
             extends: "template"
