@@ -16,17 +16,17 @@
 <body>
 
     <!-- https://github.com/PolymerElements/test-fixture/issues/24#issuecomment-169811731 -->
-    <!-- <test-fixture id="imported-template-fixture"> -->
-    <!-- <template> -->
-    <div id="dom-bind-fixture">
-        <h1>outside dom-bind</h1>
-        <template is="dom-bind" id="externalDomBind">
-            <div>inside dom-bind</div>
-            <template is="imported-template" model="{{model}}" content="./notify-dom-bind.import.html"></template>
+    <test-fixture id="imported-template-fixture">
+        <template>
+            <div id="dom-bind-fixture">
+                <h1>outside dom-bind</h1>
+                <template is="dom-bind" id="externalDomBind">
+                    <div>inside dom-bind</div>
+                    <template is="imported-template" model="{{model}}" content="./notify-dom-bind.import.html"></template>
+                </template>
+            </div>
         </template>
-    </div>
-    <!-- </template> -->
-    <!-- </test-fixture> -->
+    </test-fixture>
     <!--  -->
     <script>
         describe('notify imported `dom-bind`', function() {
@@ -34,29 +34,25 @@
             var statefulModel;
             // placeholder for globals
 
-            before(function() {
+            beforeEach(function(done) {
                 statefulModel = {
                     works: "not scoped works ok",
                     MyVendorName: {
                         works: "scoped works ok"
                     }
                 };
-                myElContainer = document.getElementById('dom-bind-fixture');
+                myElContainer = fixture('imported-template-fixture');
                 myElContainer.querySelector("#externalDomBind").model = statefulModel;
+                setTimeout(function waitForStamp() {done();}, 100);
+
             });
 
             context('not scoped', function() {
-                it('should be attached to the dom-bind in the imported-template', function(done) {
-                    setTimeout(function waitForStamp() {
-                        expect(myElContainer.querySelector("#internalDomBind").model).to.equal(statefulModel);
-                        done();
-                    }, 100);
+                it('should be attached to the dom-bind in the imported-template', function() {
+                    expect(myElContainer.querySelector("#internalDomBind").model).to.equal(statefulModel);
                 });
-                it('binding should be reflected in textContent', function(done) {
-                    setTimeout(function waitForStamp() {
-                        expect(myElContainer.querySelector("#internalSpan").textContent).to.equal(statefulModel.works);
-                        done();
-                    }, 100);
+                it('binding should be reflected in textContent', function() {
+                    expect(myElContainer.querySelector("#internalSpan").textContent).to.equal(statefulModel.works);
                 });
                 it('model change should notify the textContent', function(done) {
                     var newVal = "not scoped notification works";
@@ -69,17 +65,11 @@
             });
 
             context('scoped', function() {
-                it('should be attached to the dom-bind in the imported-template', function(done) {
-                    setTimeout(function waitForStamp() {
-                        expect(myElContainer.querySelector("#internalDomBindScoped").model).to.equal(statefulModel.MyVendorName);
-                        done();
-                    }, 100);
+                it('should be attached to the dom-bind in the imported-template', function() {
+                    expect(myElContainer.querySelector("#internalDomBindScoped").model).to.equal(statefulModel.MyVendorName);
                 });
-                it('binding should be reflected in textContent', function(done) {
-                    setTimeout(function waitForStamp() {
-                        expect(myElContainer.querySelector("#internalSpanScoped").textContent).to.equal(statefulModel.MyVendorName.works);
-                        done();
-                    }, 100);
+                it('binding should be reflected in textContent', function() {
+                    expect(myElContainer.querySelector("#internalSpanScoped").textContent).to.equal(statefulModel.MyVendorName.works);
                 });
                 it('model change should notify the textContent', function(done) {
                     var newVal = "scoped notification works";
