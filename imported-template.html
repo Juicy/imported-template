@@ -159,6 +159,10 @@ https://github.com/Juicy/imported-template
          * @param  {Mixed} value New value
          */
         ImportedTemplatePrototype._notifyPath = function(path, value) {
+            if (!this.scopedNodes) {
+                //template not loaded yet. Nothing to forward
+                return;
+            }
             var modelPrefix = "model.";
             if (path.indexOf(modelPrefix) == 0) {
                 var childNo,

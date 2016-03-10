@@ -18,7 +18,7 @@
     <!-- https://github.com/PolymerElements/test-fixture/issues/24#issuecomment-169811731 -->
     <test-fixture id="imported-template-fixture">
         <template>
-            <div id="dom-bind-fixture">
+            <div>
                 <h1>outside dom-bind</h1>
                 <template is="dom-bind" id="externalDomBind">
                     <div>inside dom-bind</div>
@@ -45,6 +45,17 @@
                 myElContainer.querySelector("#externalDomBind").model = statefulModel;
                 setTimeout(function waitForStamp() {done();}, 100);
 
+            });
+
+            context('before loaded', function() {
+                it('should not forward notification yet have the desired value', function(done) {
+                    var newVal = "notify before loaded";
+                    myElContainer.querySelector("#externalDomBind").set("model.works", newVal);
+                    setTimeout(function waitForStamp() {
+                        expect(myElContainer.querySelector("#internalSpan").textContent).to.equal(newVal);
+                        done();
+                    }, 500);
+                });
             });
 
             context('not scoped', function() {
