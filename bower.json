@@ -36,6 +36,6 @@
     "wct.conf.json"
   ],
   "dependencies": {
-    "juicy-html": ">=1.0.0"
+    "juicy-html": ">=1.1.0"
   }
 }
