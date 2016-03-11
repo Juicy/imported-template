@@ -134,7 +134,7 @@ https://github.com/Juicy/imported-template
                 len = scopedNodes && scopedNodes.length || 0;
 
             for (childNo = 0; childNo < len; childNo++) {
-                attachModels(model[scopedNodes[childNo].scope], scopedNodes[childNo]);
+                attachModels(model && model[scopedNodes[childNo].scope], scopedNodes[childNo]);
             }
             attachModels(model, this.scopelessNodes);
             // inline HTML

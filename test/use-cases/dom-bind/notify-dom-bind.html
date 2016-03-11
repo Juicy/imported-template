@@ -44,7 +44,7 @@
                 };
                 myElContainer = fixture('imported-template-fixture');
                 setTimeout(function waitForTestFixtureStamp() {
-                    externalDomBind = externalDomBind
+                    externalDomBind = myElContainer.querySelector('#externalDomBind');
                     externalDomBind.model = statefulModel;
                     //wait for dom-bind stamp
                     setTimeout(done, 100);
