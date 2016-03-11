@@ -31,6 +31,7 @@
     <script>
         describe('notify imported `dom-bind`', function() {
             var myElContainer;
+            var externalDomBind;
             var statefulModel;
             // placeholder for globals
 
@@ -42,15 +43,19 @@
                     }
                 };
                 myElContainer = fixture('imported-template-fixture');
-                myElContainer.querySelector("#externalDomBind").model = statefulModel;
-                setTimeout(function waitForStamp() {done();}, 100);
+                setTimeout(function waitForTestFixtureStamp() {
+                    externalDomBind = externalDomBind
+                    externalDomBind.model = statefulModel;
+                    //wait for dom-bind stamp
+                    setTimeout(done, 100);
+                }, 100);
 
             });
 
             context('before loaded', function() {
                 it('should not forward notification yet have the desired value', function(done) {
                     var newVal = "notify before loaded";
-                    myElContainer.querySelector("#externalDomBind").set("model.works", newVal);
+                    externalDomBind.set("model.works", newVal);
                     setTimeout(function waitForStamp() {
                         expect(myElContainer.querySelector("#internalSpan").textContent).to.equal(newVal);
                         done();
@@ -68,7 +73,7 @@
                 it('model change should notify the textContent', function(done) {
                     expect(myElContainer.querySelector("#internalSpan").textContent).to.equal(statefulModel.works);
                     var newVal = "not scoped notification works";
-                    myElContainer.querySelector("#externalDomBind").set("model.works", newVal);
+                    externalDomBind.set("model.works", newVal);
                     setTimeout(function waitForStamp() {
                         expect(myElContainer.querySelector("#internalSpan").textContent).to.equal(newVal);
                         done();
@@ -86,7 +91,7 @@
                 it('model change should notify the textContent', function(done) {
                     expect(myElContainer.querySelector("#internalSpanScoped").textContent).to.equal(statefulModel.MyVendorName.works);
                     var newVal = "scoped notification works";
-                    myElContainer.querySelector("#externalDomBind").set("model.MyVendorName.works", newVal);
+                    externalDomBind.set("model.MyVendorName.works", newVal);
                     setTimeout(function waitForStamp() {
                         expect(myElContainer.querySelector("#internalSpanScoped").textContent).to.equal(newVal);
                         done();
