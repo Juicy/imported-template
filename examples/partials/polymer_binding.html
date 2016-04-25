@@ -8,6 +8,7 @@
     <script>
         (function () {
             var script = document._currentScript || document.currentScript;
+			console.log('Does document contain this tag?', document.contains(script));
             var template = script.previousElementSibling;
 
             template.getPartialName = function () {

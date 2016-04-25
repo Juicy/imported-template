@@ -103,8 +103,6 @@ https://github.com/Juicy/imported-template
                         HTMLImports.parser.parseDynamic(node, true);
                     }
                 }
-                // Stamp tempalte into document
-                xhtml.parentNode.insertBefore(fragment, xhtml.nextSibling);
 
                 // Last bit of workaround
                 if (polyfillNeedsWorkaround) {
@@ -112,11 +110,21 @@ https://github.com/Juicy/imported-template
                     // ~ monkey patch addElementToDocument to make `document.currentScript.previousElementSibling` point to correct node
                     //   HTMLImports.parser.addElementToDocument = monkeyPatchedAddElementToDocument;
                     // parse scripts/styles
-                    HTMLImports.parser.parseNext();
+                    // Stamp template into document
+                    // setTimeout is a hack to make scripts execute before Polymer's dom-bind - #21
+                    setTimeout(function(){
+                        xhtml.parentNode.insertBefore(fragment, xhtml.nextSibling);
+                        HTMLImports.parser.parseNext();
+                    });
                     // Hack it permanently for `dom-repeat` #17
                     // ~ reverse monkey patch
                     //   HTMLImports.parser.addElementToDocument = originalAddElementToDocument;
+
+                } else {
+                    // Stamp template into document
+                    xhtml.parentNode.insertBefore(fragment, xhtml.nextSibling);
                 }
+
 
             };
             // guessed workaround for StarcounterSamples/Launcher#82, Polymer/polymer#554, http://crbug.com/389566
