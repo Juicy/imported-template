@@ -1,6 +1,6 @@
 {
   "name": "imported-template",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "devDependencies": {
     "dom-bind-notifier": "~1.0.0",
     "iron-icon": "PolymerElements/iron-icon#~1.0.4",
@@ -37,5 +37,8 @@
   ],
   "dependencies": {
     "juicy-html": ">=1.1.0"
+  },
+  "resolutions": {
+    "chai": "^3.2.0"
   }
 }

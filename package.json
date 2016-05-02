@@ -1,6 +1,6 @@
 {
   "name": "imported-template",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "`<imported-template>` is a custom element that let's you load HTML partials into your Web Components, and take full control over loaded `<script>`s and `<link rel=\"import\">`s.",
   "homepage": "https://github.com/Juicy/imported-template",
   "repository": {
