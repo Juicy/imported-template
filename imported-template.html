@@ -158,21 +158,34 @@ https://github.com/Juicy/imported-template
          * @param  {String} path Polymer notification path
          * @param  {Mixed} value New value
          */
-        ImportedTemplatePrototype._notifyPath = function(path, value) {
+        ImportedTemplatePrototype._notifyPath = function (path, value) {
             if (!this.scopedNodes) {
                 //template not loaded yet. Nothing to forward
                 return;
             }
+
             var modelPrefix = "model.";
+
             if (path.indexOf(modelPrefix) == 0) {
-                var childNo,
-                    scopedNodes = this.scopedNodes,
-                    len = scopedNodes && scopedNodes.length || 0;
+                var childNo;
+                var scopedNodes = this.scopedNodes;
+                var len = scopedNodes && scopedNodes.length || 0;
+
                 for (childNo = 0; childNo < len; childNo++) {
                     var modelScopePrefix = modelPrefix + scopedNodes[childNo].scope + ".";
-                    //only notify the scope if it is in path
+
+                    //notify the scope if it is in path
                     if (path.indexOf(modelScopePrefix) == 0) {
                         var fixedScopePath = path.replace(modelScopePrefix, modelPrefix);
+                        _notifyNodes(fixedScopePath, value, scopedNodes[childNo]);
+                        continue;
+                    }
+
+                    modelScopePrefix = modelScopePrefix.substr(0, modelScopePrefix.length - 1);
+
+                    //notify the scope if it is the path
+                    if (path == modelScopePrefix) {
+                        var fixedScopePath = modelPrefix.substr(0, modelPrefix.length - 1);
                         _notifyNodes(fixedScopePath, value, scopedNodes[childNo]);
                     }
                 }
