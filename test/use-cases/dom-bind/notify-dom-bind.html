@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html>
 
 <head>
@@ -85,6 +85,12 @@
                 it('should be attached to the dom-bind in the imported-template', function() {
                     expect(myElContainer.querySelector("#internalDomBindScoped").model).to.equal(statefulModel.MyVendorName);
                 });
+                it('should update the dom-bind once entire model scope changed', function () {
+                    externalDomBind.set("model.MyVendorName", {
+                        works: "scoped _notifyPath works ok"
+                    });
+                    expect(myElContainer.querySelector("#internalDomBindScoped").model).to.equal(statefulModel.MyVendorName);
+                });
                 it('binding should be reflected in textContent', function() {
                     expect(myElContainer.querySelector("#internalSpanScoped").textContent).to.equal(statefulModel.MyVendorName.works);
                 });
@@ -100,5 +106,5 @@
             });
         });
     </script>
-
 </body>
+</html>
