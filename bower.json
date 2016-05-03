@@ -21,7 +21,7 @@
     "Joachim Wester <joachimwester@me.com>",
     "Marcin Warpechowski <marcin@nextgen.pl>"
   ],
-  "description": "`<imported-template>` is a custom element that let's you load HTML partials into your Web Components, and take full control over loaded `<script>`s and `<link rel=\\\"import\\\">`s.Thanks to HTML Imports - caching, script execution, etc. is completely native. It also provides simple data-binding feature, that plays nice with Polymer or pure JavaScript + HTML data-binding.",
+  "description": "Custom element that loads HTML partials into your DOM, control loaded `<script>`s, `<link>`s, caching in native way. Plays nice with Polymer",
   "main": "./imported-template.html",
   "license": "MIT",
   "ignore": [
@@ -37,8 +37,5 @@
   ],
   "dependencies": {
     "juicy-html": ">=1.1.0"
-  },
-  "resolutions": {
-    "chai": "^3.2.0"
   }
 }
