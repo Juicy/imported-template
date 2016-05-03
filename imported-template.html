@@ -164,7 +164,7 @@ https://github.com/Juicy/imported-template
                 return;
             }
 
-            var modelPrefix = "model.";
+            var modelPrefix = 'model';
 
             if (path.indexOf(modelPrefix) == 0) {
                 var childNo;
@@ -172,22 +172,17 @@ https://github.com/Juicy/imported-template
                 var len = scopedNodes && scopedNodes.length || 0;
 
                 for (childNo = 0; childNo < len; childNo++) {
-                    var modelScopePrefix = modelPrefix + scopedNodes[childNo].scope + ".";
+                    var modelScopePrefix = modelPrefix + '.' + scopedNodes[childNo].scope;
 
-                    //notify the scope if it is in path
-                    if (path.indexOf(modelScopePrefix) == 0) {
+                    if (path === modelScopePrefix) {
+                        // notify the scope if it is the path
+                        _notifyNodes(modelPrefix, value, scopedNodes[childNo]);
+                    } else if (path.indexOf(modelScopePrefix + '.') == 0) {
+                        // notify the scope if it is in path
                         var fixedScopePath = path.replace(modelScopePrefix, modelPrefix);
                         _notifyNodes(fixedScopePath, value, scopedNodes[childNo]);
-                        continue;
                     }
 
-                    modelScopePrefix = modelScopePrefix.substr(0, modelScopePrefix.length - 1);
-
-                    //notify the scope if it is the path
-                    if (path == modelScopePrefix) {
-                        var fixedScopePath = modelPrefix.substr(0, modelPrefix.length - 1);
-                        _notifyNodes(fixedScopePath, value, scopedNodes[childNo]);
-                    }
                 }
                 _notifyNodes(path, value, this.scopelessNodes);
             }
