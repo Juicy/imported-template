@@ -177,7 +177,7 @@ https://github.com/Juicy/imported-template
                     if (path === modelScopePrefix) {
                         // notify the scope if it is the path
                         _notifyNodes(modelPrefix, value, scopedNodes[childNo]);
-                    } else if (path.indexOf(modelScopePrefix + '.') == 0) {
+                    } else if (path.indexOf(modelScopePrefix + '.') === 0) {
                         // notify the scope if it is in path
                         var fixedScopePath = path.replace(modelScopePrefix, modelPrefix);
                         _notifyNodes(fixedScopePath, value, scopedNodes[childNo]);
