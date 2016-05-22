@@ -82,8 +82,12 @@ https://github.com/Juicy/imported-template
 
                     }
 
+                } else if (this.import.body.childNodes.length === 0 && this.import.body.childNodes.length === 0){ // document is empty
+                    console.warn('content given for imported-template (', this, ') is an empty document');
+                    xhtml.stampedNodes = null;
+                    return;
                 } else { //there is no template in the response.
-                    // it could be a stack trace, or HTML document with imports, etc. which could be hard to handle
+                    // it could be a stack trace, or HTML document with some nodes (HTML imports or scripts) that should / should not get stamped
                     console.error("DON'T misbehave! At least one <template> tag is expected in content body", this.import.body.innerHTML);
                     return;
                 }
