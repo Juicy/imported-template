@@ -129,4 +129,4 @@ For detailed changelog, check [Releases](https://github.com/Juicy/imported-templ
 
 ## License
 
-[MIT License](http://opensource.org/licenses/MIT)
+MIT
