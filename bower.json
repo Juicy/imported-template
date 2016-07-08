@@ -5,7 +5,9 @@
     "dom-bind-notifier": "~1.0.0",
     "iron-icon": "PolymerElements/iron-icon#~1.0.4",
     "iron-iconset-svg": "PolymerElements/iron-iconset-svg#~1.0.4",
-    "web-component-tester": "Polymer/web-component-tester#~4.0.3"
+    "web-component-tester": "Polymer/web-component-tester#~4.0.3",
+    "object.observe": "^0.2.6",
+    "array.observe": "^0.0.1"
   },
   "keywords": [
     "html",
