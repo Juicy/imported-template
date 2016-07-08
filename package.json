@@ -1,6 +1,6 @@
 {
   "name": "imported-template",
-  "version": "1.4.2",
+  "version": "1.4.3",
   "description": "Custom element that lets you load HTML partials into your Web Components, and take full control over loaded `<script>`s and `<link rel=\"import\">`s.",
   "homepage": "https://github.com/Juicy/imported-template",
   "repository": {
