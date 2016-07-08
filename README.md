@@ -97,6 +97,12 @@ Property       | Type      | Description
 `model`        | *JSON*	   | Attached model, plays nice with Polymer data-binding
 `stampedNodes` | *Array*   | Array of stamped nodes.
 
+## Events
+
+Name       | Detail                                    | Description
+---        | ---                                       | ---
+`stamping` | *DocumentFragment*	fragment being stamped | Called just before stamping the fragment
+
 ### Dependencies
 
 `<juicy-html>` is framework agnostic custom element, so all you need is Web Components support. However, it plays really nice with Polymer Auto-binding templates, or any other binding library, that sets HTML elements' properties and/or attributes. Check our demos and examples.
