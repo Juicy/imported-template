@@ -26,6 +26,8 @@ You can stamp template content in your main document with just
 To see more features and examples
 [Check it live!](http://juicy.github.io/imported-template/examples/index.html)
 
+## [Tests/Spec](http://juicy.github.io/imported-template/test/)
+
 ## Features
 
  - Imports external files, and stamps inline HTML markup,
