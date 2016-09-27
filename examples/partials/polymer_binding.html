@@ -3,16 +3,24 @@
 	<template is="dom-bind" id="test">
         <!-- we use dom-bind-notifier to simplyfy two-way data-binding within dom-bind itself -->
         <dom-bind-notifier ref="test" observed-object="{{model}}" path="model" deep></dom-bind-notifier>
-		This is <input value="{{model.content::input}}"/> stamped from `dom-bind` from <code>{{getPartialName()}}</code>.
+		This is <input value="{{model.content::input}}"/> stamped from `dom-bind` from
 	</template>
     <script>
         (function () {
             var script = document._currentScript || document.currentScript;
-            var template = script.previousElementSibling;
-
-            template.getPartialName = function () {
-                return "./partials/polymer_binding.html";
-            };
+            var domBind = script.previousElementSibling;
+			console.info('Here runs, imported per-template script that could use document.currentScript to do something;');
         })();
     </script>
 </template>
+<script>
+	(function () {
+		var script = document._currentScript || document.currentScript;
+		var template = script.previousElementSibling;
+		console.info('Here runs, imported per-partial script that could prepare template to be stamped;');
+		debugger
+		var codeElement = document.createElement('code');
+		codeElement.innerHTML = '"./partials/polymer_binding.html"';
+		template.content.querySelector('[is="dom-bind"]').content.appendChild(codeElement);
+	})();
+</script>

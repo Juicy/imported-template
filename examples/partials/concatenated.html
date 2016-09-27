@@ -2,7 +2,9 @@
 <template>
 	This is content from the first part of <code>{{path}}</code>
 	<script>
-		document.currentScript.previousElementSibling.innerText = document.currentScript.model.path;
+		// document.currentScript.previousElementSibling.innerText = document.currentScript.model.path;
+		// Use polyfill of .currentScript if available
+		(document._currentScript || document.currentScript).previousElementSibling.innerText = (document._currentScript || document.currentScript).model.path;
 	</script>,
 </template>
 <link rel="import" href="../../../polymer/polymer.html">

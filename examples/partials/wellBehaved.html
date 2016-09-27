@@ -27,10 +27,11 @@
     <p>It may use attached data model, via:</p>
     <h3></h3>
 	<script>
-		console.info("template stamped, ", document.currentScript, "inline script was executed, but still in context of main", document.currentScript.ownerDocument);
-		console.log("it can refer to its parentNode", document.currentScript.parentNode);
-		console.log("and simply refer to the model attached", document.currentScript.model);
-		document.currentScript.previousElementSibling.innerText = document.currentScript.model.vanilla;
+        var currentScript = document._currentScript || document.currentScript; // Use polyfill if available
+		console.info("template stamped, ", currentScript, "inline script was executed, but still in context of main", currentScript.ownerDocument);
+		console.log("it can refer to its parentNode", currentScript.parentNode);
+		console.log("and simply refer to the model attached", currentScript.model);
+		currentScript.previousElementSibling.innerText = currentScript.model.vanilla;
 	</script>
     <template is="dom-bind">
         <h3>{{model.polymer}}</h3>
