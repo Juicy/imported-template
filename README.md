@@ -1,7 +1,7 @@
 &lt;imported-template&gt; [![Build Status](https://travis-ci.org/Juicy/imported-template.svg?branch=gh-pages)](https://travis-ci.org/Juicy/imported-template)
 ==============
 
-`<imported-template>` is a custom element that let's you load template from external file into your document, and take full control over loaded `<script>`s and `<link rel="import">`s. Thanks to HTML Imports - caching, script execution, etc. is completely native.
+`<imported-template>` (in fact `<template is="imported-template">` is a custom element that let's you load template from external file into your document, and take full control over loaded `<script>`s and `<link rel="import">`s. Thanks to HTML Imports - caching, script execution, etc. is completely native.
 It also provides simple data-binding feature, that plays nice with Polymer or pure JavaScript + HTML data-binding.
 
 ### Small sample
@@ -29,6 +29,7 @@ To see more features and examples
 ## [Tests/Spec](http://juicy.github.io/imported-template/test/)
 
 ## Features
+See the full article on features, usecases and the way it's done at http://starcounter.io/html-partialsincludes-webcomponents-way/
 
  - Imports external files, and stamps inline HTML markup,
  - Supports multiple (concatenated) templates per partial,
@@ -37,7 +38,7 @@ To see more features and examples
   - Supports `<script>, <link>, <style>` tags to be executed once,
   - Supports `<script>, <style>` tags per template instance,
  - Attaches data-binding to imported content,
- - Works fine with Polymer auto-binding features (for > 1.0.0 also)
+ - Works fine with Polymer auto-binding features
 
 
 ### Partial limitations
