@@ -49,6 +49,12 @@ https://github.com/Juicy/imported-template
             link.href = href;
             var xhtml = this;
             link.onload = function processImportedDocument() {
+                // protect yourself agains side-effect of
+                // https://github.com/webcomponents/webcomponentsjs/issues/470#issuecomment-261238583 workaround
+                // Re-evaluate need in `starcounter-include` after V1 is shipped
+                if(!this.import){
+                    return;
+                }
                 // TODO(tomalec): caching
                 // find only root templates
                 var templates = this.import.querySelectorAll("head>template,body>template,imported-template-scope>template");
@@ -113,11 +119,14 @@ https://github.com/Juicy/imported-template
                 xhtml.parentNode.insertBefore(fragment, xhtml.nextSibling);
 
                 // Last bit of workaround
+                // https://github.com/webcomponents/webcomponentsjs/issues/470 workaround
+                // Re-evaluate need once V1 is shipped
                 if (polyfillNeedsWorkaround) {
                     // Hack it permanently for `dom-repeat` #17
                     // ~ monkey patch addElementToDocument to make `document.currentScript.previousElementSibling` point to correct node
                     //   HTMLImports.parser.addElementToDocument = monkeyPatchedAddElementToDocument;
                     // parse scripts/styles
+                    console.warn('Workaround for https://github.com/webcomponents/webcomponentsjs/issues/470 is being used, some pending `<link>.onload` events  may get called too early. Especially, for 404 files. Re-evaluate the need once webcomponents.js#V1 is shipped.')
                     HTMLImports.parser.parseNext();
                     // Hack it permanently for `dom-repeat` #17
                     // ~ reverse monkey patch
