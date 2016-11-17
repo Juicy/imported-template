@@ -11,6 +11,7 @@ branches:
     - gh-pages
 node_js: 4
 addons:
+  firefox: latest
   apt:
     sources:
       - google-chrome
