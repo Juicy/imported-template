@@ -1,4 +1,4 @@
-&lt;imported-template&gt; [![Build Status](https://travis-ci.org/Juicy/imported-template.svg?branch=gh-pages)](https://travis-ci.org/Juicy/imported-template)
+&lt;imported-template&gt; [![Build Status](https://travis-ci.org/Juicy/imported-template.svg?branch=master)](https://travis-ci.org/Juicy/imported-template)
 ==============
 
 `<imported-template>` (in fact `<template is="imported-template">`) is a custom element that let's you load template from external file into your document, and take full control over loaded `<script>`s and `<link rel="import">`s. Thanks to HTML Imports - caching, script execution, etc. is completely native.
@@ -59,7 +59,7 @@ Install the component using [Bower](http://bower.io/):
 $ bower install imported-template --save
 ```
 
-Or [download as ZIP](https://github.com/Juicy/imported-template/archive/gh-pages.zip).
+Or [download as ZIP](https://github.com/Juicy/imported-template/archive/master.zip).
 
 ## Usage
 
@@ -118,7 +118,7 @@ Browser supports relies mainly on polyfills support/spec compliance.
 |:------:|:----:|:----:|:--------:|:--------:|:--------:|
 |  ✓     | ✓*   | ✓*   | ✓*       | ~        | ~*       |
 
-\* There is a workaround for [polyfill issue](https://github.com/webcomponents/webcomponentsjs/issues/470), to execute scripts and apply styles define inside template in imported html. Also, some hacks are made to preserve correct position in DOM of scripts executed by polyfill, so `previousSibling` and Polymer's `dom-bind`/`dom-repeat` can be used as in native Web Components, see [more sample use cases](https://github.com/Juicy/imported-template/tree/gh-pages/test/use-cases)
+\* There is a workaround for [polyfill issue](https://github.com/webcomponents/webcomponentsjs/issues/470), to execute scripts and apply styles define inside template in imported html. Also, some hacks are made to preserve correct position in DOM of scripts executed by polyfill, so `previousSibling` and Polymer's `dom-bind`/`dom-repeat` can be used as in native Web Components, see [more sample use cases](https://github.com/Juicy/imported-template/tree/master/test/use-cases)
 
 ~ SauceLabs tests passed but it may not be stable.
 
