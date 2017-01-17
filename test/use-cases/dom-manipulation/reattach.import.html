@@ -1,0 +1,9 @@
+<template>
+    <div class="regular">Regular div</div>
+    <template is="dom-bind">
+        <div class="bound">Bound div {{model.works}}</div>
+        <template is="dom-if" if="{{model.works}}">
+            <div class="conditional">Conditional div {{model.works}}</div>
+        </template>
+    </template>
+</template>

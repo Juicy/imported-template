@@ -1,0 +1,96 @@
+﻿<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+
+    <script src="../../../../webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../../../../web-component-tester/browser.js"></script>
+
+    <!-- Step 1: import the element to test -->
+    <link rel="import" href="../../../imported-template.html">
+    <link href="../../../../polymer/polymer.html" rel="import" />
+</head>
+
+<body>
+
+    <!-- https://github.com/PolymerElements/test-fixture/issues/24#issuecomment-169811731 -->
+    <test-fixture id="imported-template-fixture">
+        <template>
+            <div>
+                <h1>outside dom-bind</h1>
+                <template is="dom-bind" id="externalDomBind">
+                    <div>inside dom-bind</div>
+                    <template is="imported-template" model="{{model}}" content="./reattach.import.html"></template>
+                </template>
+            </div>
+        </template>
+    </test-fixture>
+    <!--  -->
+    <script>
+        describe('reattach parent to DOM', function() {
+            var myElContainer;
+            var externalDomBind;
+            var statefulModel;
+            // placeholder for globals
+
+            beforeEach(function(done) {
+                statefulModel = {
+                    works: "works ok"
+                };
+                myElContainer = fixture('imported-template-fixture');
+                setTimeout(function waitForTestFixtureStamp() {
+                    externalDomBind = myElContainer.querySelector('#externalDomBind');
+                    externalDomBind.model = statefulModel;
+                    //wait for dom-bind stamp
+                    setTimeout(done, 100);
+                }, 100);
+
+            });
+
+            context('regular HTML node', function() {
+                it('should render once and only once', function(done) {
+                    var parent = myElContainer.parentNode;
+                    expect(parent.querySelectorAll(".regular").length).to.equal(1);
+                    parent.removeChild(myElContainer);
+                    expect(parent.querySelectorAll(".regular").length).to.equal(0);
+                    parent.appendChild(myElContainer);
+                    setTimeout(function waitForStamp() {
+                        expect(parent.querySelectorAll(".regular").length).to.equal(1);
+                        done();
+                    }, 500);
+                });
+            });
+
+            context('dom-bind HTML node', function() {
+                it('should render once and only once', function(done) {
+                    var parent = myElContainer.parentNode;
+                    expect(parent.querySelectorAll(".bound").length).to.equal(1);
+                    parent.removeChild(myElContainer);
+                    expect(parent.querySelectorAll(".bound").length).to.equal(0);
+                    parent.appendChild(myElContainer);
+                    setTimeout(function waitForStamp() {
+                        expect(parent.querySelectorAll(".bound").length).to.equal(1);
+                        done();
+                    }, 500);
+                });
+            });
+
+            context('dom-if HTML node', function() {
+                it('should render once and only once', function(done) {
+                    var parent = myElContainer.parentNode;
+                    expect(parent.querySelectorAll(".conditional").length).to.equal(1);
+                    parent.removeChild(myElContainer);
+                    expect(parent.querySelectorAll(".conditional").length).to.equal(0);
+                    parent.appendChild(myElContainer);
+                    setTimeout(function waitForStamp() {
+                        expect(parent.querySelectorAll(".conditional").length).to.equal(1);
+                        done();
+                    }, 500);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
