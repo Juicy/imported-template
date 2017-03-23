@@ -33,6 +33,11 @@ https://github.com/Juicy/imported-template
 
         var ImportedTemplatePrototype = Object.create(JuicyHTMLElement.prototype);
 
+        /**
+         * Reference to pending (requested) HTMLLinkElement
+         * @type {HTMLLinkElement}
+         */
+        ImportedTemplatePrototype.pending = false;
         ImportedTemplatePrototype.scopedNodes = null;
 
         /**
@@ -47,7 +52,8 @@ https://github.com/Juicy/imported-template
             var link = document.createElement('link');
             link.rel = "import";
             link.href = href;
-            var xhtml = this;
+            var that = this;
+            this.pending = link;
             link.onload = function processImportedDocument() {
                 // protect yourself agains side-effect of
                 // https://github.com/webcomponents/webcomponentsjs/issues/470#issuecomment-261238583 workaround
@@ -61,9 +67,9 @@ https://github.com/Juicy/imported-template
                 var fragment, template;
                 var singleTemplate, singleFragment, nodes;
 
-                xhtml.scopedNodes = [];
-                xhtml.scopelessNodes = [];
-                xhtml.clear();
+                that.scopedNodes = [];
+                that.scopelessNodes = [];
+                that.clear();
 
                 // debugger
                 if (templates.length >= 1) {
@@ -80,9 +86,9 @@ https://github.com/Juicy/imported-template
                         nodes = Array.prototype.slice.call(singleFragment.childNodes);
                         if (singleTemplate.parentElement.tagName === "IMPORTED-TEMPLATE-SCOPE") {
                             nodes.scope = singleTemplate.parentElement.getAttribute("scope");
-                            xhtml.scopedNodes.push(nodes);
+                            that.scopedNodes.push(nodes);
                         } else {
-                            xhtml.scopelessNodes = xhtml.scopelessNodes.concat(nodes);
+                            that.scopelessNodes = that.scopelessNodes.concat(nodes);
                         }
                         fragment.appendChild(singleFragment);
 
@@ -90,7 +96,7 @@ https://github.com/Juicy/imported-template
 
                 } else if (this.import.body.childNodes.length === 0 && this.import.body.childNodes.length === 0){ // document is empty
                     console.warn('content given for imported-template (', this, ') is an empty document');
-                    xhtml.stampedNodes = null;
+                    that.stampedNodes = null;
                     return;
                 } else { //there is no template in the response.
                     // it could be a stack trace, or HTML document with some nodes (HTML imports or scripts) that should / should not get stamped
@@ -100,11 +106,11 @@ https://github.com/Juicy/imported-template
 
 
                 // convert dynamic NodeList to regullar array
-                xhtml.stampedNodes = Array.prototype.slice.call(fragment.childNodes);
+                that.stampedNodes = Array.prototype.slice.call(fragment.childNodes);
                 // dispatch event before stamping
-                xhtml.dispatchEvent(new CustomEvent('stamping', {detail: fragment}));
+                that.dispatchEvent(new CustomEvent('stamping', {detail: fragment}));
                 // attach models
-                xhtml.attributeChangedCallback("model", undefined, xhtml.model || xhtml.getAttribute("model"));
+                that.attributeChangedCallback("model", undefined, that.model || that.getAttribute("model"));
 
                 // Apply workaround for HTML Imports shim
                 // Workaround https://github.com/webcomponents/webcomponentsjs/issues/470
@@ -116,7 +122,7 @@ https://github.com/Juicy/imported-template
                     }
                 }
                 // Stamp tempalte into document
-                xhtml.parentNode.insertBefore(fragment, xhtml.nextSibling);
+                that.parentNode.insertBefore(fragment, that.nextSibling);
 
                 // Last bit of workaround
                 // https://github.com/webcomponents/webcomponentsjs/issues/470 workaround
@@ -133,6 +139,7 @@ https://github.com/Juicy/imported-template
                     //   HTMLImports.parser.addElementToDocument = originalAddElementToDocument;
                 }
 
+                this.pending = false;
             };
             // guessed workaround for StarcounterSamples/Launcher#82, Polymer/polymer#554, http://crbug.com/389566
             // TODO(tomalec): check if it's still required
