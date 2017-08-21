@@ -1,4 +1,4 @@
-﻿<!doctype html>
+<!doctype html>
 <html>
 
 <head>
@@ -6,6 +6,9 @@
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
 
     <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+    <!-- <script>var _MO=window.MutationObserver;delete window.MutationObserver;</script> -->
+    <script src="../../document-register-element/build/document-register-element.js"></script>
+    <!-- <script>window.MutationObserver=_MO</script> -->
     <script src="../../web-component-tester/browser.js"></script>
 
     <!-- Step 1: import the element to test -->
@@ -24,42 +27,49 @@
     </test-fixture>
 
     <script>
-    describe('<juicy-html>', function() {
-        var myEl;
-        context('when skipStampingPendingFile method is called after request for file was send but before it responded', function() {
-            beforeEach(function() {
-                myEl = fixture('juicy-html-fixture').querySelector('template[is="imported-template"]');
-                myEl.setAttribute('content', '../examples/partials/basic.html');
-                myEl.skipStampingPendingFile();
+        describe('<juicy-html>', function() {
+            var myEl;
+            context('when skipStampingPendingFile method is called after request for file was send (asynchronously after content attribute is set) but before it responded', function() {
+                beforeEach(function(done) {
+                    myEl = fixture('juicy-html-fixture').querySelector('[is=juicy-html]');
+                    setTimeout(function waitForConnectedCallbackPolyfill(){
+                        myEl.setAttribute('content', '../partials/basic.html');
+                        //wait for async attributeChanged polyfill
+                        myEl.skipStampingPendingFile();
+                        done();
+                    }, 10);
+                });
+                it('should NOT stamp anything', function(done){
+                    setTimeout(function(){
+                        expect(myEl.parentNode.childNodes.length).to.equal(1);
+                        expect(myEl.parentNode.childNodes[0]).to.equal(myEl);
+                        done();
+                    }, 300);
+                });
             });
-            it('should NOT stamp anything', function(done){
-                setTimeout(function(){
-                    expect(myEl.parentNode.childNodes.length).to.equal(1);
-                    expect(myEl.parentNode.childNodes[0]).to.equal(myEl);
-                    done();
-                }, 300);
+            context('when content property is changed', function() {
+                beforeEach(function(done) {
+                    myEl = fixture('juicy-html-fixture').querySelector('[is=juicy-html]');
+                    setTimeout(function waitForConnectedCallbackPolyfill(){
+                        myEl.setAttribute('content', '../partials/basic.html');
+                        sinon.spy(myEl, 'skipStampingPendingFile');
+                        done();
+                    }, 10);
+                });
+                it('to another url, skipStampingPendingFile method should get called', function(){
+                    myEl.setAttribute('content', '../partials/page_1.html');
+                    expect(myEl.skipStampingPendingFile).to.be.calledOnce;
+                });
+                it('to a string, skipStampingPendingFile method should get called', function(){
+                    myEl.setAttribute('content', 'blah');
+                    expect(myEl.skipStampingPendingFile).to.be.calledOnce;
+                });
+                it('to `null`, skipStampingPendingFile method should get called', function(){
+                    myEl.setAttribute('content', null);
+                    expect(myEl.skipStampingPendingFile).to.be.calledOnce;
+                });
             });
         });
-        context('when content property is changed', function() {
-            beforeEach(function() {
-                myEl = fixture('juicy-html-fixture').querySelector('template[is="imported-template"]');
-                myEl.setAttribute('content', '../examples/partials/basic.html');
-                sinon.spy(myEl, 'skipStampingPendingFile');
-            });
-            it('to another url, skipStampingPendingFile method should get called', function(){
-                myEl.setAttribute('content', '../examples/partials/concatenated.html');
-                expect(myEl.skipStampingPendingFile).to.be.calledOnce;
-            });
-            it('to a string, skipStampingPendingFile method should get called', function(){
-                myEl.setAttribute('content', 'blah');
-                expect(myEl.skipStampingPendingFile).to.be.calledOnce;
-            });
-            it('to `null`, skipStampingPendingFile method should get called', function(){
-                myEl.setAttribute('content', null);
-                expect(myEl.skipStampingPendingFile).to.be.calledOnce;
-            });
-        });
-    });
     </script>
 
 </body>

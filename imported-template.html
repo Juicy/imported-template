@@ -31,8 +31,10 @@ https://github.com/Juicy/imported-template
             HTMLImports.parser.addElementToDocument = monkeyPatchedAddElementToDocument;
         }
 
-        var ImportedTemplatePrototype = Object.create(JuicyHTMLElement.prototype);
-
+        class ImportedTemplate extends customElements.get('juicy-html') {
+            static get observedAttributes() {return ['model', 'content']; }
+        };
+        var ImportedTemplatePrototype = ImportedTemplate.prototype;
         /**
          * Reference to pending (requested) HTMLLinkElement
          * @type {HTMLLinkElement}
@@ -210,9 +212,7 @@ https://github.com/Juicy/imported-template
             }
         }
 
-        document.registerElement('imported-template', {
-            prototype: ImportedTemplatePrototype,
-            extends: "template"
-        });
+
+        customElements.define('imported-template', ImportedTemplate, {extends: 'template'});
     })();
 </script>

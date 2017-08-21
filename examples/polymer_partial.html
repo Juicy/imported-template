@@ -3,7 +3,8 @@
 <head>
     <meta charset="utf-8">
     <title>&lt;imported-template&gt; merged partial</title>
-    <script src="../../webcomponentsjs/webcomponents.js"></script>
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../../document-register-element/build/document-register-element.js"></script>
 
     <script src="../../object.observe/dist/object-observe.min.js"></script>
     <script src="../../array.observe/array-observe.min.js"></script>
@@ -30,28 +31,30 @@
     </style>
 </head>
 <body class="markdown-body">
-    <template is="dom-bind" id="root">
-        <!-- we use dom-bind-notifier to simplyfy two-way data-binding within dom-bind itself -->
-        <dom-bind-notifier ref="root" observed-object="{{model}}" path="model" deep></dom-bind-notifier>
-        <h1><code>imported-template</code> within Polymer's <code>dom-bind</code></h1>
-        <p><code>imported-template</code> plays nice with Polymer, even when used within <code>dom-bind</code>, and it stamps nested one - object is shared (given by reference) to nested instances.</p>
-        <p>So, you can access, and edit same object properties from outside: <input value="{{model.data.content::input}}" /></p>
-        <p>See console for more details.</p>
-        <pre><code>&lt;template is="imported-template"
-        content$="{{model.path}}"
-        model="{{model.data}}"
-        &gt;&lt;/template&gt;</code></pre>
-        <hr />
-        <template is="imported-template"
-                  content$="{{model.path}}"
-                  model="{{model.data}}">
+    <dom-bind>
+        <template is="dom-bind" id="root">
+            <!-- we use dom-bind-notifier to simplyfy two-way data-binding within dom-bind itself -->
+            <dom-bind-notifier ref="root" observed-object="{{model}}" path="model" deep></dom-bind-notifier>
+            <h1><code>imported-template</code> within Polymer's <code>dom-bind</code></h1>
+            <p><code>imported-template</code> plays nice with Polymer, even when used within <code>dom-bind</code>, and it stamps nested one - object is shared (given by reference) to nested instances.</p>
+            <p>So, you can access, and edit same object properties from outside: <input value="{{model.data.content::input}}" /></p>
+            <p>See console for more details.</p>
+            <pre><code>&lt;template is="imported-template"
+            content$="{{model.path}}"
+            model="{{model.data}}"
+            &gt;&lt;/template&gt;</code></pre>
+            <hr />
+            <template is="imported-template"
+                      content$="{{model.path}}"
+                      model="{{model.data}}">
+            </template>
+            <hr />
         </template>
-        <hr />
-    </template>
+    </dom-bind>
     <script>
         (function () {
             document.addEventListener('WebComponentsReady', function (){
-                var template = document.getElementById("root");
+                var template = Polymer.Element ? document.querySelector("dom-bind") : document.getElementById("root");
 
                 template.model = {
                     path: "./partials/polymer_binding.html",

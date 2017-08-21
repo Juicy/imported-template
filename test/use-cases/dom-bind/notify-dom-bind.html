@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
 
     <script src="../../../../webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../../../../document-register-element/build/document-register-element.js"></script>
     <script src="../../../../web-component-tester/browser.js"></script>
 
     <!-- Step 1: import the element to test -->
@@ -20,10 +21,12 @@
         <template>
             <div>
                 <h1>outside dom-bind</h1>
-                <template is="dom-bind" id="externalDomBind">
-                    <div>inside dom-bind</div>
-                    <template is="imported-template" model="{{model}}" content="./notify-dom-bind.import.html"></template>
-                </template>
+                <dom-bind id="externalDomBind">
+                    <template is="dom-bind">
+                        <div>inside dom-bind</div>
+                        <template is="imported-template" model="{{model}}" content="./notify-dom-bind.import.polymer2.html"></template>
+                    </template>
+                </dom-bind>
             </div>
         </template>
     </test-fixture>
@@ -40,11 +43,16 @@
                     works: "not scoped works ok",
                     MyVendorName: {
                         works: "scoped works ok"
-                    }
+                    },
+                    url: Polymer.Element? './notify-dom-bind.import.polymer2.html' : './notify-dom-bind.import.html'
                 };
                 myElContainer = fixture('imported-template-fixture');
                 setTimeout(function waitForTestFixtureStamp() {
                     externalDomBind = myElContainer.querySelector('#externalDomBind');
+                    // Polymer < 2.0
+                    if(!Polymer.Element){
+                        externalDomBind = externalDomBind.querySelector('template[is="dom-bind"]');
+                    }
                     externalDomBind.model = statefulModel;
                     //wait for dom-bind stamp
                     setTimeout(done, 100);

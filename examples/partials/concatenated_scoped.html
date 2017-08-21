@@ -12,9 +12,11 @@
 <imported-template-scope scope="vendorB">
 	<link rel="import" href="../../../polymer/polymer.html">
 	<template>
-		<template is="dom-bind">
-			and this is from the second part of <code>./partials/concatenated_scoped.html</code>,
-			with data <em>{{model.data}}</em>.
-		</template>
+        <dom-bind>
+    		<template is="dom-bind">
+    			and this is from the second part of <code>./partials/concatenated_scoped.html</code>,
+    			with data <em>{{model.data}}</em>.
+    		</template>
+        </dom-bind>
 	</template>
 </imported-template-scope>

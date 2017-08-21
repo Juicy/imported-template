@@ -4,7 +4,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
 
-    <script src="../../webcomponentsjs/webcomponents.js"></script>
+  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+<script src="../../document-register-element/build/document-register-element.js"></script>
     <script src="../../web-component-tester/browser.js"></script>
 
     <!-- if we use WCT suites, it is loaded per suite -->
@@ -16,9 +17,9 @@
     <script>
         // Load and run all tests (.html, .js):
         WCT.loadSuites([
-        'juicy-html_inline.html',
-        'juicy-html_no-content.html',
-        'juicy-html_skipping.html',
+        // 'juicy-html_inline.html',
+        // 'juicy-html_no-content.html',
+        // 'juicy-html_skipping.html',
           'html-imports_behavior/per-template_scripts.html',
           'html-imports_behavior/per-import_script.html',
           'use-cases/previousElementSibling/previousElementSibling.html',

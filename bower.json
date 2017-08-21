@@ -2,12 +2,12 @@
   "name": "imported-template",
   "version": "1.5.0",
   "devDependencies": {
-    "dom-bind-notifier": "~1.0.0",
     "iron-icon": "PolymerElements/iron-icon#~1.0.4",
     "iron-iconset-svg": "PolymerElements/iron-iconset-svg#~1.0.4",
     "web-component-tester": "Polymer/web-component-tester#~4.0.3",
-    "object.observe": "^0.2.6",
-    "array.observe": "^0.0.1"
+    "polymer": "^2.0.0",
+    "webcomponentsjs": "^1.0.0",
+    "document-register-element": "^1.7.0"
   },
   "keywords": [
     "html",
@@ -38,6 +38,6 @@
     "wct.conf.json"
   ],
   "dependencies": {
-    "juicy-html": ">=1.1.0"
+    "juicy-html": "#issues/27-CEv1"
   }
 }

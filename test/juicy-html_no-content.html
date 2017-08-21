@@ -6,6 +6,9 @@
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
 
     <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+    <!-- <script>var _MO=window.MutationObserver;delete window.MutationObserver;</script> -->
+    <script src="../../document-register-element/build/document-register-element.js"></script>
+    <!-- <script>window.MutationObserver=_MO</script> -->
     <script src="../../web-component-tester/browser.js"></script>
 
     <!-- Step 1: import the element to test -->
@@ -17,21 +20,21 @@
     <test-fixture id="juicy-html-with-content">
         <template>
             <!-- nest to workaround test-fixture bug -->
-            <div><template is="imported-template" content="./mock/smth.html">
+            <div><template is="imported-template" content="/mock/smth">
             </template></div>
         </template>
     </test-fixture>
     <test-fixture id="juicy-html-204-empty">
         <template>
             <!-- nest to workaround test-fixture bug -->
-            <div><template is="imported-template" content="./mock/204.html">
+            <div><template is="imported-template" content="/mock/204">
             </template></div>
         </template>
     </test-fixture>
     <test-fixture id="juicy-html-200-empty">
         <template>
             <!-- nest to workaround test-fixture bug -->
-            <div><template is="imported-template" content="./mock/200.html">
+            <div><template is="imported-template" content="/mock/200">
             </template></div>
         </template>
     </test-fixture>
@@ -59,10 +62,12 @@
                     //whenever the this returns true the request will not faked
                     return !url.match(/mock\//);
                 });
-
+                server.respondWith('GET', '/mock/204', [204, {"Content-Type": "text/html"}, '']);
+                server.respondWith('GET', '/mock/200', [200, {"Content-Type": "text/html"}, '']);
+                server.respondWith('GET', '/mock/smth', [200, {"Content-Type": "text/html"}, '<div id="smth">smth</div>']);
                 server.autoRespond = true;
             });
-            xcontext('when external file returns <code>204 No Content</code>', function () {
+            context('when external file returns <code>204 No Content</code>', function () {
                 beforeEach(function (done) {
 
                     myEl = fixture('juicy-html-204-empty').querySelector('template[is="imported-template"]');
@@ -89,7 +94,7 @@
                 beforeEach(function (done) {
                     myEl = fixture('juicy-html-200-empty').querySelector('template[is="imported-template"]');
                     changedEl = fixture('juicy-html-with-content').querySelector('template[is="imported-template"]');
-                    changedEl.setAttribute('content', './mock/200.html');
+                    changedEl.setAttribute('content', '/mock/200');
                     // wait for (faked) XHR
                     setTimeout(done, 100);
                 });
@@ -101,23 +106,9 @@
                     expect(changedEl.nextElementSibling).to.be.null;
                     expect(changedEl.previousElementSibling).to.be.null;
                 });
-                xit('should call <code>console.warn</code>', function () {
+                it('should call <code>console.warn</code>', function () {
                     expect(warnSpy).to.be.called;
                     expect(warnSpy).to.be.calledTwice; // once per element
-                });
-                describe('[not desired but expected]', function(){
-                    it('should call not call <code>console.warn</code> in pollyfiled HTML Imports until webcomponents/webcomponentsjs/issues/535 gets fixed/merged', function () {
-                        if(HTMLImports && HTMLImports.useNative === false){
-                            expect(warnSpy).not.to.be.called;
-                            expect(warnSpy).not.to.be.calledTwice; // once per element
-                        }
-                    });
-                    it('should call call <code>console.warn</code> for native HTML Imports ', function () {
-                        if(!HTMLImports || HTMLImports.useNative === true){
-                            expect(warnSpy).to.be.called;
-                            expect(warnSpy).to.be.calledTwice; // once per element
-                        }
-                    });
                 });
 
             });

@@ -1,0 +1,20 @@
+<imported-template-scope scope="MyVendorName">
+    <template>
+        <dom-bind id="internalDomBindScoped">
+            <template is="dom-bind">
+                <div>notify-dom-bind.import.html
+                    <span id="internalSpanScoped">{{model.works}}</span>
+                </div>
+            </template>
+        </dom-bind>
+    </template>
+</imported-template-scope>
+<template>
+    <dom-bind id="internalDomBind">
+        <template is="dom-bind">
+            <div>notify-dom-bind.import.html
+                <span id="internalSpan">{{model.works}}</span>
+            </div>
+        </template>
+    </dom-bind>
+</template>
