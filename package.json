@@ -1,7 +1,7 @@
 {
   "name": "imported-template",
   "version": "1.5.0",
-  "description": "Custom element that lets you load HTML partials into your Web Components, and take full control over loaded `<script>`s and `<link rel=\"import\">`s.",
+  "description": "Declarative way for client-side includes boosted with HTML Imports features, like full control over loaded `<script>`s and `<link>`s, caching, de-duping, etc.",
   "homepage": "https://github.com/Juicy/imported-template",
   "repository": {
     "type": "git",
@@ -17,7 +17,14 @@
   },
   "main": "./imported-template.html",
   "keywords": [
-    "web-components"
+    "include",
+    "partials",
+    "html",
+    "declarative",
+    "client-side",
+    "custom-element",
+    "web-components",
+    "polymer"
   ],
   "license": "MIT",
   "devDependencies": {

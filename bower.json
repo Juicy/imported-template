@@ -10,10 +10,12 @@
     "array.observe": "^0.0.1"
   },
   "keywords": [
-    "html",
     "include",
-    "partial",
-    "template",
+    "partials",
+    "html",
+    "declarative",
+    "client-side",
+    "custom-element",
     "web-components",
     "polymer"
   ],
@@ -23,7 +25,7 @@
     "Joachim Wester <joachimwester@me.com>",
     "Marcin Warpechowski <marcin@nextgen.pl>"
   ],
-  "description": "Custom element that loads HTML partials into your DOM, control loaded `<script>`s, `<link>`s, caching in native way. Plays nice with Polymer",
+  "description": "Declarative way for client-side includes boosted with HTML Imports features, like full control over loaded `<script>`s and `<link>`s, caching, de-duping, etc.",
   "main": "./imported-template.html",
   "license": "MIT",
   "ignore": [
