@@ -116,7 +116,7 @@
                     it('should call call <code>console.warn</code> for native HTML Imports ', function () {
                         if(!HTMLImports || HTMLImports.useNative === true){
                             expect(warnSpy.withArgs(sinon.match.any, sinon.match.any, sinon.match(/empty/))).to.be.called;
-                            expect(warnSpy.withArgs(sinon.match.any, sinon.match.any, sinon.match(/empty/))).to.be.calledThrice; // once per element
+                            expect(warnSpy.withArgs(sinon.match.any, sinon.match.any, sinon.match(/empty/))).to.be.calledTwice; // once per element
                         }
                     });
                 });
