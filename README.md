@@ -2,7 +2,7 @@
 ==============
 > Declarative way for client-side includes boosted with HTML Imports features.
 
-`<imported-template>` (in fact `<template is="imported-template">`) is a custom element that let's you load template from external file into your document, and take full control over loaded `<script>`s and `<link rel="import">`s. Thanks to HTML Imports - caching, script execution, etc. is completely native.
+`<imported-template>` (in fact `<template is="imported-template">`) is a custom element that lets you load template from external file into your document, and take full control over loaded `<script>`s and `<link rel="import">`s. Thanks to HTML Imports - caching, script execution, etc. are completely native.
 It also provides a simple data-binding feature, that plays nice with Polymer or pure JavaScript + HTML data-binding.
 
 ### Small sample
