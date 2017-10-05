@@ -22,7 +22,7 @@ You can load all dependencies and stamp template content in your main document w
 <template is="imported-template" href="/path/to/file.html"></template>
 ```
 
-> Please note that dependencies will be loaded only once, but content and inner `<script>doMagic...` will get stamped and executed as many times as you use `<<template is="imported-template">`
+> Please note that dependencies will be loaded only once, but content and inner `<script>doMagic...` will get stamped and executed as many times as you use `<template is="imported-template">`
 
 ## Demo/Examples
 
@@ -93,25 +93,28 @@ Or [download as ZIP](https://github.com/Juicy/imported-template/archive/master.z
 
 Attribute           | Options         | Default     | Description
 ---                 | ---             | ---         | ---
-`html`              | *string*		  | `""`	    | Safe HTML code to be stamped. Setting this one will skip any pending request for `href` and remove `href` attribute.
-`href`              | *string*		  | `""`	    | Path of a partial to be loaded. Setting this one will remove `html` attribute.
-`model`(_optional_) | *Object|String* | `undefined` | Object (or `JSON.stringify`'ied Object) to be attached to every stamped (root) node
+`html`              | *String*		  | `""`	    | Safe HTML code to be stamped. Setting this one will skip any pending request for `href` and remove `href` attribute.
+`href`              | *String*		  | `""`	    | Path of a partial to be loaded. Setting this one will remove `html` attribute.
+`model`(_optional_) | *Object/String* | `undefined` | Object (or `JSON.stringify`'ied Object) to be attached to every stamped (root) node
 
 ## Properties
 
 Property       | Type              | Default       | Description
 ---            | ---               | ---           | ---
 `model`        | *Object*          | `undefined`   | See [attributes](#Attributes), plays nice with Polymer data-binding
-`html`         | *string*          | `""`	       | See [attributes](#Attributes)
-`href`         | *string*          | `""`	       | See [attributes](#Attributes)
+`html`         | *String*          | `""`	       | See [attributes](#Attributes)
+`href`         | *String*          | `""`	       | See [attributes](#Attributes)
 `pending`      | *HTMLLinkElement* |               | HTML Import's `<link>` that is being loaded (if any)
 `stampedNodes` | *Array*           | `[]`          | Array of stamped nodes.
 
+Please note, that properties are available after element is upgraded.
+To provide a state before element is upgraded, please use attributes.
+
 ## Events
 
-Name       | Detail                                    | Description
----        | ---                                       | ---
-`stamping` | *DocumentFragment*	fragment being stamped | Called just before stamping the fragment
+Name       | Detail                                     | Description
+---        | ---                                        | ---
+`stamping` | *DocumentFragment*	fragment being stamped  | Called just before stamping the fragment
 
 ### Dependencies
 
