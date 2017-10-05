@@ -31,7 +31,7 @@
 
     <script>
         describe('<juicy-html>', function () {
-            var myEl, changedEl, server, infoSpy, warnSpy, errorSpy;
+            var myEl, changedEl, infoSpy, warnSpy, errorSpy;
             beforeEach(function () {
                 infoSpy = sinon.spy(console, 'info');
                 infoSpy.displayName = 'console.info';
@@ -60,7 +60,7 @@
             context('when content attribute is changed', function () {
                 beforeEach(function (done) {
                     myEl = fixture('juicy-html-without-content').querySelector('template[is="imported-template"]');
-                    myEl.setAttribute('content', './mock/smth.html');
+                    myEl.setAttribute('content', '../mock/smth.html');
                     // wait for (faked) XHR
                     setTimeout(done, 100);
                 });

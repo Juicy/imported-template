@@ -5,33 +5,33 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
 
-    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
-    <script src="../../web-component-tester/browser.js"></script>
+    <script src="../../../webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../../../web-component-tester/browser.js"></script>
 
     <!-- Step 1: import the element to test -->
-    <link rel="import" href="../imported-template.html">
+    <link rel="import" href="../../imported-template.html">
 </head>
 
 <body>
 
-    <test-fixture id="juicy-html-with-href">
+    <test-fixture id="juicy-html-with-content">
         <template>
             <!-- nest to workaround test-fixture bug -->
-            <div><template is="imported-template" href="/mock/smth">
+            <div><template is="imported-template" content="../mock/smth.html">
             </template></div>
         </template>
     </test-fixture>
     <test-fixture id="juicy-html-204-empty">
         <template>
             <!-- nest to workaround test-fixture bug -->
-            <div><template is="imported-template" href="/mock/204">
+            <div><template is="imported-template" content="../mock/204">
             </template></div>
         </template>
     </test-fixture>
     <test-fixture id="juicy-html-200-empty">
         <template>
             <!-- nest to workaround test-fixture bug -->
-            <div><template is="imported-template" href="./mock/200">
+            <div><template is="imported-template" content="../mock/200">
             </template></div>
         </template>
     </test-fixture>
@@ -40,39 +40,38 @@
         describe('<juicy-html>', function () {
             var myEl, changedEl, server, infoSpy, warnSpy, errorSpy;
             beforeEach(function () {
+                // set up spies
                 infoSpy = sinon.spy(console, 'info');
                 infoSpy.displayName = 'console.info';
                 warnSpy = sinon.spy(console, 'warn');
                 warnSpy.displayName = 'console.warn';
                 errorSpy = sinon.spy(console, 'error');
                 errorSpy.displayName = 'console.error';
+                // setup server
+                server = sinon.fakeServer.create();
+                server.xhr.useFilters = true;
+                server.xhr.addFilter(function (method, url) {
+                    //whenever this returns true the request will not faked
+                    return !url.match(/\.\.\/mock\/204/);
+                });
+                server.respondWith('GET', '../mock/204', [204, {"Content-Type": "text/html"}, '']);
+                server.autoRespond = true;
             });
             afterEach(function () {
                 infoSpy.restore();
                 warnSpy.restore();
                 errorSpy.restore();
-            });
-            before(function () {
-                var server = sinon.fakeServer.create();
-                server.xhr.useFilters = true;
-                server.xhr.addFilter(function (method, url) {
-                    //whenever the this returns true the request will not faked
-                    return !url.match(/mock\//);
-                });
-                server.respondWith('GET', '/mock/204', [204, {"Content-Type": "text/html"}, '']);
-                server.respondWith('GET', '/mock/200', [200, {"Content-Type": "text/html"}, '']);
-                server.respondWith('GET', './mock/200', [200, {"Content-Type": "text/html"}, '']);
-                server.respondWith('GET', '/mock/smth', [200, {"Content-Type": "text/html"}, '<div id="smth">smth</div>']);
-                server.autoRespond = true;
+
+                server.restore();
             });
             xcontext('when external file returns <code>204 No Content</code>', function () {
                 beforeEach(function (done) {
 
                     myEl = fixture('juicy-html-204-empty').querySelector('template[is="imported-template"]');
-                    changedEl = fixture('juicy-html-with-href').querySelector('template[is="imported-template"]');
-                    changedEl.setAttribute('href', '/mock/204');
+                    changedEl = fixture('juicy-html-with-content').querySelector('template[is="imported-template"]');
+                    changedEl.setAttribute('content', '../mock/204');
                     // wait for (faked) XHR
-                    setTimeout(done, 100);
+                    setTimeout(done, 300);
                 });
                 it('should not throw any error', function () {
                     expect(errorSpy).not.to.be.called;
@@ -91,10 +90,10 @@
             context('when external file returns <code>200 Ok</code> but no content', function () {
                 beforeEach(function (done) {
                     myEl = fixture('juicy-html-200-empty').querySelector('template[is="imported-template"]');
-                    changedEl = fixture('juicy-html-with-href').querySelector('template[is="imported-template"]');
-                    changedEl.setAttribute('href', './mock/200');
+                    changedEl = fixture('juicy-html-with-content').querySelector('template[is="imported-template"]');
+                    changedEl.setAttribute('content', '../mock/200');
                     // wait for (faked) XHR
-                    setTimeout(done, 100);
+                    setTimeout(done, 300);
                 });
                 it('should not throw any error', function () {
                     expect(errorSpy).not.to.be.called;
@@ -104,21 +103,21 @@
                     expect(changedEl.nextElementSibling).to.be.null;
                     expect(changedEl.previousElementSibling).to.be.null;
                 });
-                xit('should call <code>console.warn</code>', function () {
-                    expect(warnSpy).to.be.called;
-                    expect(warnSpy).to.be.calledTwice; // once per element
+                xit('should call <code>console.warn</code> with message about "empty"', function () {
+                    expect(warnSpy.withArgs(sinon.match(/empty/))).to.be.called;
+                    expect(warnSpy.withArgs(sinon.match(/empty/))).to.be.calledTwice; // once per element
                 });
                 describe('[not desired but expected]', function(){
                     it('should call not call <code>console.warn</code> in pollyfiled HTML Imports until webcomponents/webcomponentsjs/issues/535 gets fixed/merged', function () {
                         if(HTMLImports && HTMLImports.useNative === false){
-                            expect(warnSpy).not.to.be.called;
-                            expect(warnSpy).not.to.be.calledTwice; // once per element
+                            expect(warnSpy.withArgs(sinon.match.any, sinon.match.any, sinon.match(/empty/))).not.to.be.called;
+                            expect(warnSpy.withArgs(sinon.match.any, sinon.match.any, sinon.match(/empty/))).not.to.be.calledTwice; // once per element
                         }
                     });
                     it('should call call <code>console.warn</code> for native HTML Imports ', function () {
                         if(!HTMLImports || HTMLImports.useNative === true){
-                            expect(warnSpy).to.be.called;
-                            expect(warnSpy).to.be.calledTwice; // once per element
+                            expect(warnSpy.withArgs(sinon.match.any, sinon.match.any, sinon.match(/empty/))).to.be.called;
+                            expect(warnSpy.withArgs(sinon.match.any, sinon.match.any, sinon.match(/empty/))).to.be.calledTwice; // once per element
                         }
                     });
                 });
