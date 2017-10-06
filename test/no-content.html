@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html>
 
 <head>
@@ -14,24 +14,24 @@
 
 <body>
 
-    <test-fixture id="juicy-html-with-content">
+    <test-fixture id="juicy-html-with-href">
         <template>
             <!-- nest to workaround test-fixture bug -->
-            <div><template is="imported-template" content="./mock/smth.html">
+            <div><template is="imported-template" href="./mock/smth">
             </template></div>
         </template>
     </test-fixture>
     <test-fixture id="juicy-html-204-empty">
         <template>
             <!-- nest to workaround test-fixture bug -->
-            <div><template is="imported-template" content="./mock/204.html">
+            <div><template is="imported-template" href="./mock/204">
             </template></div>
         </template>
     </test-fixture>
     <test-fixture id="juicy-html-200-empty">
         <template>
             <!-- nest to workaround test-fixture bug -->
-            <div><template is="imported-template" content="./mock/200.html">
+            <div><template is="imported-template" href="./mock/200">
             </template></div>
         </template>
     </test-fixture>
@@ -53,23 +53,26 @@
                 errorSpy.restore();
             });
             before(function () {
-                var server = sinon.fakeServer.create();
+                server = sinon.fakeServer.create();
                 server.xhr.useFilters = true;
                 server.xhr.addFilter(function (method, url) {
-                    //whenever the this returns true the request will not faked
-                    return !url.match(/mock\//);
+                    //whenever this returns true the request will not faked
+                    return !url.match(/\.\/mock\/204/);
                 });
-
+                server.respondWith('GET', './mock/204', [204, {"Content-Type": "text/html"}, '']);
                 server.autoRespond = true;
+            });
+            after(function () {
+                server.restore();
             });
             xcontext('when external file returns <code>204 No Content</code>', function () {
                 beforeEach(function (done) {
 
                     myEl = fixture('juicy-html-204-empty').querySelector('template[is="imported-template"]');
-                    changedEl = fixture('juicy-html-with-content').querySelector('template[is="imported-template"]');
-                    changedEl.setAttribute('content', '/mock/204');
+                    changedEl = fixture('juicy-html-with-href').querySelector('template[is="imported-template"]');
+                    changedEl.setAttribute('href', './mock/204');
                     // wait for (faked) XHR
-                    setTimeout(done, 100);
+                    setTimeout(done, 300);
                 });
                 it('should not throw any error', function () {
                     expect(errorSpy).not.to.be.called;
@@ -88,10 +91,10 @@
             context('when external file returns <code>200 Ok</code> but no content', function () {
                 beforeEach(function (done) {
                     myEl = fixture('juicy-html-200-empty').querySelector('template[is="imported-template"]');
-                    changedEl = fixture('juicy-html-with-content').querySelector('template[is="imported-template"]');
-                    changedEl.setAttribute('content', './mock/200.html');
+                    changedEl = fixture('juicy-html-with-href').querySelector('template[is="imported-template"]');
+                    changedEl.setAttribute('href', './mock/200');
                     // wait for (faked) XHR
-                    setTimeout(done, 100);
+                    setTimeout(done, 300);
                 });
                 it('should not throw any error', function () {
                     expect(errorSpy).not.to.be.called;
@@ -106,13 +109,13 @@
                     expect(warnSpy).to.be.calledTwice; // once per element
                 });
                 describe('[not desired but expected]', function(){
-                    it('should call not call <code>console.warn</code> in pollyfiled HTML Imports until webcomponents/webcomponentsjs/issues/535 gets fixed/merged', function () {
+                    it('should not call <code>console.warn</code> in pollyfiled HTML Imports until webcomponents/webcomponentsjs/issues/535 gets fixed/merged', function () {
                         if(HTMLImports && HTMLImports.useNative === false){
                             expect(warnSpy).not.to.be.called;
                             expect(warnSpy).not.to.be.calledTwice; // once per element
                         }
                     });
-                    it('should call call <code>console.warn</code> for native HTML Imports ', function () {
+                    it('should call <code>console.warn</code> for native HTML Imports ', function () {
                         if(!HTMLImports || HTMLImports.useNative === true){
                             expect(warnSpy).to.be.called;
                             expect(warnSpy).to.be.calledTwice; // once per element
