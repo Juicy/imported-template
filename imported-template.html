@@ -145,6 +145,9 @@ https://github.com/Juicy/imported-template
             // TODO(tomalec): check if it's still required
             setTimeout(function appendAsync() {
                 document.head.appendChild(link);
+                that.dispatchEvent(new CustomEvent("stamped", {
+                    detail: that.stampedNodes
+                }));
             });
             return this;
         };

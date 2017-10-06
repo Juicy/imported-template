@@ -114,6 +114,7 @@ To provide a state before element is upgraded, please use attributes.
 
 Name       | Detail                                     | Description
 ---        | ---                                        | ---
+`stamped`  | *Array* of *Node* s array of stamped nodes | Trigger every time content is (re-)stamped
 `stamping` | *DocumentFragment*	fragment being stamped  | Called just before stamping the fragment
 
 ### Dependencies
