@@ -167,20 +167,27 @@ https://github.com/Juicy/imported-template
 
         function _notifyNodes(path, value, nodes) {
             for (var childNo = 0; childNo < nodes.length; childNo++) {
-                if (nodes[childNo]._notifyPath) {
-                    nodes[childNo]._notifyPath(path, value);
+                if (nodes[childNo].notifyPath) {
+                    nodes[childNo].notifyPath(path, value);
                 }
             }
         }
 
+
+        // to fool Polymer into thinking `imported-template` is a polymer element thus forwarding notifications to it.
+        ImportedTemplatePrototype.__dataHasAccessor = {partial: true, viewModel: true, model: true};
+        // Polymer doesn't set props on its own components, rather, it calls this function
+        ImportedTemplatePrototype._setPendingProperty = function (path, value) {    
+            this[path] = value;
+        }
         /**
-         * Forward Polymer notification downwards from upper
-         * `<template is="dom-bind">`
-         * to the imported `<template is="dom-bind">`
-         * @param  {String} path Polymer notification path
-         * @param  {Mixed} value New value
-         */
-        ImportedTemplatePrototype._notifyPath = function (path, value) {
+        * Forward Polymer notification downwards from `<dom-bind>`
+        * to <template is="imported-template">
+        * @param  {String} path Polymer notification path
+        * @param  {Mixed} value New value
+        */
+        ImportedTemplatePrototype._setPendingPropertyOrPath = function (path, value) {
+            
             if (!this.scopedNodes) {
                 //template not loaded yet. Nothing to forward
                 return;
