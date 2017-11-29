@@ -112,9 +112,10 @@ To provide a state before element is upgraded, please use attributes.
 
 ## Events
 
-Name       | Detail                                     | Description
----        | ---                                        | ---
-`stamping` | *DocumentFragment*	fragment being stamped  | Called just before stamping the fragment
+Name       | When                               | `event.detail`
+---        | ---                                | ---
+`stamped`  | Every time content is (re-)stamped | *Array* of stamped *Node* s
+`stamping` | Just before stamping the fragment  | *DocumentFragment*	being stamped
 
 ### Dependencies
 
