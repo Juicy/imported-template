@@ -18,17 +18,16 @@
     <test-fixture id="juicy-html-fixture">
         <template>
             <!-- nest to workaround test-fixture bug -->
-            <div><template is="imported-template" html="<h1>Hello World</h1>">
-            </template></div>
+            <div><imported-template html="<h1>Hello World</h1>"></imported-template></div>
         </template>
     </test-fixture>
 
     <script>
-        describe('<juicy-html>', function() {
+        describe('<imported-template>', function() {
             var myEl;
             context('when created with HTML markup in html attribute', function() {
                 beforeEach(function(done) {
-                    myEl = fixture('juicy-html-fixture').querySelector('template[is="imported-template"]');
+                    myEl = fixture('juicy-html-fixture').querySelector('imported-template');
                     // wait for polyfilled callbacks
                     setTimeout(done, 10);
                 });

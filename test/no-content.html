@@ -17,27 +17,24 @@
     <test-fixture id="juicy-html-with-href">
         <template>
             <!-- nest to workaround test-fixture bug -->
-            <div><template is="imported-template" href="./mock/smth">
-            </template></div>
+            <div><imported-template href="./mock/smth.html"></imported-template></div>
         </template>
     </test-fixture>
     <test-fixture id="juicy-html-204-empty">
         <template>
             <!-- nest to workaround test-fixture bug -->
-            <div><template is="imported-template" href="./mock/204">
-            </template></div>
+            <div><imported-template href="./mock/204"></imported-template></div>
         </template>
     </test-fixture>
     <test-fixture id="juicy-html-200-empty">
         <template>
             <!-- nest to workaround test-fixture bug -->
-            <div><template is="imported-template" href="./mock/200">
-            </template></div>
+            <div><imported-template href="./mock/200"></imported-template></div>
         </template>
     </test-fixture>
 
     <script>
-        describe('<juicy-html>', function () {
+        describe('<imported-template>', function () {
             var myEl, changedEl, server, infoSpy, warnSpy, errorSpy;
             beforeEach(function () {
                 infoSpy = sinon.spy(console, 'info');
@@ -68,8 +65,8 @@
             xcontext('when external file returns <code>204 No Content</code>', function () {
                 beforeEach(function (done) {
 
-                    myEl = fixture('juicy-html-204-empty').querySelector('template[is="imported-template"]');
-                    changedEl = fixture('juicy-html-with-href').querySelector('template[is="imported-template"]');
+                    myEl = fixture('juicy-html-204-empty').querySelector('imported-template');
+                    changedEl = fixture('juicy-html-with-href').querySelector('imported-template');
                     changedEl.setAttribute('href', './mock/204');
                     // wait for (faked) XHR
                     setTimeout(done, 300);
@@ -90,8 +87,8 @@
             });
             context('when external file returns <code>200 Ok</code> but no content', function () {
                 beforeEach(function (done) {
-                    myEl = fixture('juicy-html-200-empty').querySelector('template[is="imported-template"]');
-                    changedEl = fixture('juicy-html-with-href').querySelector('template[is="imported-template"]');
+                    myEl = fixture('juicy-html-200-empty').querySelector('imported-template');
+                    changedEl = fixture('juicy-html-with-href').querySelector('imported-template');
                     changedEl.setAttribute('href', './mock/200');
                     // wait for (faked) XHR
                     setTimeout(done, 300);

@@ -34,7 +34,7 @@
   },
   "scripts": {
     "test": "wct",
-    "translate-juicy-html-tests": "grep -r -l juicy-html test/* | xargs sed -i 's/\"juicy-html\"/\"imported-template\"/g;s/juicy-html.html/imported-template.html/g'",
+    "translate-juicy-html-tests": "grep -r -l juicy-html test/* | xargs sed -i \"s/<\\(\\/\\)\\?juicy-html/<\\1imported-template/g;s/'juicy-html'/'imported-template'/g;s/juicy-html\\.html/imported-template\\.html/g\"",
     "fetch-juicy-html-tests": "git clone --depth=1 https://github.com/Juicy/juicy-html.git && rm -rf juicy-html/test/index.html juicy-html/test/mock && cp -r juicy-html/test/. test/ && rm -rf juicy-html",
     "use-juicy-html-tests": "npm run fetch-juicy-html-tests && npm run translate-juicy-html-tests"
   }
