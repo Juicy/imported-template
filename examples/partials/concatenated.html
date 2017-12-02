@@ -9,7 +9,9 @@
 </template>
 <link rel="import" href="../../../polymer/polymer.html">
 <template>
-	<template is="dom-bind">
-		and this is from the second part of <code>{{model.path}}</code>.
-	</template>
+	<dom-bind>
+		<template is="dom-bind">
+			and this is from the second part of <code>{{model.path}}</code>.
+		</template>
+	</dom-bind>
 </template>

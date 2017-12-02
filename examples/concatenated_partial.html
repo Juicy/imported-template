@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <title>&lt;imported-template&gt; merged partial</title>
-  <script src="../../webcomponentsjs/webcomponents.js"></script>
+  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
 
   <link rel="import" href="../imported-template.html">
 
@@ -22,15 +22,15 @@
 <body class="markdown-body">
     <h1>Concatenated partials/templates</h1>
     <p>To boost performance <code>imported-template</code> supports concatenated partials, and stamps all "root" templates all together.</p>
-    <pre><code>&lt;template is="imported-template"
-    content="./partials/concatenated.html"
+    <pre><code>&lt;imported-template
+    href="./partials/concatenated.html"
     model='{"path":"./partials/concatenated.html"}'
-    &gt;&lt;/template&gt;</code></pre>
+    &gt;&lt;/imported-template&gt;</code></pre>
     <hr/>
-    <template is="imported-template"
-        content="./partials/concatenated.html"
+    <imported-template
+        href="./partials/concatenated.html"
         model='{"path":"./partials/concatenated.html"}'
-    ></template>
+    ></imported-template>
     <hr/>
     <p>Please note, that if not specified otherwise, all shares same data model</p>
 

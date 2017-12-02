@@ -100,23 +100,9 @@
                     expect(changedEl.nextElementSibling).to.be.null;
                     expect(changedEl.previousElementSibling).to.be.null;
                 });
-                xit('should call <code>console.warn</code> with message about "empty"', function () {
+                it('should call <code>console.warn</code> with message about "empty"', function () {
                     expect(warnSpy.withArgs(sinon.match(/empty/))).to.be.called;
                     expect(warnSpy.withArgs(sinon.match(/empty/))).to.be.calledTwice; // once per element
-                });
-                describe('[not desired but expected]', function(){
-                    it('should not call <code>console.warn</code> in pollyfiled HTML Imports until webcomponents/webcomponentsjs/issues/535 gets fixed/merged', function () {
-                        if(HTMLImports && HTMLImports.useNative === false){
-                            expect(warnSpy.withArgs(sinon.match.any, sinon.match.any, sinon.match(/empty/))).not.to.be.called;
-                            expect(warnSpy.withArgs(sinon.match.any, sinon.match.any, sinon.match(/empty/))).not.to.be.calledTwice; // once per element
-                        }
-                    });
-                    it('should call <code>console.warn</code> for native HTML Imports ', function () {
-                        if(!HTMLImports || HTMLImports.useNative === true){
-                            expect(warnSpy.withArgs(sinon.match.any, sinon.match.any, sinon.match(/empty/))).to.be.called;
-                            expect(warnSpy.withArgs(sinon.match.any, sinon.match.any, sinon.match(/empty/))).to.be.calledTwice; // once per element
-                        }
-                    });
                 });
 
             });

@@ -3,7 +3,7 @@
     <title>Polymer binding issue</title>
     <meta charset="utf-8">
     <!-- Import Polymer platform -->
-    <script src="../../../webcomponentsjs/webcomponents.js"></script>
+    <script src="../../../webcomponentsjs/webcomponents-lite.js"></script>
     <link rel="import" href="../../../polymer/polymer.html">
 
     <link rel="import" href="../../imported-template.html">
@@ -11,7 +11,7 @@
 
 <body>
   <template id="root" bind>
-    <template is="imported-template" content="./templates/start.html"></template>
+    <imported-template href="./templates/start.html"></imported-template>
   </template>
 
   <script type="text/javascript">

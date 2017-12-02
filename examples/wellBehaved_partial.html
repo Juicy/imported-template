@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <title>&lt;imported-template&gt; with simple data binding</title>
-  <script src="../../webcomponentsjs/webcomponents.js"></script>
+  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
 
   <link rel="import" href="../imported-template.html">
 
@@ -21,19 +21,19 @@
 </head>
 <body class="markdown-body">
     <h1>Imported template with simple data binding</h1>
-    <pre><code>&lt;template is="imported-template"
-    content="./partials/wellBehaved.html"
+    <pre><code>&lt;imported-template
+    href="./partials/wellBehaved.html"
     model='{"name":"imported-template"}'
-&gt;&lt;/template&gt;</code></pre>
+&gt;&lt;/imported-template&gt;</code></pre>
     <hr/>
-    <template is="imported-template"
-        content="./partials/wellBehaved.html"
+    <imported-template
+        href="./partials/wellBehaved.html"
         model='{
             "polymer": "Polymer `dom-bind`",
             "vanilla": "Native JS+HTML",
             "data":"data model"
         }'
-        ></template>
+        ></imported-template>
 
 </body>
 </html>

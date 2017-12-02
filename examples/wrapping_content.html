@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <title>&lt;imported-template&gt; with wrapping content</title>
-  <script src="../../webcomponentsjs/webcomponents.js"></script>
+  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
   <link rel="import" href="../../polymer/polymer.html">
   <link rel="import" href="../imported-template.html">
   <style>
@@ -19,7 +19,7 @@ Let's greet
 <template id="test" bind>
   <ul>
   <template repeat="{{ users }}">
-      <template is="imported-template" content="{{ html }}"><li><content></content></li></template>
+      <imported-template href="{{ html }}"><template><li><slot></slot></li></template></imported-template>
   </template>
   </ul>
 </template>

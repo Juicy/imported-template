@@ -33,7 +33,9 @@
 		console.log("and simply refer to the model attached", currentScript.model);
 		currentScript.previousElementSibling.innerText = currentScript.model.vanilla;
 	</script>
-    <template is="dom-bind">
-        <h3>{{model.polymer}}</h3>
-    </template>
+    <dom-bind>
+        <template is="dom-bind">
+            <h3>{{model.polymer}}</h3>
+        </template>
+    </dom-bind>
 </template>

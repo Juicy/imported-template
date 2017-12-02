@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <title>&lt;imported-template&gt; in a &lt;template&gt; with HTML partial from a string</title>
-  <script src="../../webcomponentsjs/webcomponents.js"></script>
+  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
   <link rel="import" href="../../polymer/polymer.html">
   <link rel="import" href="../imported-template.html">
   <style>
@@ -16,7 +16,7 @@
 <body>
 
 <template id="test" bind>
-  <template is="imported-template" content="{{ subpage.html }}"></template>
+  <imported-template html="{{ subpage.html }}"></imported-template>
 </template>
 
 <script>
