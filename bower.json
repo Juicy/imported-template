@@ -34,7 +34,7 @@
     "wct.conf.json"
   ],
   "dependencies": {
-    "juicy-html": "#master"
+    "juicy-html": "^3.0.0"
   },
   "devDependencies": {
     "iron-icon": "PolymerElements/iron-icon#~2.0.0",
