@@ -64,7 +64,7 @@ https://github.com/Juicy/imported-template
                     // find only root templates
                     let templates = this.import instanceof Document ?
                         this.import.querySelectorAll("head>template,body>template,imported-template-scope>template") :
-                        this.import.children.filter((e)=>{return e.tagName === 'TEMPLATE'}).concat(this.import.querySelectorAll("imported-template-scope>template"));
+                        this.import.children.filter(e => e.tagName === 'TEMPLATE').concat(this.import.querySelectorAll("imported-template-scope>template"));
                     var fragment, template;
                     var singleTemplate, singleFragment, nodes;
 
@@ -72,7 +72,6 @@ https://github.com/Juicy/imported-template
                     that.scopelessNodes = [];
                     that.clear();
 
-                    debugger
                     if (templates.length >= 1) {
                         fragment = document.createDocumentFragment();
                         // clone templates contents, and mark correct scopes
@@ -159,7 +158,7 @@ https://github.com/Juicy/imported-template
              * @param  {Mixed} value New value
              */
             _notifyPath(path, value) {
-                return this._setPendingPropertyOrPath.call(path, value);
+                return this._setPendingPropertyOrPath.call(this, path, value);
             }
             /**
              * Forward Polymer notification downwards from `<dom-bind>`
