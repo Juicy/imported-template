@@ -1,7 +1,9 @@
 <template>
-    <template is="dom-bind" class="sub-dom-bind">
-        <div class="sub">dom-repeat.import.html <span>{{model.works}}</span></div>
-    </template>
+    <dom-bind class="sub-dom-bind">
+        <template is="dom-bind">
+            <div class="sub">dom-repeat.import.html <span>{{model.works}}</span></div>
+        </template>
+    </dom-bind>
     <script class="sub-script">
     (function(){
         //debugger

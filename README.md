@@ -2,7 +2,7 @@
 ==============
 > Declarative way for client-side includes boosted with HTML Imports features.
 
-`<imported-template>` (in fact `<template is="imported-template">`) is a custom element that lets you load template from external file into your document, and take full control over loaded `<script>`s and `<link rel="import">`s. Thanks to HTML Imports - caching, script execution, etc. are completely native.
+`<imported-template>` is a custom element that lets you load template from external file into your document, and take full control over loaded `<script>`s and `<link rel="import">`s. Thanks to HTML Imports - caching, script execution, etc. are completely native.
 It also provides a simple data-binding feature, that plays nice with Polymer or pure JavaScript + HTML data-binding.
 
 ### Small sample
@@ -19,10 +19,10 @@ If you have your partial **/path/to/file.html** full of your HTML magic:
 ```
 You can load all dependencies and stamp template content in your main document with just
 ```html
-<template is="imported-template" href="/path/to/file.html"></template>
+<imported-template href="/path/to/file.html"></imported-template>
 ```
 
-> Please note that dependencies will be loaded only once, but content and inner `<script>doMagic...` will get stamped and executed as many times as you use `<template is="imported-template">`
+> Please note that dependencies will be loaded only once, but content and inner `<script>doMagic...` will get stamped and executed as many times as you use `<imported-template>`
 
 ## Demo/Examples
 
@@ -69,7 +69,7 @@ Or [download as ZIP](https://github.com/Juicy/imported-template/archive/master.z
 1. Import Web Components' polyfill, if needed:
 
     ```html
-    <script src="bower_components/webcomponentsjs/webcomponents.js"></script>
+    <script src="bower_components/webcomponentsjs/webcomponents-lite.js"></script>
     ```
 
 2. Import Custom Element:
@@ -82,11 +82,11 @@ Or [download as ZIP](https://github.com/Juicy/imported-template/archive/master.z
 
 	To load content from file:
     ```html
-    <template is="imported-template" href="/your/partial.html"></template>
+    <imported-template href="/your/partial.html"></imported-template>
     ```
 	To attach data to content:
     ```html
-    <template is="imported-template" href="/your/partial.html" model='{"json":"data"}'></template>
+    <imported-template href="/your/partial.html" model='{"json":"data"}'></imported-template>
 	```
 
 ## Attributes/Properties

@@ -14,16 +14,22 @@
 </head>
 
 <body>
+    <script>
+        // placeholder for globals
+        window.ImportedTemplateTest = {};
+    </script>
 
     <!-- https://github.com/PolymerElements/test-fixture/issues/24#issuecomment-169811731 -->
     <!-- <test-fixture id="imported-template-fixture"> -->
         <!-- <template> -->
             <div id="dom-bind-fixture">
                 <h1>outside dom-bind</h1>
-                <template is="dom-bind">
-                    <div>inside dom-bind</div>
-                    <template is="imported-template" content="./dom-bind.import.html"></template>
-                </template>
+                <dom-bind>
+                    <template is="dom-bind">
+                        <div>inside dom-bind</div>
+                        <imported-template href="./dom-bind.import.html"></imported-template>
+                    </template>
+                </dom-bind>
             </div>
         <!-- </template> -->
     <!-- </test-fixture> -->
@@ -31,8 +37,6 @@
     <script>
         describe('<imported-template> within `dom-bind`', function() {
             var myElContainer;
-            // placeholder for globals
-            window.ImportedTemplateTest = {};
 
             context('when loads partial with script', function() {
                 before(function() {

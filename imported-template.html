@@ -7,6 +7,7 @@ https://github.com/Juicy/imported-template
 <link rel="import" href="../juicy-html/juicy-html.html">
 <script>
     (function () {
+        // Workaround for polyfilled per-template scripts works with WebComponents.js#v0 only
         var polyfillNeedsWorkaround = (function () {
             var isSafari = navigator.vendor && navigator.vendor.indexOf("Apple") > -1 && navigator.userAgent && !navigator.userAgent.match("CriOS");
             var isSafariWithWc = isSafari && window.navigator.appVersion.match(/(version[/])([7-8][.])/gi);
@@ -31,7 +32,186 @@ https://github.com/Juicy/imported-template
             HTMLImports.parser.addElementToDocument = monkeyPatchedAddElementToDocument;
         }
 
-        var ImportedTemplatePrototype = Object.create(JuicyHTMLElement.prototype);
+        class ImportedTemplate extends customElements.get('juicy-html') {
+            constructor(self) {
+                self = super(self);
+            }
+            /**
+             * Import partial via HTML Import, and replicate its `<template>`.
+             * @IDEA: return promise (if supported) for document load (tomalec)
+             * @public only for debugging.
+             * @param  {String} href partial URL
+             * @return {imported-template}      self
+             */
+            _loadExternalFile(href) {
+                //href is a URL, load the partial from the HTTP server/cache
+                var link = document.createElement('link');
+                link.rel = "import";
+                link.href = href;
+                var that = this;
+                this.pending = link;
+                link.onload = function processImportedDocument() {
+                    // protect yourself agains side-effect of
+                    // https://github.com/webcomponents/webcomponentsjs/issues/470#issuecomment-261238583 workaround
+                    // Re-evaluate need in `starcounter-include` after V1 is shipped
+                    if(!this.import){
+                        return;
+                    }
+                    // TODO(tomalec): caching
+                    // HTML Imports polyfill starting from wc.js#1.x does not create separate document,
+                    // it's just appended to `link` element, therefore there is no `body`
+                    const importsBody = this.import instanceof Document ? this.import.body : this.import;
+                    // find only root templates
+                    let templates = this.import instanceof Document ?
+                        this.import.querySelectorAll("head>template,body>template,imported-template-scope>template") :
+                        this.import.children.filter(e => e.tagName === 'TEMPLATE').concat(this.import.querySelectorAll("imported-template-scope>template"));
+                    var fragment, template;
+                    var singleTemplate, singleFragment, nodes;
+
+                    that.scopedNodes = [];
+                    that.scopelessNodes = [];
+                    that.clear();
+
+                    if (templates.length >= 1) {
+                        fragment = document.createDocumentFragment();
+                        // clone templates contents, and mark correct scopes
+                        // TODO: check if moving by text is faster,
+                        //      as we assume those are templates => document fragments (tomalec)
+                        // IDEA(tomalec): skip all that magic if we do not have any imported-template-scopes
+                        for (var nodeNo = 0; nodeNo < templates.length; nodeNo++) {
+                            singleTemplate = templates[nodeNo];
+                            //d debugger // or innerHTML in this case
+                            singleFragment = document.importNode(singleTemplate.content, true);
+                            // convert dynamic NodeList to regullar array
+                            nodes = Array.prototype.slice.call(singleFragment.childNodes);
+                            if (singleTemplate.parentElement.tagName === "IMPORTED-TEMPLATE-SCOPE") {
+                                nodes.scope = singleTemplate.parentElement.getAttribute("scope");
+                                that.scopedNodes.push(nodes);
+                            } else {
+                                that.scopelessNodes = that.scopelessNodes.concat(nodes);
+                            }
+                            fragment.appendChild(singleFragment);
+
+                        }
+                    } else if (importsBody.childNodes.length === 0 && (!this.import.head || this.import.head.childNodes.length === 0)){ // document is empty
+                        console.warn('content given for imported-template is an empty document', this);
+                        that.stampedNodes = null;
+                        return;
+                    } else { //there is no template in the response.
+                        // it could be a stack trace, or HTML document with some nodes (HTML imports or scripts) that should / should not get stamped
+                        console.error("DON'T misbehave! At least one <template> tag is expected in content body", importsBody.innerHTML);
+                        return;
+                    }
+
+
+                    // convert dynamic NodeList to regullar array
+                    that.stampedNodes = Array.prototype.slice.call(fragment.childNodes);
+                    // dispatch event before stamping
+                    that.dispatchEvent(new CustomEvent('stamping', {detail: fragment}));
+                    // attach models
+                    that.attributeChangedCallback("model", undefined, that.model || that.getAttribute("model"));
+
+                    // Apply workaround for HTML Imports shim
+                    // Workaround https://github.com/webcomponents/webcomponentsjs/issues/470
+                    // fix for https://github.com/Juicy/imported-template/issues/17
+                    if (polyfillNeedsWorkaround) {
+                        var nodes = fragment.querySelectorAll(HTMLImports.parser.importsSelectors);
+                        for (var nodeNo = 0, l = nodes.length, node; (nodeNo < l) && (node = nodes[nodeNo]) ; nodeNo++) {
+                            HTMLImports.parser.parseDynamic(node, true);
+                        }
+                    }
+                    // Stamp tempalte into document
+                    that.parentNode.insertBefore(fragment, that.nextSibling);
+
+                    // Last bit of workaround
+                    // https://github.com/webcomponents/webcomponentsjs/issues/470 workaround
+                    // Re-evaluate need once V1 is shipped
+                    if (polyfillNeedsWorkaround) {
+                        // Hack it permanently for `dom-repeat` #17
+                        // ~ monkey patch addElementToDocument to make `document.currentScript.previousElementSibling` point to correct node
+                        //   HTMLImports.parser.addElementToDocument = monkeyPatchedAddElementToDocument;
+                        // parse scripts/styles
+                        console.warn('Workaround for https://github.com/webcomponents/webcomponentsjs/issues/470 is being used, some pending `<link>.onload` events  may get called too early. Especially, for 404 files. Re-evaluate the need once webcomponents.js#V1 is shipped.')
+                        HTMLImports.parser.parseNext();
+                        // Hack it permanently for `dom-repeat` #17
+                        // ~ reverse monkey patch
+                        //   HTMLImports.parser.addElementToDocument = originalAddElementToDocument;
+                    }
+
+                    that.pending = false;
+                };
+                // guessed workaround for StarcounterSamples/Launcher#82, Polymer/polymer#554, http://crbug.com/389566
+                // TODO(tomalec): check if it's still required
+                setTimeout(function appendAsync() {
+                    document.head.appendChild(link);
+                    that.dispatchEvent(new CustomEvent("stamped", {
+                        detail: that.stampedNodes
+                    }));
+                });
+                return this;
+            }
+            /**
+             * Forward Polymer notification downwards from upper
+             * `<template is="dom-bind">`
+             * to the imported `<template is="dom-bind">`
+             * @param  {String} path Polymer notification path
+             * @param  {Mixed} value New value
+             */
+            _notifyPath(path, value) {
+                return this._setPendingPropertyOrPath.call(this, path, value);
+            }
+            /**
+             * Forward Polymer notification downwards from `<dom-bind>`
+             * to the imported `<dom-bind>`
+             * @param  {String} path Polymer notification path
+             * @param  {Mixed} value New value
+             */
+            _setPendingPropertyOrPath(path, value) {
+                if (!this.scopedNodes) {
+                    //template not loaded yet. Nothing to forward
+                    return;
+                }
+
+                var modelPrefix = 'model';
+
+                if (path.indexOf(modelPrefix) == 0) {
+                    var childNo;
+                    var scopedNodes = this.scopedNodes;
+                    var len = scopedNodes && scopedNodes.length || 0;
+
+                    for (childNo = 0; childNo < len; childNo++) {
+                        var modelScopePrefix = modelPrefix + '.' + scopedNodes[childNo].scope;
+
+                        if (path === modelScopePrefix) {
+                            // notify the scope if it is the path
+                            _notifyNodes(modelPrefix, value, scopedNodes[childNo]);
+                        } else if (path.indexOf(modelScopePrefix + '.') === 0) {
+                            // notify the scope if it is in path
+                            var fixedScopePath = path.replace(modelScopePrefix, modelPrefix);
+                            _notifyNodes(fixedScopePath, value, scopedNodes[childNo]);
+                        }
+
+                    }
+                    _notifyNodes(path, value, this.scopelessNodes);
+                }
+            }
+            attachModel(model){
+                const attachModels = super.attachModel.bind(this);
+                var childNo,
+                    scopedNodes = this.scopedNodes,
+                    len = scopedNodes && scopedNodes.length || 0;
+
+                for (childNo = 0; childNo < len; childNo++) {
+                    attachModels(model && model[scopedNodes[childNo].scope], scopedNodes[childNo]);
+                }
+                attachModels(model, this.scopelessNodes);
+                // inline HTML
+                if (!this.scopedNodes && !this.scopelessNodes) {
+                    attachModels(model, this.stampedNodes);
+                }
+            }
+        }
+        var ImportedTemplatePrototype = ImportedTemplate.prototype;
 
         /**
          * Reference to pending (requested) HTMLLinkElement
@@ -40,182 +220,25 @@ https://github.com/Juicy/imported-template
         ImportedTemplatePrototype.pending = false;
         ImportedTemplatePrototype.scopedNodes = null;
 
-        /**
-         * Import partial via HTML Import, and replicate its `<template>`.
-         * @IDEA: return promise (if supported) for document load (tomalec)
-         * @public only for debugging.
-         * @param  {String} href partial URL
-         * @return {imported-template}      self
-         */
-        ImportedTemplatePrototype._loadExternalFile = function importHTMLImport(href) {
-            //href is a URL, load the partial from the HTTP server/cache
-            var link = document.createElement('link');
-            link.rel = "import";
-            link.href = href;
-            var that = this;
-            this.pending = link;
-            link.onload = function processImportedDocument() {
-                // protect yourself agains side-effect of
-                // https://github.com/webcomponents/webcomponentsjs/issues/470#issuecomment-261238583 workaround
-                // Re-evaluate need in `starcounter-include` after V1 is shipped
-                if(!this.import){
-                    return;
-                }
-                // TODO(tomalec): caching
-                // find only root templates
-                var templates = this.import.querySelectorAll("head>template,body>template,imported-template-scope>template");
-                var fragment, template;
-                var singleTemplate, singleFragment, nodes;
 
-                that.scopedNodes = [];
-                that.scopelessNodes = [];
-                that.clear();
-
-                // debugger
-                if (templates.length >= 1) {
-                    fragment = document.createDocumentFragment();
-                    // clone templates contents, and mark correct scopes
-                    // TODO: check if moving by text is faster,
-                    //      as we assume those are templates => document fragments (tomalec)
-                    // IDEA(tomalec): skip all that magic if we do not have any imported-template-scopes
-                    for (var nodeNo = 0; nodeNo < templates.length; nodeNo++) {
-                        singleTemplate = templates[nodeNo];
-                        //d debugger // or innerHTML in this case
-                        singleFragment = document.importNode(singleTemplate.content, true);
-                        // convert dynamic NodeList to regullar array
-                        nodes = Array.prototype.slice.call(singleFragment.childNodes);
-                        if (singleTemplate.parentElement.tagName === "IMPORTED-TEMPLATE-SCOPE") {
-                            nodes.scope = singleTemplate.parentElement.getAttribute("scope");
-                            that.scopedNodes.push(nodes);
-                        } else {
-                            that.scopelessNodes = that.scopelessNodes.concat(nodes);
-                        }
-                        fragment.appendChild(singleFragment);
-
-                    }
-
-                } else if (this.import.body.childNodes.length === 0 && this.import.body.childNodes.length === 0){ // document is empty
-                    console.warn('content given for imported-template (', this, ') is an empty document');
-                    that.stampedNodes = null;
-                    return;
-                } else { //there is no template in the response.
-                    // it could be a stack trace, or HTML document with some nodes (HTML imports or scripts) that should / should not get stamped
-                    console.error("DON'T misbehave! At least one <template> tag is expected in content body", this.import.body.innerHTML);
-                    return;
-                }
-
-
-                // convert dynamic NodeList to regullar array
-                that.stampedNodes = Array.prototype.slice.call(fragment.childNodes);
-                // dispatch event before stamping
-                that.dispatchEvent(new CustomEvent('stamping', {detail: fragment}));
-                // attach models
-                that.attributeChangedCallback("model", undefined, that.model || that.getAttribute("model"));
-
-                // Apply workaround for HTML Imports shim
-                // Workaround https://github.com/webcomponents/webcomponentsjs/issues/470
-                // fix for https://github.com/Juicy/imported-template/issues/17
-                if (polyfillNeedsWorkaround) {
-                    var nodes = fragment.querySelectorAll(HTMLImports.parser.importsSelectors);
-                    for (var nodeNo = 0, l = nodes.length, node; (nodeNo < l) && (node = nodes[nodeNo]) ; nodeNo++) {
-                        HTMLImports.parser.parseDynamic(node, true);
-                    }
-                }
-                // Stamp tempalte into document
-                that.parentNode.insertBefore(fragment, that.nextSibling);
-
-                // Last bit of workaround
-                // https://github.com/webcomponents/webcomponentsjs/issues/470 workaround
-                // Re-evaluate need once V1 is shipped
-                if (polyfillNeedsWorkaround) {
-                    // Hack it permanently for `dom-repeat` #17
-                    // ~ monkey patch addElementToDocument to make `document.currentScript.previousElementSibling` point to correct node
-                    //   HTMLImports.parser.addElementToDocument = monkeyPatchedAddElementToDocument;
-                    // parse scripts/styles
-                    console.warn('Workaround for https://github.com/webcomponents/webcomponentsjs/issues/470 is being used, some pending `<link>.onload` events  may get called too early. Especially, for 404 files. Re-evaluate the need once webcomponents.js#V1 is shipped.')
-                    HTMLImports.parser.parseNext();
-                    // Hack it permanently for `dom-repeat` #17
-                    // ~ reverse monkey patch
-                    //   HTMLImports.parser.addElementToDocument = originalAddElementToDocument;
-                }
-
-                that.pending = false;
-            };
-            // guessed workaround for StarcounterSamples/Launcher#82, Polymer/polymer#554, http://crbug.com/389566
-            // TODO(tomalec): check if it's still required
-            setTimeout(function appendAsync() {
-                document.head.appendChild(link);
-                that.dispatchEvent(new CustomEvent("stamped", {
-                    detail: that.stampedNodes
-                }));
-            });
-            return this;
-        };
-
-        var attachModels = JuicyHTMLElement.prototype.attachModel;
-        ImportedTemplatePrototype.attachModel = function (model) {
-            var childNo,
-                scopedNodes = this.scopedNodes,
-                len = scopedNodes && scopedNodes.length || 0;
-
-            for (childNo = 0; childNo < len; childNo++) {
-                attachModels(model && model[scopedNodes[childNo].scope], scopedNodes[childNo]);
-            }
-            attachModels(model, this.scopelessNodes);
-            // inline HTML
-            if (!this.scopedNodes && !this.scopelessNodes) {
-                attachModels(model, this.stampedNodes);
-            }
+        // to fool Polymer into thinking `imported-template` is a polymer element thus forwarding notifications to it.
+        ImportedTemplatePrototype.__dataHasAccessor = {partial: true, viewModel: true, model: true};
+        // Polymer doesn't set props on its own components, rather, it calls this function
+        ImportedTemplatePrototype._setPendingProperty = function (path, value) {
+            this[path] = value;
         }
 
         function _notifyNodes(path, value, nodes) {
             for (var childNo = 0; childNo < nodes.length; childNo++) {
-                if (nodes[childNo]._notifyPath) {
+                if (nodes[childNo].notifyPath) {
+                    nodes[childNo].notifyPath(path, value);
+                } else if (nodes[childNo]._notifyPath) {
                     nodes[childNo]._notifyPath(path, value);
                 }
             }
         }
 
-        /**
-         * Forward Polymer notification downwards from upper
-         * `<template is="dom-bind">`
-         * to the imported `<template is="dom-bind">`
-         * @param  {String} path Polymer notification path
-         * @param  {Mixed} value New value
-         */
-        ImportedTemplatePrototype._notifyPath = function (path, value) {
-            if (!this.scopedNodes) {
-                //template not loaded yet. Nothing to forward
-                return;
-            }
 
-            var modelPrefix = 'model';
-
-            if (path.indexOf(modelPrefix) == 0) {
-                var childNo;
-                var scopedNodes = this.scopedNodes;
-                var len = scopedNodes && scopedNodes.length || 0;
-
-                for (childNo = 0; childNo < len; childNo++) {
-                    var modelScopePrefix = modelPrefix + '.' + scopedNodes[childNo].scope;
-
-                    if (path === modelScopePrefix) {
-                        // notify the scope if it is the path
-                        _notifyNodes(modelPrefix, value, scopedNodes[childNo]);
-                    } else if (path.indexOf(modelScopePrefix + '.') === 0) {
-                        // notify the scope if it is in path
-                        var fixedScopePath = path.replace(modelScopePrefix, modelPrefix);
-                        _notifyNodes(fixedScopePath, value, scopedNodes[childNo]);
-                    }
-
-                }
-                _notifyNodes(path, value, this.scopelessNodes);
-            }
-        }
-
-        document.registerElement('imported-template', {
-            prototype: ImportedTemplatePrototype,
-            extends: "template"
-        });
+        customElements.define('imported-template', ImportedTemplate);
     })();
 </script>

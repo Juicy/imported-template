@@ -17,20 +17,18 @@
     <test-fixture id="juicy-html-with-content">
         <template>
             <!-- nest to workaround test-fixture bug -->
-            <div><template is="imported-template" content="../mock/smth.html">
-            </template></div>
+            <div><imported-template content="../mock/smth.html"></imported-template></div>
         </template>
     </test-fixture>
     <test-fixture id="juicy-html-without-content">
         <template>
             <!-- nest to workaround test-fixture bug -->
-            <div><template is="imported-template">
-            </template></div>
+            <div><imported-template></imported-template></div>
         </template>
     </test-fixture>
 
     <script>
-        describe('<juicy-html>', function () {
+        describe('<imported-template>', function () {
             var myEl, changedEl, infoSpy, warnSpy, errorSpy;
             beforeEach(function () {
                 infoSpy = sinon.spy(console, 'info');
@@ -47,7 +45,7 @@
             });
             context('when element is attached with content attribute', function () {
                 beforeEach(function (done) {
-                    myEl = fixture('juicy-html-with-content').querySelector('template[is="imported-template"]');
+                    myEl = fixture('juicy-html-with-content').querySelector('imported-template');
                     // wait for (faked) XHR
                     setTimeout(done, 100);
                 });
@@ -59,7 +57,7 @@
             });
             context('when content attribute is changed', function () {
                 beforeEach(function (done) {
-                    myEl = fixture('juicy-html-without-content').querySelector('template[is="imported-template"]');
+                    myEl = fixture('juicy-html-without-content').querySelector('imported-template');
                     myEl.setAttribute('content', '../mock/smth.html');
                     // wait for (faked) XHR
                     setTimeout(done, 100);

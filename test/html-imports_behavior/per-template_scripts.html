@@ -18,18 +18,18 @@
     <test-fixture id="imported-template-fixture">
         <template>
             <div><!-- nest to workaround test-fixture bug -->
-                <template is="imported-template" content="./per-template_scripts.imports/partial_with_script.html">
-                </template>
+                <imported-template href="./per-template_scripts.imports/partial_with_script.html">
+                </imported-template>
             </div>
         </template>
     </test-fixture>
     <test-fixture id="twice-imported-template-fixture">
         <template>
             <div><!-- nest to workaround test-fixture bug -->
-                <template is="imported-template" content="./per-template_scripts.imports/partial_with_script.html">
-                </template>
-                <template is="imported-template" content="./per-template_scripts.imports/partial_with_script.html">
-                </template>
+                <imported-template href="./per-template_scripts.imports/partial_with_script.html">
+                </imported-template>
+                <imported-template href="./per-template_scripts.imports/partial_with_script.html">
+                </imported-template>
             </div>
         </template>
     </test-fixture>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <title>&lt;imported-template&gt; in a &lt;template&gt; with HTML partial loaded as a sibling</title>
-  <script src="../../webcomponentsjs/webcomponents.js"></script>
+  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
   <link rel="import" href="../../polymer/polymer.html">
   <link rel="import" href="../imported-template.html">
   <style>
@@ -19,7 +19,7 @@
   <h2>Hey! those are siblings:</h2>
   <ul>
     <li class="specialExternal">Just plain <code>&lt;li&gt;</code></li>
-    <template is="imported-template" content="{{ partial }}" currentnode></template>
+    <imported-template href="{{ partial }}" currentnode></imported-template>
   </ul>
 </template>
 

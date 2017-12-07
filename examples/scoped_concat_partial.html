@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <title>&lt;imported-template&gt; merged, scoped partial</title>
-  <script src="../../webcomponentsjs/webcomponents.js"></script>
+  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
 
   <link rel="import" href="../imported-template.html">
 
@@ -23,21 +23,21 @@
     <h1>Concatenated partials/templates with attached scopes</h1>
     <blockquote>To boost performance <code>imported-template</code> supports <a href="concatenated_partial.html">concatenated partials</a>, and stamps all "root" templates all together.</blockquote>
     <p>To mark isolated data scope for each partial, you may use <code>&lt;imported-template-scope&gt;</code> custom element.</p>
-    <pre><code>&lt;template is="imported-template"
-    content="./partials/concatenated_scoped.html"
+    <pre><code>&lt;imported-template
+    href="./partials/concatenated_scoped.html"
     model='{
         "vendorA": {"data": "from scope of Vendor A"},
         "vendorB": {"data": "from scope of Vendor B"}
     }'
-    &gt;&lt;/template&gt;</code></pre>
+    &gt;&lt;/imported-template&gt;</code></pre>
     <hr/>
-    <template is="imported-template"
-        content="./partials/concatenated_scoped.html"
+    <imported-template
+        href="./partials/concatenated_scoped.html"
         model='{
             "vendorA": {"data": "from scope of Vendor A"},
             "vendorB": {"data": "from scope of Vendor B"}
         }'
-    ></template>
+    ></imported-template>
 
 
 </body>
