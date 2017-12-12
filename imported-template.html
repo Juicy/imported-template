@@ -14,6 +14,23 @@ https://github.com/Juicy/imported-template
 
             return (typeof HTMLImports !== 'undefined') && !HTMLImports.useNative && HTMLImports.parser && !isSafariWithWc;
         })();
+        // We neet to workaround exectuting scripts from imported tempalte until
+        // https://github.com/webcomponents/html-imports/pull/77
+        // is merged
+        const HTMLImportsV1PolyfillInUse = HTMLImports && (HTMLImports.useNative === false) && HTMLImports.importForElement;
+        const scriptsSelector = 'script:not([type]),script[type="application/javascript"],script[type="text/javascript"]';
+        /**
+         * @param {Array|NodeList|NamedNodeMap} list
+         * @param {!Function} callback
+         */
+        const forEach = (list, callback) => {
+          const length = list ? list.length : 0;
+          let i = 0;
+          for (; i < length && i >= 0; i = i + 1) {
+            callback(list[i], i);
+          }
+        };
+        // end of workaround consts
 
         // Prepare for monkeypatching addElementToDocument to make `document.currentScript.previousElementSibling` point to correct node
         var originalAddElementToDocument, monkeyPatchedAddElementToDocument;
@@ -71,6 +88,24 @@ https://github.com/Juicy/imported-template
                     that.scopedNodes = [];
                     that.scopelessNodes = [];
                     that.clear();
+
+                    // Make scripts from imported templates work in browsers polyfilled by wcjs#v1 HTML Imports
+                    if(HTMLImportsV1PolyfillInUse){
+                        const replaceScripts = (content) => {
+                          forEach(content.querySelectorAll('template'), template => {
+                            forEach(template.content.querySelectorAll(scriptsSelector), script => {
+                              const clone = /** @type {!HTMLScriptElement} */
+                                (document.createElement('script'));
+                              forEach(script.attributes, attr => clone.setAttribute(attr.name, attr.value));
+                              clone.textContent = script.textContent;
+                              script.parentNode.insertBefore(clone, script);
+                              script.parentNode.removeChild(script);
+                            });
+                            replaceScripts(template.content);
+                          });
+                        };
+                        replaceScripts(this.import);
+                    }
 
                     if (templates.length >= 1) {
                         fragment = document.createDocumentFragment();
