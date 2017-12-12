@@ -30,7 +30,7 @@
                             <template is="dom-repeat" items="[0,1,2]">
                                 <fieldset>
                                     <legend>Item <span>{{item}}</span></legend>
-                                    <imported-template href="./dom-repeat.import.html"></imported-template>
+                                    <imported-template href="./dom-repeat.import.html" model$="{{item}}"></imported-template>
                                 </fieldset>
                             </template>
                         </div>
@@ -54,7 +54,8 @@
                     },500);
                 });
                 describe('once stamped, should execute script within correct place in DOM', function(){
-                    it('`document.(_)currentScript.previousElementSibling` should point to node that was before it in template', function(done){
+                    it('`document.(_)currentScript.previousElementSibling` should point to node that was before it in template - order of loading the same partial may be inconsistent due to /webcomponents/html-imports#79', function(done){
+                        console.info('https://github.com/webcomponents/html-imports/issues/79');
                         setTimeout(function waitForStamp(){
                             var stampedNodes = repeatContainer.querySelectorAll('fieldset');
                             expect(stampedNodes.length).to.equal(3);

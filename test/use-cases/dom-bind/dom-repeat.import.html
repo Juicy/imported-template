@@ -1,16 +1,19 @@
 <template>
     <dom-bind class="sub-dom-bind">
         <template is="dom-bind">
-            <div class="sub">dom-repeat.import.html <span>{{model.works}}</span></div>
+            <div class="sub">dom-repeat.import.html <span>{{model}}</span></div>
         </template>
     </dom-bind>
     <script class="sub-script">
     (function(){
         //debugger
         //console.log("In dom-repeat.import.html!");
-        var template = (document._currentScript || document.currentScript).previousElementSibling;
-        window.ImportedTemplateTest.previousElementSiblings.push( template );
-        template.model = {works: "works"};
+        var domBind = (document._currentScript || document.currentScript).previousElementSibling;
+        // Once https://github.com/webcomponents/html-imports/issues/79 is fixed
+        // should be changed
+        // window.ImportedTemplateTest.previousElementSiblings.push(domBind);
+        window.ImportedTemplateTest.previousElementSiblings[domBind.model] = domBind;
+        // template.model = {works: "works"};
     })();
     </script>
     <style>
