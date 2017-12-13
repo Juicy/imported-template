@@ -125,7 +125,7 @@ Name       | When                               | `event.detail`
 
 Browser support relies mainly on polyfills support/spec compliance.
 
-| Chrome | IE11 | Edge | Firefox  | Safari 9+ |
+| Chrome | IE11 | Edge | Firefox  | Safari 10 |
 |:------:|:----:|:----:|:--------:|:--------:|
 |  ✓     | ✓** | ✓*   | ✓*       | ✓*       |
 
