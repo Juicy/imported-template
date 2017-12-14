@@ -14,9 +14,8 @@ https://github.com/Juicy/imported-template
 
             return (typeof HTMLImports !== 'undefined') && !HTMLImports.useNative && HTMLImports.parser && !isSafariWithWc;
         })();
-        // We neet to workaround exectuting scripts from imported tempalte until
-        // https://github.com/webcomponents/html-imports/pull/77
-        // is merged
+        // We need to workaround executing scripts from the template imported by this element until
+        // https://github.com/webcomponents/html-imports/pull/77 is merged
         const HTMLImportsV1PolyfillInUse = HTMLImports && (HTMLImports.useNative === false) && HTMLImports.importForElement;
         const scriptsSelector = 'script:not([type]),script[type="application/javascript"],script[type="text/javascript"]';
         /**
@@ -89,6 +88,9 @@ https://github.com/Juicy/imported-template
                     that.scopelessNodes = [];
                     that.clear();
 
+                    
+                    // We need to workaround executing scripts from the template imported by this element until
+                    // https://github.com/webcomponents/html-imports/pull/77 is merged
                     // Make scripts from imported templates work in browsers polyfilled by wcjs#v1 HTML Imports
                     if(HTMLImportsV1PolyfillInUse){
                         const replaceScripts = (content) => {
@@ -106,6 +108,7 @@ https://github.com/Juicy/imported-template
                         };
                         replaceScripts(this.import);
                     }
+                    // end of workaround for webcomponents/html-imports/pull/77
 
                     if (templates.length >= 1) {
                         fragment = document.createDocumentFragment();
