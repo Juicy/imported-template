@@ -169,9 +169,16 @@ https://github.com/Juicy/imported-template
         }
 
         function _notifyNodes(path, value, nodes) {
-            for (var childNo = 0; childNo < nodes.length; childNo++) {
-                if (nodes[childNo]._notifyPath) {
-                    nodes[childNo]._notifyPath(path, value);
+            for (let childNo = 0; childNo < nodes.length; childNo++) {
+                const elem = nodes[childNo];
+                if (elem._notifyPath) {
+                    elem._notifyPath(path, value);
+                }
+
+                //mirrored implementation of this fix: https://github.com/Polymer/polymer/pull/4537/files
+                const firstElemChild = elem.firstElementChild;
+                if (firstElemChild && firstElemChild.getAttribute("is") === elem.localName && firstElemChild._notifyPath) {
+                    firstElemChild._notifyPath(path, value);
                 }
             }
         }
