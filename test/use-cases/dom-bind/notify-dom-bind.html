@@ -20,10 +20,10 @@
         <template>
             <div>
                 <h1>outside dom-bind</h1>
-                <template is="dom-bind" id="externalDomBind">
+                <dom-bind><template is="dom-bind" id="externalDomBind">
                     <div>inside dom-bind</div>
                     <template is="imported-template" model="{{model}}" content="./notify-dom-bind.import.html"></template>
-                </template>
+                </template></dom-bind>
             </div>
         </template>
     </test-fixture>
