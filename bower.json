@@ -32,7 +32,7 @@
     "wct.conf.json"
   ],
   "dependencies": {
-    "juicy-html": "^2.0.0"
+    "juicy-html": "^2.0.3"
   },
   "devDependencies": {
     "dom-bind-notifier": "~1.0.0",
