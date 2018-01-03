@@ -2,7 +2,7 @@
 
 #### Live Demo
 <!-- Fork this JSBin, or provide your own URL -->
-https://jsbin.com/ligimo/9/edit?html,console,output
+https://jsbin.com/ligimo/11/edit?html,output
 
 ### Expected result
 
