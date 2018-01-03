@@ -80,7 +80,10 @@ https://github.com/Juicy/imported-template
                     // find only root templates
                     let templates = this.import instanceof Document ?
                         this.import.querySelectorAll("head>template,body>template,imported-template-scope>template") :
-                        this.import.children.filter(e => e.tagName === 'TEMPLATE').concat(this.import.querySelectorAll("imported-template-scope>template"));
+                        Array.prototype.filter.call(
+                            this.import.querySelectorAll("template"),
+                            (e => e.parentNode === this.import || e.parentNode.tagName === 'IMPORTED-TEMPLATE-SCOPE')
+                        );
                     var fragment, template;
                     var singleTemplate, singleFragment, nodes;
 

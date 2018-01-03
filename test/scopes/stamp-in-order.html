@@ -1,0 +1,128 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+
+    <script src="../../../webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../../../web-component-tester/browser.js"></script>
+
+    <!-- Step 1: import the element to test -->
+    <link rel="import" href="../../imported-template.html">
+</head>
+
+<body>
+
+    <!-- You can use the document as a place to set up your fixtures. -->
+    <test-fixture id="imported-template-fixture">
+        <template>
+            <!-- nest to workaround test-fixture bug -->
+            <div><imported-template></imported-template></div>
+        </template>
+    </test-fixture>
+
+    <script>
+        describe('<imported-template>', function() {
+            const STAMPED_FRAGMENT = `Scopeless <span>1</span>Scoped <span>1</span>Scopeless <span>2</span>Scoped <span>2</span>Scopeless <span>3</span>`;
+            let juicyElement, container;
+            context('when loads merged document with scopeless and scoped templates', function() {
+                beforeEach(function() {
+                    container = fixture('imported-template-fixture');
+                    juicyElement = container.querySelector('imported-template');
+                });
+                afterEach(function(done){
+                    setTimeout(done, 500);
+                })
+                it('should fire `stamping` event', function(done){
+                    let stampingEventCallback = sinon.spy();
+                    juicyElement.addEventListener('stamping', stampingEventCallback);
+                    juicyElement.href = './stamp-in-order.import.html';
+                    setTimeout(function waitForLoad(){
+                        expect(stampingEventCallback).to.be.called;
+                        expect(stampingEventCallback).to.be.calledOnce;
+                        done();
+                    }, 500);
+                });
+                it('should fire `stamping` event with document fragment perserving the order in `event.detail`', function(done){
+                    juicyElement.addEventListener('stamping', stampingEventCallback);
+                    juicyElement.href = './stamp-in-order.import.html';
+                    function stampingEventCallback(event){
+                        juicyElement.removeEventListener('stamping', stampingEventCallback);
+
+                        expect(event).to.have.property('detail');
+                        expect(event.detail).to.be.instanceof(DocumentFragment);
+
+                        const parsedFragment = document.createElement('div');
+                        parsedFragment.appendChild(event.detail.cloneNode(true));
+                        expect(parsedFragment.innerHTML).to.equal(STAMPED_FRAGMENT);
+                        done();
+                    }
+                });
+                context('once `stamping` event is fired', function(){
+                    beforeEach(function(done) {
+                        juicyElement = fixture('imported-template-fixture').querySelector('imported-template');
+                        juicyElement.addEventListener('stamping', function(){
+                            done();
+                        });
+                        juicyElement.href = './stamp-in-order.import.html';
+                    });
+                    it('`element.stampedNodes` as an array of all stamped nodes in perserved order', function(){
+                        expect(juicyElement.stampedNodes).to.be.an('array');
+                        expect(juicyElement.stampedNodes).to.have.lengthOf(10);
+                        expect(juicyElement.stampedNodes[0].textContent).to.equal('Scopeless ');
+                        expect(juicyElement.stampedNodes[1].textContent).to.equal('1');
+                        expect(juicyElement.stampedNodes[2].textContent).to.equal('Scoped ');
+                        expect(juicyElement.stampedNodes[3].textContent).to.equal('1');
+                        expect(juicyElement.stampedNodes[4].textContent).to.equal('Scopeless ');
+                        expect(juicyElement.stampedNodes[5].textContent).to.equal('2');
+                        expect(juicyElement.stampedNodes[6].textContent).to.equal('Scoped ');
+                        expect(juicyElement.stampedNodes[7].textContent).to.equal('2');
+                        expect(juicyElement.stampedNodes[8].textContent).to.equal('Scopeless ');
+                        expect(juicyElement.stampedNodes[9].textContent).to.equal('3');
+                    });
+                    it('should fire `stamping` event with set `element.scopedNodes` as an array of stamped, scoped nodes in perserved order', function(){
+                        expect(juicyElement.scopedNodes).to.be.an('array').that.have.lengthOf(2);
+
+                        expect(juicyElement.scopedNodes[0]).to.be.an('array')
+                                                            .that.have.lengthOf(2)
+                                                            .have.property('scope', 'Vendor1')
+                        expect(juicyElement.scopedNodes[0][0].textContent).to.equal('Scoped ');
+                        expect(juicyElement.scopedNodes[0][1].textContent).to.equal('1');
+
+                        expect(juicyElement.scopedNodes[1]).to.be.an('array')
+                                                            .that.have.lengthOf(2)
+                                                            .have.property('scope', 'Vendor2')
+                        expect(juicyElement.scopedNodes[1][0].textContent).to.equal('Scoped ');
+                        expect(juicyElement.scopedNodes[1][1].textContent).to.equal('2');
+
+                    });
+                    it('should fire `stamping` event with set `element.scopelessNodes` as an array of stamped, scopeless nodes in perserved order', function(){
+                        expect(juicyElement.scopelessNodes).to.be.an('array');
+                        expect(juicyElement.scopelessNodes).to.have.lengthOf(6);
+                        expect(juicyElement.scopelessNodes[0].textContent).to.equal('Scopeless ');
+                        expect(juicyElement.scopelessNodes[1].textContent).to.equal('1');
+                        expect(juicyElement.scopelessNodes[2].textContent).to.equal('Scopeless ');
+                        expect(juicyElement.scopelessNodes[3].textContent).to.equal('2');
+                        expect(juicyElement.scopelessNodes[4].textContent).to.equal('Scopeless ');
+                        expect(juicyElement.scopelessNodes[5].textContent).to.equal('3');
+
+                    });
+                });
+                it('should stamp them in order eventually', function(done){
+                    juicyElement.href = './stamp-in-order.import.html';
+                    setTimeout(()=>{
+                        // protect aginst variable order of attributes
+                        expect(container.innerHTML.replace(/<imported-template[^>]*>/,'')).to.equal(
+                            '</imported-template>' +
+                            STAMPED_FRAGMENT)
+                        done();
+                    }, 500);
+                });
+            });
+        });
+    </script>
+
+</body>
+
+</html>
