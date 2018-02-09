@@ -7,16 +7,14 @@
 	</dom-bind>
     <script>
         (function () {
-            var script = document._currentScript || document.currentScript;
-            var domBind = script.previousElementSibling;
+            var domBind = document.currentScript.previousElementSibling;
 			console.info('Here runs, imported per-template script that could use document.currentScript to do something;');
         })();
     </script>
 </template>
 <script>
 	(function () {
-		var script = document._currentScript || document.currentScript;
-		var template = script.previousElementSibling;
+		var template = document.currentScript.previousElementSibling;
 		console.info('Here runs, imported per-partial script that could prepare template to be stamped;');
 		var codeElement = document.createElement('code');
 		codeElement.innerHTML = '"./partials/polymer_binding.html"';
