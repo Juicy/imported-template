@@ -8,7 +8,7 @@
     (function(){
         //debugger
         //console.log("In dom-repeat.import.html!");
-        var domBind = (document._currentScript || document.currentScript).previousElementSibling;
+        var domBind = document.currentScript.previousElementSibling;
         // Once https://github.com/webcomponents/html-imports/issues/79 is fixed
         // should be changed
         // window.ImportedTemplateTest.previousElementSiblings.push(domBind);

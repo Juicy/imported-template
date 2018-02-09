@@ -2,7 +2,7 @@
     <h1 id="previousElement">Hello World</h1>
     <script>
         console.log('template\'s script executed');
-        console.log('script\s previousElementSibling', (document._currentScript || document.currentScript).previousElementSibling );
-        window.ImportedTemplateTest.previousElementSibling = (document._currentScript || document.currentScript).previousElementSibling;
+        console.log('script\s previousElementSibling', document.currentScript.previousElementSibling );
+        window.ImportedTemplateTest.previousElementSibling = document.currentScript.previousElementSibling;
     </script>
 </template>

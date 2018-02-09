@@ -5,7 +5,7 @@
 		<script>
 			// document.currentScript.previousElementSibling.innerText = document.currentScript.model.data;
 			// Use polyfill of .currentScript if available
-			(document._currentScript || document.currentScript).previousElementSibling.innerText = (document._currentScript || document.currentScript).model.data;
+			document.currentScript.previousElementSibling.innerText = document.currentScript.model.data;
 		</script>,
 	</template>
 </imported-template-scope>
