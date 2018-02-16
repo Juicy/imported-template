@@ -51,7 +51,7 @@ See the full article on features, use cases and the way it's done at http://star
 
 ### Rationale
 
-`imported-template` evolved out of [x-html](https://github.com/PuppetJs/x-html) (now [`juicy-html`](https://github.com/Juicy/juicy-html) ) due to need for better control of `<scripts>` and HTML Imports execution. See discussion [here](https://github.com/Juicy/juicy-html/issues/8)
+`imported-template` evolved out of [x-html](https://github.com/Palindrom/x-html) (now [`juicy-html`](https://github.com/Juicy/juicy-html) ) due to need for better control of `<scripts>` and HTML Imports execution. See discussion [here](https://github.com/Juicy/juicy-html/issues/8)
 
 
 ## Install
