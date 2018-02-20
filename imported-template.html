@@ -7,31 +7,6 @@ https://github.com/Juicy/imported-template
 <link rel="import" href="../juicy-html/juicy-html.html">
 <script>
     (function () {
-        // Workaround for polyfilled per-template scripts works with WebComponents.js#v0 only
-        var polyfillNeedsWorkaround = (function () {
-            var isSafari = navigator.vendor && navigator.vendor.indexOf("Apple") > -1 && navigator.userAgent && !navigator.userAgent.match("CriOS");
-            var isSafariWithWc = isSafari && window.navigator.appVersion.match(/(version[/])([7-8][.])/gi);
-
-            return (typeof HTMLImports !== 'undefined') && !HTMLImports.useNative && HTMLImports.parser && !isSafariWithWc;
-        })();
-
-        // Prepare for monkeypatching addElementToDocument to make `document.currentScript.previousElementSibling` point to correct node
-        var originalAddElementToDocument, monkeyPatchedAddElementToDocument;
-        if (polyfillNeedsWorkaround) {
-            originalAddElementToDocument = HTMLImports.parser.addElementToDocument;
-            function monkeyPatchedAddElementToDocument(elt) {
-                if (unwrap(elt.ownerDocument) == document){
-                    document.head.appendChild(elt);
-                } else {
-                    originalAddElementToDocument.call(this, elt);
-                }
-            }
-
-            // Monkey patch it permanently to make (asynchronous) `dom-repeat` get correct `document.currentScript.previousElementSibling`
-            // https://github.com/Juicy/imported-template/issues/17#issuecomment-169654611
-            HTMLImports.parser.addElementToDocument = monkeyPatchedAddElementToDocument;
-        }
-
         class ImportedTemplate extends customElements.get('juicy-html') {
             constructor(self) {
                 self = super(self);
@@ -51,12 +26,6 @@ https://github.com/Juicy/imported-template
                 var that = this;
                 this.pending = link;
                 link.onload = function processImportedDocument() {
-                    // protect yourself agains side-effect of
-                    // https://github.com/webcomponents/webcomponentsjs/issues/470#issuecomment-261238583 workaround
-                    // Re-evaluate need in `starcounter-include` after V1 is shipped
-                    if(!this.import){
-                        return;
-                    }
                     // TODO(tomalec): caching
                     // HTML Imports polyfill starting from wc.js#1.x does not create separate document,
                     // it's just appended to `link` element, therefore there is no `body`
@@ -114,32 +83,8 @@ https://github.com/Juicy/imported-template
                     // attach models
                     that.attributeChangedCallback("model", undefined, that.model || that.getAttribute("model"));
 
-                    // Apply workaround for HTML Imports shim
-                    // Workaround https://github.com/webcomponents/webcomponentsjs/issues/470
-                    // fix for https://github.com/Juicy/imported-template/issues/17
-                    if (polyfillNeedsWorkaround) {
-                        var nodes = fragment.querySelectorAll(HTMLImports.parser.importsSelectors);
-                        for (var nodeNo = 0, l = nodes.length, node; (nodeNo < l) && (node = nodes[nodeNo]) ; nodeNo++) {
-                            HTMLImports.parser.parseDynamic(node, true);
-                        }
-                    }
                     // Stamp tempalte into document
                     that.parentNode.insertBefore(fragment, that.nextSibling);
-
-                    // Last bit of workaround
-                    // https://github.com/webcomponents/webcomponentsjs/issues/470 workaround
-                    // Re-evaluate need once V1 is shipped
-                    if (polyfillNeedsWorkaround) {
-                        // Hack it permanently for `dom-repeat` #17
-                        // ~ monkey patch addElementToDocument to make `document.currentScript.previousElementSibling` point to correct node
-                        //   HTMLImports.parser.addElementToDocument = monkeyPatchedAddElementToDocument;
-                        // parse scripts/styles
-                        console.warn('Workaround for https://github.com/webcomponents/webcomponentsjs/issues/470 is being used, some pending `<link>.onload` events  may get called too early. Especially, for 404 files. Re-evaluate the need once webcomponents.js#V1 is shipped.')
-                        HTMLImports.parser.parseNext();
-                        // Hack it permanently for `dom-repeat` #17
-                        // ~ reverse monkey patch
-                        //   HTMLImports.parser.addElementToDocument = originalAddElementToDocument;
-                    }
 
                     that.pending = false;
                 };
