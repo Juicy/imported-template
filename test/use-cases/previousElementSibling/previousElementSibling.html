@@ -35,7 +35,7 @@
                     myElContainer = fixture('imported-template-fixture');
                 });
                 describe('once stamped, should execute script within correct place in DOM', function(){
-                    it('`document.(_)currentScript.previousElementSibling` should point to node that was before it in template', function(done){
+                    it('`document.currentScript.previousElementSibling` should point to node that was before it in template', function(done){
                         setTimeout(function waitForStamp(){
                             expect(window.ImportedTemplateTest.previousElementSibling).to.equal(myElContainer.querySelector('#previousElement'));
                             done();
