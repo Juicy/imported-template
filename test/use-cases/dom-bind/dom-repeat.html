@@ -54,7 +54,7 @@
                     },500);
                 });
                 describe('once stamped, should execute script within correct place in DOM', function(){
-                    it('`document.(_)currentScript.previousElementSibling` should point to node that was before it in template - order of loading the same partial may be inconsistent due to /webcomponents/html-imports#79', function(done){
+                    it('`document.currentScript.previousElementSibling` should point to node that was before it in template - order of loading the same partial may be inconsistent due to /webcomponents/html-imports#79', function(done){
                         console.info('https://github.com/webcomponents/html-imports/issues/79');
                         setTimeout(function waitForStamp(){
                             var stampedNodes = repeatContainer.querySelectorAll('fieldset');
