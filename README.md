@@ -129,7 +129,7 @@ Browser support relies mainly on polyfills support/spec compliance.
 |:------:|:----:|:----:|:--------:|:--------:|
 |  ✓     | ✓**  | ✓    | ✓        | ✓        |
 
-\*\* **V1**: IE11 does not support `currentScript` so bunch of test for useful cases fails
+\*\* **V1**: IE11 does not support `currentScript`, so a bunch of tests for useful cases fail.
 
 
 ## [Contributing and Development](CONTRIBUTING.md)
