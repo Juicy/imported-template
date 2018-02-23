@@ -6,6 +6,7 @@ before_script:
   - npm install bower
   - 'export PATH=$PWD/node_modules/.bin:$PATH'
   - bower install
+  - "if [ -v JUICY_TATTOO_DEPENDENCY ]; then bower uninstall ${JUICY_TATTOO_DEPENDENCY} ${JUICY_TATTOO_DEPENDENCY_SLUG} --save; bower install ${JUICY_TATTOO_DEPENDENCY_SLUG}#${JUICY_TATTOO_DEPENDENCY_COMMIT}; fi"
 node_js: stable
 addons:
   firefox: latest
