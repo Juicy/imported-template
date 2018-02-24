@@ -1,6 +1,6 @@
 {
   "name": "imported-template",
-  "version": "3.1.1",
+  "version": "3.2.0",
   "keywords": [
     "include",
     "partials",
@@ -34,7 +34,7 @@
     "wct.conf.json"
   ],
   "dependencies": {
-    "juicy-html": "^3.0.0"
+    "juicy-html": "^4.0.0"
   },
   "devDependencies": {
     "iron-icon": "PolymerElements/iron-icon#~2.0.0",

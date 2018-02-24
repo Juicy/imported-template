@@ -1,6 +1,6 @@
 {
   "name": "imported-template",
-  "version": "3.1.1",
+  "version": "3.2.0",
   "description": "Declarative way for client-side includes boosted with HTML Imports features, like full control over loaded `<script>`s and `<link>`s, caching, de-duping, etc.",
   "homepage": "https://github.com/Juicy/imported-template",
   "repository": {
