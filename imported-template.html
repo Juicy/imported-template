@@ -1,5 +1,5 @@
 <!--
-imported-template.html version: 3.2.0
+imported-template.html version: 3.2.1
 (c) 2013 Joachim Wester
 MIT license
 https://github.com/Juicy/imported-template
@@ -168,9 +168,10 @@ https://github.com/Juicy/imported-template
         ImportedTemplatePrototype.pending = false;
         ImportedTemplatePrototype.scopedNodes = null;
 
-
         // to fool Polymer into thinking `imported-template` is a polymer element thus forwarding notifications to it.
         ImportedTemplatePrototype.__dataHasAccessor = {partial: true, viewModel: true, model: true};
+        ImportedTemplatePrototype.__isPropertyEffectsClient = true;
+        
         // Polymer doesn't set props on its own components, rather, it calls this function
         ImportedTemplatePrototype._setPendingProperty = function (path, value) {
             this[path] = value;
