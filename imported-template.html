@@ -88,14 +88,13 @@ https://github.com/Juicy/imported-template
 
                     that.pending = false;
                 };
-                // guessed workaround for StarcounterSamples/Launcher#82, Polymer/polymer#554, http://crbug.com/389566
-                // TODO(tomalec): check if it's still required
-                setTimeout(function appendAsync() {
-                    document.head.appendChild(link);
-                    that.dispatchEvent(new CustomEvent("stamped", {
-                        detail: that.stampedNodes
-                    }));
-                });
+
+                // Start importing
+                document.head.appendChild(link);
+                that.dispatchEvent(new CustomEvent("stamped", {
+                    detail: that.stampedNodes
+                }));
+
                 return this;
             }
             /**

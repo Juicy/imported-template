@@ -1,0 +1,63 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+
+    <script src="../../../webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../../../web-component-tester/browser.js"></script>
+
+    <!-- Step 1: import the element to test -->
+    <link rel="import" href="../../imported-template.html">
+</head>
+
+<body>
+
+    <div id="other-element">foo</div>
+    <!-- You can use the document as a place to set up your fixtures. -->
+    <test-fixture id="imported-template-fixture">
+        <template>
+            <div>
+                <!-- nest to workaround test-fixture bug -->
+                <imported-template href="../mock/smth.html">
+                </imported-template>
+            </div>
+        </template>
+    </test-fixture>
+
+    <script>
+        describe('<imported-template>', function() {
+            var myElContainer;
+
+            context('when element is connected is being loaded', function() {
+                before(function() {
+                    myElContainer = fixture('imported-template-fixture');
+                });
+                it('`offsetWidth` of already loaded elements should point return correct (non-zero) value', function(){
+                    expect(document.querySelector('#other-element').offsetWidth).to.equal(document.body.offsetWidth);
+
+                });
+            });
+            context('when partial (HTML Import resource) is being loaded', function() {
+                let element;
+                before(function() {
+                    myElContainer = document.createElement('div');
+                    document.body.appendChild(myElContainer);
+                    element = document.createElement('imported-template');
+                });
+                it('`offsetWidth` of already loaded elements should point return correct (non-zero) value', function(done){
+                    element.addEventListener('stamped', function whenImporting(){
+                        expect(document.querySelector('#other-element').offsetWidth).to.equal(document.body.offsetWidth);
+                        done();
+                    });
+                    myElContainer.appendChild(element);
+                    element.setAttribute('href', '../mock/smth.html');
+                });
+            });
+        });
+    </script>
+
+</body>
+
+</html>
