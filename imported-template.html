@@ -7,6 +7,16 @@ https://github.com/Juicy/imported-template
 <link rel="import" href="../juicy-html/juicy-html.html">
 <script>
     (function () {
+        // Needed to workaround https://github.com/webcomponents/webcomponentsjs/issues/1008
+        const isIE = /Trident/.test(navigator.userAgent) ||
+                    /Edge\/\d./i.test(navigator.userAgent);
+        const importDisableType = 'import-disable';
+        const stripDisabledType = function(template) {
+            const scope = template.content || template;
+            scope.querySelectorAll(`link[type="${importDisableType}"]`)
+                .forEach((link)=>{link.removeAttribute('type')});
+            scope.querySelectorAll('template').forEach(stripDisabledType);
+        };
         class ImportedTemplate extends customElements.get('juicy-html') {
             constructor(self) {
                 self = super(self);
@@ -54,6 +64,9 @@ https://github.com/Juicy/imported-template
                             singleTemplate = templates[nodeNo];
                             //d debugger // or innerHTML in this case
                             singleFragment = document.importNode(singleTemplate.content, true);
+                            if(isIE){
+                                stripDisabledType(singleFragment);
+                            }
                             // convert dynamic NodeList to regullar array
                             nodes = Array.prototype.slice.call(singleFragment.childNodes);
                             if (singleTemplate.parentElement.tagName === "IMPORTED-TEMPLATE-SCOPE") {

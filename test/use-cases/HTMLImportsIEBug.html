@@ -1,0 +1,77 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+
+    <script src="../../../webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../../../web-component-tester/browser.js"></script>
+
+    <!-- Step 1: import the element to test -->
+    <link rel="import" href="../../imported-template.html">
+</head>
+
+<body>
+
+    <div id="other-element">foo</div>
+    <!-- You can use the document as a place to set up your fixtures. -->
+    <test-fixture id="imported-template-fixture">
+        <template>
+            <div>
+                <!-- nest to workaround test-fixture bug -->
+                <imported-template href="../mock/with-link-stylesheets.html">
+                </imported-template>
+            </div>
+        </template>
+    </test-fixture>
+
+    <script>
+        describe('when <imported-template> is connected, and imports a template', function() {
+            var myElContainer;
+            beforeEach(function() {
+                myElContainer = fixture('imported-template-fixture');
+            });
+
+            context('with a link element,', function() {
+                it('the link element should eventually be stamped, load and apply styles', function(done){
+                    setTimeout(()=>{
+                        const importedStyles = myElContainer.querySelector('#imported-styles');
+                        const styledElement = myElContainer.querySelector('#green');
+
+                        expect(importedStyles).to.be.ok;
+                        expect(importedStyles.sheet).to.be.ok;
+                        expect(importedStyles.sheet.cssRules).to.have.lengthOf(1);
+                        expect(window.getComputedStyle(styledElement)).to.have.property('color', 'rgb(0, 128, 0)');
+                        done();
+                    }, 100);
+                });
+            });
+            context('that contains a nested template with a link element, once nested template is manually attached to document', function() {
+
+                beforeEach(function(done) {
+                    setTimeout(()=>{
+                        const nestedTemplate = myElContainer.querySelector('#nested');
+                        myElContainer.appendChild(document.importNode(nestedTemplate.content, true));
+                        done();
+                    }, 10);
+                });
+                it('the nested link element should eventually be stamped, load and apply styles', function(done){
+                    setTimeout(()=>{
+                        const importedStyles = myElContainer.querySelector('#imported-nested-styles');
+                        const styledElement = myElContainer.querySelector('#nested-green');
+
+                        expect(importedStyles).to.be.ok;
+                        expect(importedStyles.sheet).to.be.ok;
+                        expect(importedStyles.sheet.cssRules).to.have.lengthOf(1);
+                        expect(window.getComputedStyle(styledElement)).to.have.property('color', 'rgb(0, 128, 0)');
+                        done();
+                    }, 100);
+                });
+            });
+        });
+    </script>
+
+</body>
+
+</html>
