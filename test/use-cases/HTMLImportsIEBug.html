@@ -59,12 +59,12 @@
                 it('the nested link element should eventually be stamped, load and apply styles', function(done){
                     setTimeout(()=>{
                         const importedStyles = myElContainer.querySelector('#imported-nested-styles');
-                        const styledElement = myElContainer.querySelector('#nested-green');
+                        const styledElement = myElContainer.querySelector('#nested-blue');
 
                         expect(importedStyles).to.be.ok;
                         expect(importedStyles.sheet).to.be.ok;
                         expect(importedStyles.sheet.cssRules).to.have.lengthOf(1);
-                        expect(window.getComputedStyle(styledElement)).to.have.property('color', 'rgb(0, 128, 0)');
+                        expect(window.getComputedStyle(styledElement)).to.have.property('color', 'rgb(0, 0, 128)');
                         done();
                     }, 500);
                 });
