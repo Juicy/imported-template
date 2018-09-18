@@ -67,8 +67,8 @@ https://github.com/Juicy/imported-template
                             if(isIE){
                                 stripDisabledType(singleFragment);
                             }
-                            // convert dynamic NodeList to regullar array
-                            nodes = Array.prototype.slice.call(singleFragment.childNodes);
+                            // convert dynamic NodeList to regular array
+                            nodes = Array.from(singleFragment.childNodes);
                             if (singleTemplate.parentElement.tagName === "IMPORTED-TEMPLATE-SCOPE") {
                                 nodes.scope = singleTemplate.parentElement.getAttribute("scope");
                                 that.scopedNodes.push(nodes);
@@ -89,8 +89,8 @@ https://github.com/Juicy/imported-template
                     }
 
 
-                    // convert dynamic NodeList to regullar array
-                    that.stampedNodes = Array.prototype.slice.call(fragment.childNodes);
+                    // convert dynamic NodeList to regular array
+                    that.stampedNodes = Array.from(fragment.childNodes);
                     // dispatch event before stamping
                     that.dispatchEvent(new CustomEvent('stamping', {detail: fragment}));
                     // attach models
