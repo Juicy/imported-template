@@ -96,8 +96,15 @@ https://github.com/Juicy/imported-template
                     // attach models
                     that.attributeChangedCallback("model", undefined, that.model || that.getAttribute("model"));
 
-                    // Stamp tempalte into document
+                    // prepending to the DOM scrolls to undesired [0,0]
+                    // see https://stackoverflow.com/questions/5688362/how-to-prevent-scrolling-on-prepend
+                    const currentScrollPosition = [window.scrollX, window.scrollY];
+
+                    // Stamp template into document
                     that.parentNode.insertBefore(fragment, that.nextSibling);
+                    
+                    // scroll back to original location
+                    window.scrollTo(...currentScrollPosition);
 
                     that.pending = false;
                 };
